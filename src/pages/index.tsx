@@ -15,6 +15,7 @@ export default function Home() {
   };
   return (
     <div className="m-[auto] h-[90vh] flex justify-center items-center">
+      <h2>Hello world</h2>
       <div>
         <Image
         unoptimized={true}
