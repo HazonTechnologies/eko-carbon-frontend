@@ -1,10 +1,10 @@
 import React, { createContext, useContext, useState } from "react";
 
 interface LoadingCtx {
-    loading: boolean,
-    setLoadingStatus: (param: boolean) => void;
+  loading: boolean;
+  // eslint-disable-next-line no-unused-vars
+  setLoadingStatus: (param: boolean) => void;
 }
-
 
 const loadindDefault: LoadingCtx = {
   loading: false,
@@ -13,24 +13,21 @@ const loadindDefault: LoadingCtx = {
 
 const LoadingContext = createContext<LoadingCtx>(loadindDefault);
 
-const LoadingProvider = ({ children }:{children: React.ReactNode}) => {
+const LoadingProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const setLoadingStatus = (param: boolean) => {
-    console.warn(loading)
     setLoading(param);
-    console.warn(loading)
   };
 
   return (
-      
     <LoadingContext.Provider
       value={{
         loading,
         setLoadingStatus,
       }}
     >
-      {children}
+      <span>{children}</span>
     </LoadingContext.Provider>
   );
 };
@@ -38,9 +35,7 @@ const LoadingProvider = ({ children }:{children: React.ReactNode}) => {
 const useLoading = () => {
   const context = useContext(LoadingContext);
 
-  if (!context)
-    throw new Error("useLoading must be used inside a `LoadingProvider`");
-
+  if (!context) throw new Error("useLoading must be used inside a `LoadingProvider`");
   return context;
 };
 

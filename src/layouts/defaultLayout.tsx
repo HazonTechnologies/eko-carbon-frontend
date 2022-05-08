@@ -1,30 +1,17 @@
-import Header from "../components/main/header";
 import React from "react";
-import { NextPage } from "next";
-import { SWRConfig } from "swr";
-import fetcher from "../lib/helperFunctions/fetcher";
-import { LoadingProvider, useLoading } from "../context/loadingCtx";
+import Header from "../components/main/header";
+import { useHeader } from "../context/headerCtx";
 
-const DefaultLayout = ({ children }:{children:React.ReactNode}) => {
-
-  const {loading}  = useLoading()
+const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
+  const {
+    state: { isShown },
+  } = useHeader();
 
   return (
-    <LoadingProvider>
-    <SWRConfig
-      value={{
-        fetcher,
-        dedupingInterval: 10000,
-      }}
-    >
-        <div className="layout">
-          {JSON.stringify(loading)}
-          {loading && <h1>Loading......</h1>}
-          <Header />
-          {children}
-        </div>
-    </SWRConfig>
-    </LoadingProvider>
+    <div className="layout">
+      {isShown && <Header />}
+      {children}
+    </div>
   );
 };
 
