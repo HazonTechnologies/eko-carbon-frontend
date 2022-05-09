@@ -5,6 +5,7 @@ import {
   SettingOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import { Avatar, Badge } from "antd";
 import Image from "next/image";
 
 import imageLoader from "../../lib/helperFunctions/loader";
@@ -23,7 +24,7 @@ const Header = () => (
         height={60}
       />
     </h2>
-    <nav className="flex sm:gap-x-8 gap-x-3 items-center text-base">
+    <nav className="flex sm:gap-x-8 gap-x-4 items-center text-lg">
       <p id="search">
         <SearchOutlined />
       </p>
@@ -31,10 +32,22 @@ const Header = () => (
         <SettingOutlined />
       </p>
       <p id="notification">
-        <BellOutlined />
+        <Badge
+          size="small"
+          offset={[-2, 5]}
+          className="!-mb-5 !text-xs"
+          count={10}
+          overflowCount={99}
+        >
+          <BellOutlined className="text-xl text-secondary-high" />
+        </Badge>
       </p>
-      <p className="rounded-3xl text-sm pb-2.5 -mb-2 px-2.5 p-1 border border-secondary-mid" id="avatar">
-        <UserOutlined />
+      <p>
+        <Avatar
+          size={28}
+          className="!bg-transparent border border-secondary-high -mb-1"
+          icon={<UserOutlined />}
+        />
       </p>
     </nav>
   </header>

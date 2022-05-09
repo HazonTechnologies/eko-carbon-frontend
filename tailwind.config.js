@@ -22,6 +22,7 @@ module.exports = {
                 high: '#187A56',
             },
             background: "#F8F8F8",
+            transparent: "rgba(42, 196, 140, 0.0)",
         },
 
         fontFamily: {

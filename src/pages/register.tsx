@@ -2,6 +2,7 @@
 // import { useId, useState } from "react";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
+import RegisterAccountInfoScreen from "../components/main/registerAccountInfoScreen";
 
 // import { useLoading } from "../context/loadingCtx";
 import RegisterScreen from "../components/main/registerScreen";
@@ -53,10 +54,14 @@ const Register = () => {
   }, [step, headerDispatch]);
 
   const onSubmit = (values: any) => {
+    console.log(values);
     setUserDetails(values);
     headerDispatch({ type: Types.Toggle, payload: { value: true } });
 
     updateStep(2);
+  };
+  const onRegAccount = (values: any) => {
+    console.log(values);
   };
   const selectUserType = (type: Option) => {
     setUserType(type);
@@ -133,6 +138,7 @@ const Register = () => {
           onSelect={selectOffsetType}
         />
       )}
+      {step === 4 && <RegisterAccountInfoScreen onSubmit={onRegAccount} />}
     </div>
   );
 };

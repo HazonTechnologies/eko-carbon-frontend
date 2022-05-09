@@ -12,6 +12,7 @@ interface Props {
   icon?: string;
   onClickTrigger?: MouseEventHandler<HTMLButtonElement> | undefined;
   bg?: string;
+  className?: string
 }
 
 export default function ButtonUI({
@@ -23,6 +24,7 @@ export default function ButtonUI({
   disabled,
   onClickTrigger,
   children,
+  className,
 }: Props) {
   return (
     <Button
@@ -43,6 +45,7 @@ export default function ButtonUI({
        
       h-[45px]
       rounded-l
+      ${className}
       `}
     >
       {icon && (

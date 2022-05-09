@@ -3,6 +3,7 @@
 /* hello world */
 
 @import url('antd/dist/antd.min.css');
+@import url('react-phone-input-2/lib/style.css');
 
 /* hello */
 
@@ -43,6 +44,44 @@ a {
 
 .lds-ripple div:nth-child(2) {
     animation-delay: -0.5s;
+}
+
+.ant-steps-item-finish>.ant-steps-item-container>.ant-steps-item-tail:after,
+.ant-steps-item-process .ant-steps-item-icon>.ant-steps-icon .ant-steps-icon-dot {
+    @apply !bg-tertiary-high;
+}
+
+.ant-steps-item-title {
+    font-size: 14px !important;
+    word-break: keep-all;
+    opacity: 0.7;
+}
+
+.ant-steps-item-description {
+    font-size: 12px !important;
+    opacity: 0.7;
+}
+
+.step-done {
+    font-size: 1.25rem;
+    position: absolute;
+    top: -6px;
+    left: -9px;
+}
+
+.react-tel-input .flag-dropdown {
+    background: none;
+    border: none;
+}
+
+.react-tel-input .form-control {
+    width: 100%;
+}
+
+@media (min-width: 640px) {
+    .react-tel-input .form-control {
+        width: 100%;
+    }
 }
 
 @keyframes lds-ripple {
