@@ -5,13 +5,14 @@ import {
   SettingOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import { NextPage } from "next";
 import { Avatar, Badge } from "antd";
 import Image from "next/image";
 
 import imageLoader from "../../lib/helperFunctions/loader";
 // import headerLinks from "../../lib/common/links";
 
-const Header = () => (
+const Header:NextPage<any> = () => (
   <header className="bg-tertiary-high sm:px-8 p-1 flex justify-between items-center text-secondary-mid">
     <h2>
       <Image

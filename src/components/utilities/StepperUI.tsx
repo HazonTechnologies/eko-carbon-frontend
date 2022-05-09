@@ -7,7 +7,7 @@ const { Step } = Steps;
 
 const customDot = (
   dot: any,
-  { status, index }: { status: any; index: any }
+  { status, index }: { status: any; index: any },
 ) => (
   <Popover
     content={
