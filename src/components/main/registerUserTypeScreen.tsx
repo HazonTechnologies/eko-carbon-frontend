@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { NextPage } from "next";
 import { useState } from "react";
-import { Option } from "../../models/option";
+import { Option } from "../../models/utilities";
 import { UserType } from "../../models/user";
 import OptionsUI from "../utilities/OptionsUI";
 
@@ -24,12 +24,11 @@ const RegisterUserTypeScreen: NextPage<RegisterUserTypePropType> = ({
   selected,
 }) => (
   <div className="flex flex-col items-center">
-    <h2 className="text-2xl font-header font-normal">{header}</h2>
+    <h2 className="text-xl sm:text-2xl font-header font-normal">{header}</h2>
     <p className="font-light mb-10 text-center">{subHeader}</p>
     <div>
       <OptionsUI selected={selected} options={options} select={onSelect} />
     </div>
   </div>
 );
-
 export default RegisterUserTypeScreen;

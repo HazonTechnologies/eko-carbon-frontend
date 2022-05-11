@@ -2,41 +2,60 @@ import { Form, Input, Select } from "antd";
 import PhoneInput from "react-phone-input-2";
 
 import { NextPage } from "next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // import { User } from "../../models/user";
 import ButtonUI from "../utilities/ButtonUI";
+import { AccountInformation } from "../../models/user";
+import { useLoading } from "../../context/loadingCtx";
 
 const { Option } = Select;
 
-// interface LoginPropType {
-//   // eslint-disable-next-line no-unused-vars
-//   onSubmit: (param: User) => void;
-//   // eslint-disable-next-line no-unused-vars
-//   onError: (param: any) => void;
-//   googleCall: () => void;
-// }
+interface Bank {
+  name: string;
+  value: string;
+}
+const mockOptions: Bank[] = [
+  {
+    name: "Guaranty Trust Bank",
+    value: "gt",
+  },
+  {
+    name: "Zenith Bank",
+    value: "zenith",
+  },
+  {
+    name: "Access Bank",
+    value: "access",
+  },
+];
 
-const BankInformationScreen: NextPage<any> = ({ onSubmit, onError }) => {
+interface BankInfoPropType {
+  // eslint-disable-next-line no-unused-vars
+  onSubmit: (param: AccountInformation) => void;
+  // eslint-disable-next-line no-unused-vars
+}
+
+const BankInfoScreen: NextPage<BankInfoPropType> = ({
+  onSubmit,
+}) => {
+  const onError = (err: any) => {
+    console.log(err);
+  };
   const onFilter = (input: any, option: any) => {
     console.log(input);
     return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
   };
-
-  const [options, setOptions] = useState([
-    {
-      name: "Guaranty Trust Bank",
-      value: "gt",
-    },
-    {
-      name: "Zenith Bank",
-      value: "zenith",
-    },
-    {
-      name: "Access Bank",
-      value: "access",
-    },
-  ]);
+  const [options, setOptions] = useState<Bank[]>([]);
+  const { setLoadingStatus } = useLoading();
+  //   call API
+  useEffect(() => {
+    setLoadingStatus(true);
+    setTimeout(() => {
+      setOptions(mockOptions);
+      setLoadingStatus(false);
+    }, 5000);
+  }, []);
 
   return (
     <div className="sm:w-[400px] w-[320px] m-[auto] shadow-1 rounded-lg bg-secondary-high p-10 my-2">
@@ -51,10 +70,10 @@ const BankInformationScreen: NextPage<any> = ({ onSubmit, onError }) => {
       >
         <Form.Item
           label="Phone number"
-          name="phone"
-          rules={[{ required: true, message: "Kindly input your phone!" }]}
+          name="phoneNumber"
+          rules={[{ required: true, message: "Kindly input your phone number!" }]}
         >
-          <PhoneInput country="us" containerClass="w-40px" />
+          <PhoneInput country="ng" containerClass="w-40px" />
         </Form.Item>
 
         <Form.Item
@@ -66,7 +85,6 @@ const BankInformationScreen: NextPage<any> = ({ onSubmit, onError }) => {
             showSearch
             placeholder="Select a person"
             optionFilterProp="children"
-            onChange={setOptions}
             filterOption={onFilter}
           >
             {options.length &&
@@ -87,7 +105,7 @@ const BankInformationScreen: NextPage<any> = ({ onSubmit, onError }) => {
             },
           ]}
         >
-          <Input type="tel" pattern="^[0-9]$" />
+          <Input type="tel" />
         </Form.Item>
         <Form.Item
           label="Account Name"
@@ -95,14 +113,14 @@ const BankInformationScreen: NextPage<any> = ({ onSubmit, onError }) => {
           rules={[
             {
               required: true,
-              message: "Kindly input your organisation account name!",
+              message: "No organisation account name found!",
             },
           ]}
         >
-          <Input disabled={true} />
+          <Input />
         </Form.Item>
         <Form.Item className="mt-4 text-right">
-          <ButtonUI disabled={false} htmlType="submit" className="px-8 ">
+          <ButtonUI htmlType="submit" className="px-8 ">
             Proceed
           </ButtonUI>
         </Form.Item>
@@ -110,4 +128,4 @@ const BankInformationScreen: NextPage<any> = ({ onSubmit, onError }) => {
     </div>
   );
 };
-export default BankInformationScreen;
+export default BankInfoScreen;

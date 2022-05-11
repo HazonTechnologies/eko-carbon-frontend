@@ -4,6 +4,7 @@
 
 @import url('antd/dist/antd.min.css');
 @import url('react-phone-input-2/lib/style.css');
+@import url('react-photo-view/dist/react-photo-view.css');
 
 /* hello */
 
@@ -76,6 +77,10 @@ a {
 
 .react-tel-input .form-control {
     width: 100%;
+}
+
+.PhotoView-Slider__Backdrop {
+    background: rgba(0, 0, 0, 0.90) !important;
 }
 
 @media (min-width: 640px) {

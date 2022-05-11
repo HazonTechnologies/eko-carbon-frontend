@@ -2,8 +2,14 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 import { CheckCircleOutlined } from "@ant-design/icons";
 import { Steps, Popover } from "antd";
+import { Step } from "../../models/utilities";
 
-const { Step } = Steps;
+interface StepperProp {
+  currStep: number;
+  steps: Step[];
+}
+
+const { Step: StepRef } = Steps;
 
 const customDot = (
   dot: any,
@@ -24,24 +30,29 @@ const customDot = (
   </Popover>
 );
 
-export default () => (
+export default ({ currStep, steps = [] }: StepperProp) => (
   <Steps
     progressDot={customDot}
     size="small"
-    current={2}
+    current={currStep}
     className="text-tertiary-high w-[80vw]"
   >
-    <Step
-      title="Bank Information"
-      description="Please provide your account information"
-    />
-    <Step
+    {steps.length &&
+      steps.map((step) => (
+        <StepRef
+          key={step.name}
+          title={step.name}
+          description={step.description}
+        />
+      ))}
+
+    {/* <Step
       title="Business Information"
       description="A few details about your company"
     />
     <Step
       title="Business Representative Documentation"
       description="Onboard management from your team"
-    />
+    /> */}
   </Steps>
 );

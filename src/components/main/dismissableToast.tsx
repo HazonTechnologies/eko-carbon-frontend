@@ -13,9 +13,19 @@ export default function DismissableToast() {
           style: {
             borderRadius: "3px",
             padding: "15px 4px",
-            borderLeft: "6px solid green",
+
             background: "#fff",
             color: "#000",
+          },
+          success: {
+            style: {
+              borderLeft: "6px solid green",
+            },
+          },
+          error: {
+            style: {
+              borderLeft: "6px solid red",
+            },
           },
         }}
       >
@@ -28,10 +38,10 @@ export default function DismissableToast() {
                 {t.type !== "loading" && (
                   <button
                     type="button"
-                    className="rounded-full p-1 ring-primary-400 transition hover:bg-[#444] focus:outline-none focus-visible:ring"
+                    className="rounded-full p-1 px-2 ring-primary-400 transition hover:bg-primary-lower focus:outline-none focus-visible:ring"
                     onClick={() => toast.dismiss(t.id)}
                   >
-                    {/* <HiX /> */}
+                    <span>x</span>
                   </button>
                 )}
               </>

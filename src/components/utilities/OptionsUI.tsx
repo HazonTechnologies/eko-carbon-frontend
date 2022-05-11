@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import { BulbOutlined, PlusOutlined } from "@ant-design/icons";
-import { Option } from "../../models/option";
+import { Option } from "../../models/utilities";
 
 interface OptionsPropType {
   options: Option[];

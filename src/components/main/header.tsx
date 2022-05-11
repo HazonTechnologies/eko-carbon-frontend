@@ -1,8 +1,8 @@
 // import Link from "next/link";
 import {
+  AlignLeftOutlined,
   BellOutlined,
   SearchOutlined,
-  SettingOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { NextPage } from "next";
@@ -12,9 +12,13 @@ import Image from "next/image";
 import imageLoader from "../../lib/helperFunctions/loader";
 // import headerLinks from "../../lib/common/links";
 
-const Header:NextPage<any> = () => (
-  <header className="bg-tertiary-high sm:px-8 p-1 flex justify-between items-center text-secondary-mid">
-    <h2>
+const Header: NextPage<any> = ({ toggleSideNav, isSideNavOpen }) => (
+  <header className="fixed w-[100vw] z-50 bg-tertiary-high sm:px-8 p-1 px-3 flex justify-between items-center text-secondary-mid">
+    <AlignLeftOutlined
+      onClick={() => toggleSideNav(!isSideNavOpen)}
+      className="sm:hidden text-xl"
+    />
+    <h2 className="-mb-1">
       <Image
         priority={true}
         unoptimized={true}
@@ -29,15 +33,12 @@ const Header:NextPage<any> = () => (
       <p id="search">
         <SearchOutlined />
       </p>
-      <p id="setting">
-        <SettingOutlined />
-      </p>
       <p id="notification">
         <Badge
           size="small"
           offset={[-2, 5]}
           className="!-mb-5 !text-xs"
-          count={10}
+          count={5}
           overflowCount={99}
         >
           <BellOutlined className="text-xl text-secondary-high" />

@@ -17,21 +17,7 @@ import {
   typeSubHeader,
   typeHeader,
 } from "../lib/common/registerTypes";
-import { Option } from "../models/option";
-// interface UserInfo {
-//   phone: number;
-//   bank: string;
-//   accountNumber: number;
-//   accountName: number;
-//   businessName: string;
-//   businessEmail: string;
-//   businessAddress: string;
-//   rcNumber: number;
-//   website: string;
-//   industry: string;
-//   summary: string;
-//   certOfInc: File;
-// }
+import { Option } from "../models/utilities";
 
 const Register = () => {
   // const { setLoadingStatus } = useLoading();
@@ -47,6 +33,7 @@ const Register = () => {
   // const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const { dispatch: headerDispatch } = useHeader();
 
+
   useEffect(() => {
     if (step === 1) {
       headerDispatch({ type: Types.Toggle, payload: { value: false } });
@@ -60,8 +47,8 @@ const Register = () => {
 
     updateStep(2);
   };
-  const onRegAccount = (values: any) => {
-    console.log(values);
+  const onRegAccount = (bankValues:any, infoValues:any, repValues:any) => {
+    console.warn(bankValues, infoValues, repValues);
   };
   const selectUserType = (type: Option) => {
     setUserType(type);
@@ -138,7 +125,7 @@ const Register = () => {
           onSelect={selectOffsetType}
         />
       )}
-      {step === 4 && <RegisterAccountInfoScreen onSubmit={onRegAccount} />}
+      {step === 4 && <RegisterAccountInfoScreen onSubmitReg={onRegAccount} />}
     </div>
   );
 };

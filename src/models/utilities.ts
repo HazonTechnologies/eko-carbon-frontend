@@ -4,3 +4,7 @@ export interface Option {
   value: string;
   icon: string;
 }
+export interface Step {
+  name: string;
+  description: string;
+}

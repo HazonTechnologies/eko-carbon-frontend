@@ -7,6 +7,7 @@ module.exports = {
     theme: {
         colors: {
             primary: { // black
+                lower: 'rgba(0, 0, 0, 0.1)',
                 low: '#909090',
                 medium: '#666666',
                 high: '#525252',
@@ -23,6 +24,7 @@ module.exports = {
             },
             background: "#F8F8F8",
             transparent: "rgba(42, 196, 140, 0.0)",
+            bg_overlay: "rgba(0, 0, 0, 0.2)",
         },
 
         fontFamily: {
