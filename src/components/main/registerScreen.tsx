@@ -1,82 +1,73 @@
 import { Form, Input } from "antd";
-import Image from "next/image";
 import { NextPage } from "next";
 
 import CustomButton from "../utilities/ButtonUI";
-import imageLoader from "../../lib/helperFunctions/loader";
 import { User } from "../../models/user";
 
 interface RegisterPropType {
   // eslint-disable-next-line no-unused-vars
   onSubmit: (param: User) => void;
-  // eslint-disable-next-line no-unused-vars
-  onError: (param: any) => void;
   googleCall: () => void;
   initialValues: { email: string } | null;
 }
 
 const RegisterScreen: NextPage<RegisterPropType> = ({
   onSubmit,
-  onError,
   googleCall,
   initialValues,
-}) => (
-  <div className="flex flex-col justify-start">
-    <Image
-      priority={true}
-      unoptimized={true}
-      loader={imageLoader}
-      src="/assets/icons/logo.svg"
-      alt="Icon"
-      width={150}
-      height={50}
-    />
-    <div className="w-[350px] m-[auto] shadow-1 rounded-lg bg-secondary-high p-6 my-2">
-      <h2 className="text-3xl text-bond font-header">Sign Up</h2>
-      <p className="text-sm my-4">Create your own secure account</p>
-      <CustomButton
-        onClickTrigger={googleCall}
-        disabled={false}
-        bg="primary-high"
-        color="primary-medium"
-        htmlType="button"
-        width="100%"
-        icon="googleIcon.svg"
-      >
-        Sign Up With Google
-      </CustomButton>
-
-      <div className="w-[100%] my-6 opacity-30 items-center flex justify-evenly">
-        <span className="border-b w-[45%]" />
-        <span className="w-[10%] text-center">OR</span>
-        <span className="border-b w-[45%]" />
-      </div>
-      <Form
-        name="basic"
-        layout="vertical"
-        initialValues={initialValues ?? {}}
-        onFinish={onSubmit}
-        onFinishFailed={onError}
-        autoComplete="off"
-      >
-        <Form.Item
-          label="Email Address"
-          name="email"
-          rules={[
-            { required: true, message: "Kindly input your email address!" },
-          ]}
+}) => {
+  const onError = (err: any) => {
+    console.log(err);
+  };
+  return (
+    <div className="flex flex-col justify-start">
+      <div className="w-[350px] m-[auto] shadow-1 rounded-lg bg-secondary-high p-6 my-2">
+        <h2 className="text-3xl text-bond font-header">Sign Up</h2>
+        <p className="text-sm my-4">Create your own secure account</p>
+        <CustomButton
+          onClickTrigger={googleCall}
+          disabled={false}
+          bg="primary-high"
+          color="primary-medium"
+          htmlType="button"
+          width="100%"
+          icon="googleIcon.svg"
         >
-          <Input type="email" />
-        </Form.Item>
+          Sign Up With Google
+        </CustomButton>
 
-        <Form.Item className="mt-4">
-          <CustomButton disabled={false} htmlType="submit" width="100%">
-            Submit
-          </CustomButton>
-        </Form.Item>
-      </Form>
+        <div className="w-[100%] my-6 opacity-30 items-center flex justify-evenly">
+          <span className="border-b w-[45%]" />
+          <span className="w-[10%] text-center">OR</span>
+          <span className="border-b w-[45%]" />
+        </div>
+        <Form
+          name="basic"
+          layout="vertical"
+          initialValues={initialValues ?? {}}
+          onFinish={onSubmit}
+          onFinishFailed={onError}
+          autoComplete="off"
+        >
+          <Form.Item
+            label="Email Address"
+            name="email"
+            rules={[
+              { required: true, message: "Kindly input your email address!" },
+            ]}
+          >
+            <Input type="email" />
+          </Form.Item>
+
+          <Form.Item className="mt-4">
+            <CustomButton disabled={false} htmlType="submit" width="100%">
+              Submit
+            </CustomButton>
+          </Form.Item>
+        </Form>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default RegisterScreen;

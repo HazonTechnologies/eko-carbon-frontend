@@ -5,16 +5,22 @@ export const typeSubHeader =
   "Share your intent with us for a more customized experience";
 export const userTypes: Option[] = [
   {
-    title: "Calculate & Offset Carbon Footprint",
-    description: "Calculate and offset your carbon footprint",
-    value: "offset",
+    title: "List Green Projects",
+    description: "Create an account to list your green projects",
+    value: "list",
+    icon: "bulboutlined",
+  },
+  {
+    title: "Calculate & Offset my Personal Emissions",
+    description: "Create an account to calculate and offset your personal footprint",
+    value: "offset_personal",
     icon: "pluscircleoutlined",
   },
   {
-    title: "List Green Projects",
-    description: "List your environmentally friendly projects",
-    value: "list",
-    icon: "bulboutlined",
+    title: "Calculate & Offset my Organisational's Emissions",
+    description: "Create an account to calculate and offset your organisation footprint",
+    value: "offset_company",
+    icon: "pluscircleoutlined",
   },
 ];
 export const offsetTypes: Option[] = [

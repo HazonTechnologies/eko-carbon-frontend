@@ -198,7 +198,7 @@ const BusinessRepScreen: NextPage<BusinessRepPropType> = ({
           name="country"
           rules={[{ required: true, message: "Kindly select your country!" }]}
         >
-          <Select placeholder="Select an option" defaultValue="nigeria">
+          <Select placeholder="Select an option">
             {country.length &&
               country.map((option) => (
                 <Option key={option.value} value={option.value}>
@@ -212,7 +212,7 @@ const BusinessRepScreen: NextPage<BusinessRepPropType> = ({
           name="state"
           rules={[{ required: true, message: "Kindly select your state!" }]}
         >
-          <Select placeholder="Select an option" defaultValue="as">
+          <Select placeholder="Select an option">
             {state.length &&
               state.map((option) => (
                 <Option key={option.value} value={option.value}>
@@ -226,7 +226,7 @@ const BusinessRepScreen: NextPage<BusinessRepPropType> = ({
           name="city"
           rules={[{ required: true, message: "Kindly select your city!" }]}
         >
-          <Select placeholder="Select an option" defaultValue="lv">
+          <Select placeholder="Select an option">
             {city.length &&
               city.map((option) => (
                 <Option key={option.value} value={option.value}>

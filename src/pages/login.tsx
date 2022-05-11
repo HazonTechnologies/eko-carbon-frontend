@@ -3,8 +3,9 @@
 // import { postApi } from "../lib/helperFunctions/fetcher";
 // import { useLoading } from "../context/loadingCtx";
 import LoginScreen from "../components/main/loginScreen";
+import DefaultLayout from "../layouts/defaultLayout";
 
-export default function Login() {
+const Login = () => {
   // const { setLoadingStatus } = useLoading();
   // const id = useId();
   // const { push } = useRouter();
@@ -29,4 +30,6 @@ export default function Login() {
       />
     </div>
   );
-}
+};
+Login.getLayout = (page: any) => <DefaultLayout>{page}</DefaultLayout>;
+export default Login;

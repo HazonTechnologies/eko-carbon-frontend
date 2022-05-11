@@ -11,15 +11,13 @@ import { AccountInformation } from "../../models/user";
 import { useLoading } from "../../context/loadingCtx";
 import formatBytes from "../../lib/helperFunctions/formatBytes";
 import formatFileName from "../../lib/helperFunctions/formatFileName";
+import { Industry } from "../../models/industry";
 // import imageLoader from "../../lib/helperFunctions/loader";
 // import ImageViewer from "./imageViewer";
 
 const { Option } = Select;
 
-interface Industry {
-  name: string;
-  value: string;
-}
+
 const mockOptions: Industry[] = [
   {
     name: "Manufacturing",

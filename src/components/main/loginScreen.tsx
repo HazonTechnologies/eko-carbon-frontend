@@ -1,9 +1,6 @@
 import { Form, Input } from "antd";
-import Image from "next/image";
-
 import { NextPage } from "next";
 import Link from "next/link";
-import imageLoader from "../../lib/helperFunctions/loader";
 import { User } from "../../models/user";
 import ButtonUI from "../utilities/ButtonUI";
 
@@ -21,14 +18,6 @@ const LoginScreen: NextPage<LoginPropType> = ({
   googleCall,
 }) => (
   <div>
-    <Image
-      unoptimized={true}
-      loader={imageLoader}
-      src="/assets/icons/logo.svg"
-      alt="Icon"
-      width={150}
-      height={50}
-    />
     <div className="w-[350px] m-[auto] shadow-1 rounded-lg bg-secondary-high p-6 my-2">
       <h2 className="text-3xl text-bond font-header">Sign in</h2>
       <p className="text-sm my-4">Sign in now</p>
