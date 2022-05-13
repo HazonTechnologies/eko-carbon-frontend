@@ -10,6 +10,7 @@ import { Avatar, Badge } from "antd";
 import Image from "next/image";
 
 import imageLoader from "../../lib/helperFunctions/loader";
+import OffsetMenu from "./offsetMenuList";
 // import headerLinks from "../../lib/common/links";
 
 const Header: NextPage<any> = ({ toggleSideNav, isSideNavOpen, type }) => (
@@ -32,9 +33,21 @@ const Header: NextPage<any> = ({ toggleSideNav, isSideNavOpen, type }) => (
       />
     </h2>
     {type === "entry" && (
-      <button className="bg-secondary-low px-3 py-2 rounded text-xs sm:text-sm" type="button">Try Our Carbon Calculator</button>
+      <button
+        className="bg-secondary-low px-3 py-2 rounded text-xs sm:text-sm"
+        type="button"
+      >
+        Try Our Carbon Calculator
+      </button>
     )}
-    {type === "list" && (
+    {type === "offset" && (
+      <OffsetMenu
+        className="hidden sm:flex sm:text-xs"
+        onActiveClass="bg-secondary-low"
+        align="flex"
+      />
+    )}
+    {(type === "list" || type === "offset") && (
       <nav className="flex sm:gap-x-8 gap-x-4 items-center text-lg">
         <p id="search">
           <SearchOutlined />
