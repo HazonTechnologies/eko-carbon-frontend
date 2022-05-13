@@ -28,7 +28,7 @@ const Register = () => {
 
   const [step, updateStep] = useState<number>(1);
   const [userDetails, setUserDetails] = useState<{ email: string } | null>(
-    null
+    null,
   );
   const [userType, setUserType] = useState<Option | null>(null);
   // const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
