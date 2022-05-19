@@ -34,7 +34,7 @@ const ListerMenu: NextPage<any> = () => {
       {listerMenu &&
         listerMenu.length &&
         listerMenu.map((menu) => (
-          <>
+          <div key={menu.link}>
             {menu.type === "link" && (
               <Link href={menu.link}>
                 <a
@@ -71,14 +71,14 @@ const ListerMenu: NextPage<any> = () => {
                   {menu.children &&
                     menu.children.length &&
                     menu.children.map((childMenu) => (
-                      <Link href={childMenu.link}>
+                      <Link key={childMenu.link} href={childMenu.link}>
                         <a>{childMenu.title}</a>
                       </Link>
                     ))}
                 </nav>
               </div>
             )}
-          </>
+          </div>
         ))}
     </nav>
   );

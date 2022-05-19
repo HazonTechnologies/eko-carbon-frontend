@@ -18,7 +18,7 @@ const OffseterLayout = ({ children }: { children: React.ReactNode }) => {
         <SideNav isSideNavOpen={isSideNavOpen} setIsSideNavOpen={setIsSideNavOpen} type="offsetter" />
       </div>
 
-      <div style={{ width: "100%", height: "100%" }} className="pt-[6vh] sm:pl-[29vw] lg:pl-[16vw]">
+      <div style={{ width: "100%", height: "100%" }} className="pt-[6vh]">
         {children}
       </div>
     </div>

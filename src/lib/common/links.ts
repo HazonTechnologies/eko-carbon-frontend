@@ -46,25 +46,25 @@ const listerLinks: ListerLink[] = [
     children: [
       {
         title: "Eko Farma",
-        link: "jnfo4553",
+        link: "jnfo4552",
         type: "link",
         active: false,
       },
       {
         title: "I meet Farma",
-        link: "jnfo4553",
+        link: "jnfo453744",
         type: "link",
         active: false,
       },
       {
         title: "Wellness Plus",
-        link: "jnfo4553",
+        link: "jnfo4529383",
         type: "link",
         active: false,
       },
       {
         title: "Add Project",
-        link: "jnfo4553",
+        link: "jnfo4537938",
         type: "popup",
         active: false,
       },
@@ -79,4 +79,25 @@ const listerLinks: ListerLink[] = [
   },
 ];
 
-export { offsetLinks, listerLinks };
+const listerBreadNav:ListerLink[] = [
+  {
+    title: "Overview",
+    link: "/listers/overview",
+    type: "link",
+    active: true,
+  },
+  {
+    title: "Profile",
+    link: "/listers/profile",
+    type: "link",
+    active: false,
+  },
+  {
+    title: "Offset Bids",
+    link: "/listers/offset_bids",
+    type: "link",
+    active: false,
+  },
+];
+
+export { offsetLinks, listerLinks, listerBreadNav };
