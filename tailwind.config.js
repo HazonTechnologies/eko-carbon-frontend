@@ -25,8 +25,9 @@ module.exports = {
             background: "#F8F8F8",
             transparent: "rgba(42, 196, 140, 0.0)",
             bg_overlay: "rgba(0, 0, 0, 0.2)",
+            success: "#027A48",
+            error: "#ff3333",
         },
-
         fontFamily: {
             'header': ['Epilogue', 'system-ui'],
             'body': ['Inter', 'system-ui', 'sans-serif'],
@@ -34,6 +35,7 @@ module.exports = {
         },
         boxShadow: {
             1: "0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06)",
+            2: "#F2F4F9",
         },
 
 

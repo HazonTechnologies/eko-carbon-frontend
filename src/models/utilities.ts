@@ -7,4 +7,5 @@ export interface Option {
 export interface Step {
   name: string;
   description: string;
+  status?: "approved" | "rejected"
 }

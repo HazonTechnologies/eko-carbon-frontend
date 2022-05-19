@@ -18,7 +18,7 @@ const ListerLayout = ({ children }: { children: React.ReactNode }) => {
         <SideNav isSideNavOpen={isSideNavOpen} setIsSideNavOpen={setIsSideNavOpen} type="lister" />
       </div>
 
-      <div style={{ width: "100%", height: "100%" }} className="pt-[6vh] sm:pl-[29vw] lg:pl-[16vw]">
+      <div style={{ width: "100%", height: "100%" }} className="pt-[6vh] lg:pt-[8vh] px-2 sm:px-8 sm:pl-[29vw] md:pl-[30vw] lg:pl-[23vw] xl:pl-[17vw]">
         {children}
       </div>
     </div>
