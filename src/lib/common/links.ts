@@ -79,7 +79,7 @@ const listerLinks: ListerLink[] = [
   },
 ];
 
-const listerBreadNav:ListerLink[] = [
+const listerBreadNavDummy:ListerLink[] = [
   {
     title: "Overview",
     link: "/listers/overview",
@@ -100,4 +100,4 @@ const listerBreadNav:ListerLink[] = [
   },
 ];
 
-export { offsetLinks, listerLinks, listerBreadNav };
+export { offsetLinks, listerLinks, listerBreadNavDummy };

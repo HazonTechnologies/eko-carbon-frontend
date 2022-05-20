@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import ButtonUI from "../utilities/ButtonUI";
 import { AccountInformation } from "../../models/user";
 import { useLoading } from "../../context/loadingCtx";
+import { BankInfo } from "../../models/listers";
 
 const { Option } = Select;
 
@@ -33,11 +34,13 @@ const mockOptions: Bank[] = [
 interface BankInfoPropType {
   // eslint-disable-next-line no-unused-vars
   onSubmit: (param: AccountInformation) => void;
+  bankInfo: BankInfo | undefined
   // eslint-disable-next-line no-unused-vars
 }
 
 const BankInfoScreen: NextPage<BankInfoPropType> = ({
   onSubmit,
+  bankInfo,
 }) => {
   const onError = (err: any) => {
     console.log(err);
@@ -63,14 +66,14 @@ const BankInfoScreen: NextPage<BankInfoPropType> = ({
       <Form
         name="basic"
         layout="vertical"
-        initialValues={{ bank: "zenith", phone: "+2349035108713" }}
+        initialValues={bankInfo}
         onFinish={onSubmit}
         onFinishFailed={onError}
         autoComplete="off"
       >
         <Form.Item
           label="Phone number"
-          name="phoneNumber"
+          name="PhoneNumber"
           rules={[{ required: true, message: "Kindly input your phone number!" }]}
         >
           <PhoneInput country="ng" containerClass="w-40px" />
@@ -78,7 +81,7 @@ const BankInfoScreen: NextPage<BankInfoPropType> = ({
 
         <Form.Item
           label="Bank Name"
-          name="bank"
+          name="BankCode"
           rules={[{ required: true, message: "Kindly select a bank!" }]}
         >
           <Select
@@ -97,7 +100,7 @@ const BankInfoScreen: NextPage<BankInfoPropType> = ({
         </Form.Item>
         <Form.Item
           label="Corporate Account Number"
-          name="accountNumber"
+          name="CorporateAccountNumber"
           rules={[
             {
               required: true,
@@ -109,7 +112,7 @@ const BankInfoScreen: NextPage<BankInfoPropType> = ({
         </Form.Item>
         <Form.Item
           label="Account Name"
-          name="accountName"
+          name="CorporateAccountName"
           rules={[
             {
               required: true,
