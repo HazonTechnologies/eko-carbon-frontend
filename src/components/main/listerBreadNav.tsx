@@ -1,29 +1,25 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable import/no-extraneous-dependencies */
 import { DatePicker } from "antd";
-import { useState } from "react";
 import moment, { Moment } from "moment";
+import { NextPage } from "next";
 import { RangeValue } from "rc-picker/lib/interface";
-import { listerBreadNav } from "../../lib/common/links";
 import { ListerLink } from "../../models/link";
 
+interface ListerBreadNavType {
+  // eslint-disable-next-line no-unused-vars
+  links: ListerLink[];
+  goTo: (param: string) => void;
+  showDate: boolean;
+}
+
 const { RangePicker } = DatePicker;
-const ListerBreadnav = () => {
-  const [links, setActiveLink] = useState<ListerLink[]>(listerBreadNav);
-  const [showDate, setShowDate] = useState<boolean>(true);
 
-  const goTo = (selectedLink: string) => {
-    if (selectedLink === "/listers/overview") {
-      setShowDate(true);
-    } else {
-      setShowDate(false);
-    }
-    const allLinks = links.map((link) => {
-      if (link.link === selectedLink) return { ...link, active: true };
-      return { ...link, active: false };
-    });
-    setActiveLink(allLinks);
-  };
-
+const ListerBreadnav: NextPage<ListerBreadNavType> = ({
+  links,
+  goTo,
+  showDate,
+}) => {
   const onChange = (dates: RangeValue<Moment>, dateStrings: any[]) => {
     if (!dates || !dates.length) return;
     console.log("From: ", dates[0], ", to: ", dates[1]);

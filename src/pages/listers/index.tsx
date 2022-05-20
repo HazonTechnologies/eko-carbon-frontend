@@ -1,34 +1,42 @@
-import ListerAreaChart from "../../components/main/listerAreaChart";
+import { useMemo, useState } from "react";
+import ListerBreadNav from "../../components/main/listerBreadNav";
+import ListerOverview from "../../components/main/listerOverview";
+import Profile from "../../components/main/profile";
 
-import ListerBoard from "../../components/main/listerBoard";
-import ListerBreadnav from "../../components/main/listerBreadNav";
-import ListerPieChart from "../../components/main/listerPieChart";
-import ListerRecentActivity from "../../components/main/listerRecentActivity";
-import OffsetterTable from "../../components/main/offsetter";
 import ListerLayout from "../../layouts/listerLayout";
+import { listerBreadNavDummy } from "../../lib/common/links";
+import { ListerLink } from "../../models/link";
 
-const ListerHome = () => (
-  <div className="mt-10">
-    <ListerBreadnav />
-    <ListerBoard />
-    <div className="flex items-start flex-wrap gap-4  justify-between">
-      <div className="bg-secondary-high p-4 pb-5 w-[100%] lg:w-[60%] boxProps2 ">
-        <ListerAreaChart />
-      </div>
-      <div className="bg-secondary-high p-4 pb-[60px] w-[100%] lg:w-[36%] xl:w-[38%] boxProps2">
-        <ListerPieChart />
-      </div>
-      <div className="flex items-start flex-wrap gap-4 gap-x-2 w-[100%] justify-between">
-        <div className="w-[100%] lg:w-[55%] xl:w-[60%] boxProps2 p-6">
-          <OffsetterTable />
-        </div>
-        <div className="w-[100%]  lg:w-[43%] xl:w-[38%] boxProps2 p-6 px-3">
-          <ListerRecentActivity />
-        </div>
-      </div>
+const ListerHome = () => {
+  const [links, setActiveLink] = useState<ListerLink[]>(listerBreadNavDummy);
+  const [showDate, setShowDate] = useState<boolean>(true);
+
+  const goTo = (selectedLink: string) => {
+    if (selectedLink === "/listers/overview") {
+      setShowDate(true);
+    } else {
+      setShowDate(false);
+    }
+    const allLinks = links.map((link) => {
+      if (link.link === selectedLink) return { ...link, active: true };
+      return { ...link, active: false };
+    });
+    setActiveLink(allLinks);
+  };
+
+  const currentNav = useMemo(() => {
+    const selectedLink = links.find((link) => link.active);
+    return selectedLink?.link;
+  }, [links]);
+
+  return (
+    <div className="mt-10">
+      <ListerBreadNav goTo={goTo} links={links} showDate={showDate} />
+      {currentNav && currentNav === "/listers/overview" && <ListerOverview />}
+      {currentNav && currentNav === "/listers/profile" && <Profile />}
     </div>
-  </div>
-);
+  );
+};
 
 ListerHome.getLayout = (page: any) => <ListerLayout>{page}</ListerLayout>;
 export default ListerHome;

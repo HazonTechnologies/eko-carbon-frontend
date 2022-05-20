@@ -8,6 +8,7 @@ import BusinessInfoScreen from "./businessInfoScreen";
 import BusinessRepScreen from "./businessRepScreen";
 import accountInfoSteps from "../../lib/common/accountInfoSteps";
 import { Step } from "../../models/utilities";
+import { BankInfo } from "../../models/listers";
 
 // import { useState } from "react";
 // import { Option } from "../../models/option";
@@ -22,7 +23,7 @@ const RegisterAccountInfoScreen: NextPage<RegisterAccountInfoPropType> = ({
   onSubmitReg,
 }) => {
   const [currStep, setCurrStep] = useState(0);
-  const [bankInfo, setBankInfo] = useState(null);
+  const [bankInfo, setBankInfo] = useState<BankInfo | undefined>(undefined);
   const [businessInfo, setBusinessInfo] = useState(null);
   const [businessRep, setBusinessRep] = useState(null);
 
@@ -46,7 +47,7 @@ const RegisterAccountInfoScreen: NextPage<RegisterAccountInfoPropType> = ({
     <div className="flex flex-col justify-center items-center">
       <Stepper steps={accountInfoSteps()} currStep={currStep} />
       {currStep === 0 && (
-        <BankInfoScreen onSubmit={(formData) => onSubmit("bank", formData)} />
+        <BankInfoScreen bankInfo={bankInfo} onSubmit={(formData) => onSubmit("bank", formData)} />
       )}
       {currStep === 1 && (
         <BusinessInfoScreen
