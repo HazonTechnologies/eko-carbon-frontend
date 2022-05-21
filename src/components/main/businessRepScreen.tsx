@@ -1,17 +1,15 @@
 import { Form, Input, Select } from "antd";
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
-import Dropzone from "react-dropzone";
-import { CloudUploadOutlined, EyeOutlined } from "@ant-design/icons";
+
 import PhoneInput from "react-phone-input-2";
-import { toast } from "react-hot-toast";
 
 // import { User } from "../../models/user";
 import ButtonUI from "../utilities/ButtonUI";
 import { AccountInformation } from "../../models/user";
 import { useLoading } from "../../context/loadingCtx";
-import formatFileName from "../../lib/helperFunctions/formatFileName";
-import formatBytes from "../../lib/helperFunctions/formatBytes";
+
+import DropFile from "../utilities/DropFile";
 
 const { Option } = Select;
 
@@ -85,24 +83,8 @@ const BusinessRepScreen: NextPage<BusinessRepPropType> = ({
   };
 
   const [options, setOptions] = useState<BooleanType[]>([]);
-  const [certOfInc, setCertOfInc] = useState<File | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
 
-  const processFile = (acceptedFile: File[], errors: any) => {
-    //   toast.error("Hello")
-    if (errors && errors.length) {
-      console.log(errors);
-      toast.error(errors[0].errors[0].message);
-      return;
-    }
-    if (acceptedFile.length) {
-      const file = acceptedFile[0];
-      setCertOfInc(file);
-    }
-  };
-  const expand = () => {
-    if (!certOfInc) return;
-    window.open(URL.createObjectURL(certOfInc), "_blank", "fullScreen=yes");
-  };
   const { setLoadingStatus } = useLoading();
   //   call API
   useEffect(() => {
@@ -250,40 +232,13 @@ const BusinessRepScreen: NextPage<BusinessRepPropType> = ({
           </Select>
         </Form.Item>
         <div>
-          <h2 className="pb-2">Upload ID</h2>
-          <Dropzone
-            onDrop={processFile}
-            accept={{
-              "application/pdf": [".pdf"],
-              "images/png": [".png"],
-              "images/jpg": [".jpg"],
-              "images/jpeg": [".jpeg"],
-            }}
-            multiple={false}
-          >
-            {({ getRootProps, getInputProps }) => (
-              <section className="border border-primary-lower rounded py-3 mb-4">
-                <div {...getRootProps()}>
-                  <input {...getInputProps()} />
-                  <div className="flex flex-col items-center justify-center">
-                    <CloudUploadOutlined className="text-xl bg-tertiary-low rounded-3xl px-2 py-1" />
-                    <p>
-                      <span>Click to upload</span>
-                      <span> or drag and drop</span>
-                    </p>
-                    <small>SVG, PNG,JPG or GIF (max. 800x400px)</small>
-                  </div>
-                </div>
-              </section>
-            )}
-          </Dropzone>
-          {certOfInc && (
-            <p className="flex items-center justify-between bg-tertiary-low p-2 my-2 mb-6 rounded">
-              <span>{formatFileName(certOfInc.name)}</span>
-              <span>{formatBytes(certOfInc.size)}</span>
-              <EyeOutlined onClick={expand} />
-            </p>
-          )}
+          <DropFile
+            title="Upload ID"
+            acceptedFileTypes={["pdf", "jpeg", "jpg", "png"]}
+            files={files}
+            setFiles={setFiles}
+            allowMultiple={false}
+          />
         </div>
 
         <Form.Item

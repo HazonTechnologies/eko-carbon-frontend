@@ -112,6 +112,14 @@ button.ant-pagination-item-link,
     margin-top: -2px;
 }
 
+.ant-modal-body {
+    padding-bottom: 0;
+}
+
+.ant-tag-close-icon {
+    vertical-align: 0.1em;
+}
+
 @media (max-width: 480px) {
     .ant-picker-panels {
         display: flex !important;
