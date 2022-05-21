@@ -34,7 +34,7 @@ export default function ButtonUI({
       className={`
       ${width ? `w-[${width}]` : "w-100%"} 
       ${color ? `text-${color}` : "text-secondary-high"}
-      ${bg ? `bg-${color}` : "bg-tertiary-high"}
+      ${bg ? `bg-${bg}` : "bg-tertiary-high"}
       ${disabled ? "opacity-20" : "opacity-100"}
       ${icon ? "flex gap-x-2 justify-center items-center" : ""}
       opacity-90

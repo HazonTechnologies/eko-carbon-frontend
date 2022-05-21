@@ -1,22 +1,17 @@
 import { Form, Input, Select } from "antd";
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
-import Dropzone from "react-dropzone";
-import { CloudUploadOutlined, EyeOutlined } from "@ant-design/icons";
-import { toast } from "react-hot-toast";
 // import Image from "next/image";
 // import { User } from "../../models/user";
 import ButtonUI from "../utilities/ButtonUI";
 import { AccountInformation } from "../../models/user";
 import { useLoading } from "../../context/loadingCtx";
-import formatBytes from "../../lib/helperFunctions/formatBytes";
-import formatFileName from "../../lib/helperFunctions/formatFileName";
 import { Industry } from "../../models/industry";
+import DropFile from "../utilities/DropFile";
 // import imageLoader from "../../lib/helperFunctions/loader";
 // import ImageViewer from "./imageViewer";
 
 const { Option } = Select;
-
 
 const mockOptions: Industry[] = [
   {
@@ -44,7 +39,7 @@ const BusinessInfoScreen: NextPage<BusinessInfoPropType> = ({
   goBack,
 }) => {
   const { setLoadingStatus } = useLoading();
-  const [certOfInc, setCertOfInc] = useState<File | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
   const onError = (err: any) => {
     console.log(err);
   };
@@ -53,23 +48,6 @@ const BusinessInfoScreen: NextPage<BusinessInfoPropType> = ({
     return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
   };
   const [options, setOptions] = useState<Industry[]>([]);
-  const processFile = (acceptedFile: File[], errors: any) => {
-    //   toast.error("Hello")
-    if (errors && errors.length) {
-      console.log(errors);
-      toast.error(errors[0].errors[0].message);
-      return;
-    }
-    if (acceptedFile.length) {
-      const file = acceptedFile[0];
-      setCertOfInc(file);
-    }
-  };
-
-  const expand = () => {
-    if (!certOfInc) return;
-    window.open(URL.createObjectURL(certOfInc), "_blank", "fullScreen=yes");
-  };
 
   //   call API
   useEffect(() => {
@@ -177,40 +155,13 @@ const BusinessInfoScreen: NextPage<BusinessInfoPropType> = ({
           <Input.TextArea rows={4} />
         </Form.Item>
         <div>
-          <h2 className="pb-2">Certificate of Incorporation</h2>
-          <Dropzone
-            onDrop={processFile}
-            accept={{
-              "application/pdf": [".pdf"],
-              "images/png": [".png"],
-              "images/jpg": [".jpg"],
-              "images/jpeg": [".jpeg"],
-            }}
-            multiple={false}
-          >
-            {({ getRootProps, getInputProps }) => (
-              <section className="border border-primary-lower rounded py-3">
-                <div {...getRootProps()}>
-                  <input {...getInputProps()} />
-                  <div className="flex flex-col items-center justify-center">
-                    <CloudUploadOutlined className="text-xl bg-tertiary-low rounded-3xl px-2 py-1" />
-                    <p>
-                      <span>Click to upload</span>
-                      <span> or drag and drop</span>
-                    </p>
-                    <small>SVG, PNG,JPG or GIF (max. 800x400px)</small>
-                  </div>
-                </div>
-              </section>
-            )}
-          </Dropzone>
-          {certOfInc && (
-            <p className="flex items-center justify-between bg-tertiary-low p-2 my-2 mb-6 rounded">
-              <span>{formatFileName(certOfInc.name)}</span>
-              <span>{formatBytes(certOfInc.size)}</span>
-              <EyeOutlined onClick={expand} />
-            </p>
-          )}
+          <DropFile
+            title="Certificate of Incorporation"
+            acceptedFileTypes={["pdf", "jpeg", "jpg", "png"]}
+            files={files}
+            setFiles={setFiles}
+            allowMultiple={false}
+          />
         </div>
         <Form.Item
           label="Password"

@@ -64,15 +64,15 @@ const listerLinks: ListerLink[] = [
       },
       {
         title: "Add Project",
-        link: "jnfo4537938",
+        link: "addProject",
         type: "popup",
         active: false,
       },
     ],
   },
   {
-    title: "Archived",
-    link: "/listers/archived",
+    title: "Archives",
+    link: "/listers/archives",
     type: "link",
     active: true,
     icon: "SaveOutlined",
