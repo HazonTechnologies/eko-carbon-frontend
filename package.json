@@ -13,6 +13,7 @@
         "@mikecousins/react-pdf": "^5.5.1",
         "antd": "^4.20.3",
         "axios": "^0.26.1",
+        "lodash.debounce": "^4.0.8",
         "moment": "^2.29.3",
         "next": "12.1.5",
         "postcss-import": "^14.1.0",
@@ -29,6 +30,7 @@
     },
     "devDependencies": {
         "@tailwindcss/jit": "^0.1.18",
+        "@types/lodash.debounce": "^4.0.7",
         "@types/node": "17.0.24",
         "@types/randomcolor": "^0.5.6",
         "@types/react": "18.0.5",

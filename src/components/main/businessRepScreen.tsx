@@ -6,58 +6,41 @@ import PhoneInput from "react-phone-input-2";
 
 // import { User } from "../../models/user";
 import ButtonUI from "../utilities/ButtonUI";
-import { AccountInformation } from "../../models/user";
+import { BusinessRepInfo } from "../../models/listers";
 import { useLoading } from "../../context/loadingCtx";
 
 import DropFile from "../utilities/DropFile";
+import { fetcher } from "../../lib/helperFunctions/fetcher";
+import { AntFormValidatingProps, BooleanType } from "../../models/utilities";
+import { emailPattern, passwordPattern, phonePattern } from "../../lib/common/regex";
 
 const { Option } = Select;
 
-interface BooleanType {
+interface City {
   name: string;
-  value: string;
 }
-const mockOptions: BooleanType[] = [
+
+interface State {
+  name: string;
+  cities: City[];
+}
+interface Country {
+  name: string;
+  phoneCode: string;
+  states: State[];
+}
+
+const mockBooleanOptions: BooleanType[] = [
   {
     name: "Yes",
-    value: "yes",
+    value: true,
   },
   {
     name: "No",
-    value: "no",
+    value: false,
   },
 ];
-const country: BooleanType[] = [
-  {
-    name: "Nigeria",
-    value: "ng",
-  },
-  {
-    name: "United States of America",
-    value: "us",
-  },
-];
-const state: BooleanType[] = [
-  {
-    name: "Austin",
-    value: "as",
-  },
-  {
-    name: "Connecticut",
-    value: "cn",
-  },
-];
-const city: BooleanType[] = [
-  {
-    name: "Las Vegas",
-    value: "lv",
-  },
-  {
-    name: "Houston",
-    value: "hs",
-  },
-];
-const idType: BooleanType[] = [
+const idType: { name: string; value: string }[] = [
   {
     name: "Voters Card",
     value: "votersCard",
@@ -68,32 +51,104 @@ const idType: BooleanType[] = [
   },
 ];
 
+const defaultProjectScopes: { name: string; value: string }[] = [
+  {
+    name: "Municipal Solid Waste",
+    value: "msw",
+  },
+  {
+    name: "Agricultural Projects",
+    value: "ap",
+  },
+  {
+    name: "Afforestation & Reforestation",
+    value: "ar",
+  },
+  {
+    name: "Water, Sanitation & Hygiene Projects",
+    value: "wshp",
+  },
+  {
+    name: "Construction Projects (CDMW)",
+    value: "cp",
+  },
+  {
+    name: "Renewable Energy & Energy Efficient Project",
+    value: "reeep",
+  },
+];
+
 interface BusinessRepPropType {
   // eslint-disable-next-line no-unused-vars
-  onSubmit: (param: AccountInformation) => void;
+  onSubmit: (param: BusinessRepInfo) => void;
   goBack: () => void;
+  businessName: string | undefined;
 }
 
 const BusinessRepScreen: NextPage<BusinessRepPropType> = ({
   onSubmit,
   goBack,
+  businessName,
 }) => {
   const onError = (err: any) => {
     console.log(err);
   };
-
+  const [formValues, setFormValues] = useState<BusinessRepInfo | null>(null);
+  const [projectScopeOptions, setProjectScopeOptions] = useState<
+    { name: string; value: string }[]
+  >([]);
   const [options, setOptions] = useState<BooleanType[]>([]);
+  const [countries, setCountries] = useState<Country[]>([]);
+  const [states, setStates] = useState<State[]>([]);
+  const [cities, setCities] = useState<City[]>([]);
   const [files, setFiles] = useState<File[]>([]);
 
+  const [validateStatus, setValidateStatus] =
+    useState<AntFormValidatingProps>("");
+  const [form] = Form.useForm();
+
   const { setLoadingStatus } = useLoading();
+
+  const fetchDependencies = () => {
+    setLoadingStatus(true);
+    fetcher("Account/dependencies")
+      .then((res) => {
+        if (!res.successful) return;
+        setCountries(res.data.countries);
+      })
+      .finally(() => setLoadingStatus(false));
+  };
   //   call API
   useEffect(() => {
-    setLoadingStatus(true);
-    setTimeout(() => {
-      setOptions(mockOptions);
-      setLoadingStatus(false);
-    }, 1000);
+    fetchDependencies();
+    setOptions(mockBooleanOptions);
+    setProjectScopeOptions(defaultProjectScopes);
   }, []);
+
+  const onCountrySelected = (val: string) => {
+    setStates([]);
+    setCities([]);
+    const selectedCountry = countries.find((country) => country.name === val);
+    if (!selectedCountry) return;
+    setStates(selectedCountry.states);
+  };
+  const onStateSelected = (val: string) => {
+    setCities([]);
+    const selectedStates = states.find((state) => state.name === val);
+    if (!selectedStates) return;
+    setCities(selectedStates.cities);
+  };
+
+  const confirmPass = (value: string) => {
+    const password = formValues?.Password;
+    if (!password) return;
+    if (value !== password) {
+      setValidateStatus("error");
+      return;
+    }
+    form.setFields([{ name: "ConfirmPassword", errors: [""] }]);
+    setValidateStatus("success");
+  };
 
   return (
     <div className="sm:w-[400px] w-[320px] m-[auto] shadow-1 rounded-lg bg-secondary-high p-10 my-2">
@@ -105,19 +160,23 @@ const BusinessRepScreen: NextPage<BusinessRepPropType> = ({
       <Form
         name="basic"
         layout="vertical"
+        form={form}
         initialValues={{ bank: "zenith", phone: "+2349035108713" }}
+        onValuesChange={(_, values) => setFormValues(values)}
         onFinish={onSubmit}
         onFinishFailed={onError}
         autoComplete="off"
       >
         <Form.Item
-          label="Are you a business owner at  [ company name ]"
-          name="businessOwner"
-          rules={[{ required: true, message: "Kindly select an option!" }]}
+          label="Project Scope"
+          name="projectScope"
+          rules={[
+            { required: true, message: "Kindly select a project scope!" },
+          ]}
         >
-          <Select placeholder="Select an option" defaultValue="yes">
-            {options.length &&
-              options.map((option) => (
+          <Select placeholder="Select a peoject scope">
+            {projectScopeOptions.length &&
+              projectScopeOptions.map((option) => (
                 <Option key={option.value} value={option.value}>
                   {option.name}
                 </Option>
@@ -125,14 +184,28 @@ const BusinessRepScreen: NextPage<BusinessRepPropType> = ({
           </Select>
         </Form.Item>
         <Form.Item
-          label="Do you own more than 25% at  [ company name ]"
-          name="ownAbove25"
+          label={`Are you a business owner at ${businessName ?? ''}`}
+          name="isbusinessOwner"
           rules={[{ required: true, message: "Kindly select an option!" }]}
         >
-          <Select placeholder="Select an option" defaultValue="yes">
+          <Select placeholder="Select an option">
             {options.length &&
               options.map((option) => (
-                <Option key={option.value} value={option.value}>
+                <Option key={option.name} value={option.value}>
+                  {option.name}
+                </Option>
+              ))}
+          </Select>
+        </Form.Item>
+        <Form.Item
+          label={`Do you own more than 25% at ${businessName ?? ''}`}
+          name="OwnsAboveQuarter"
+          rules={[{ required: true, message: "Kindly select an option!" }]}
+        >
+          <Select placeholder="Select an option">
+            {options.length &&
+              options.map((option) => (
+                <Option key={option.name} value={option.value}>
                   {option.name}
                 </Option>
               ))}
@@ -140,23 +213,24 @@ const BusinessRepScreen: NextPage<BusinessRepPropType> = ({
         </Form.Item>
         <Form.Item
           label="Full Name"
-          name="name"
+          name="stakeholderName"
           rules={[{ required: true, message: "Kindly input your full name!" }]}
         >
           <Input />
         </Form.Item>
         <Form.Item
           label="Email Address"
-          name="email"
+          name="stakeholderEmail"
           rules={[
             { required: true, message: "Kindly input your email address!" },
+            { pattern: emailPattern, message: "Invalid email!" },
           ]}
         >
           <Input />
         </Form.Item>
-        <Form.Item
+        {/* <Form.Item
           label="BVN"
-          name="bvn"
+          name="stakeholderBVN"
           rules={[
             {
               required: true,
@@ -165,25 +239,29 @@ const BusinessRepScreen: NextPage<BusinessRepPropType> = ({
           ]}
         >
           <Input type="number" />
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item
           label="Phone number"
-          name="phoneNumber"
+          name="stakeholderPhoneNumber"
           rules={[
             { required: true, message: "Kindly input your phone number!" },
+            { pattern: phonePattern, message: "Invalid phone number!" },
           ]}
         >
           <PhoneInput country="ng" containerClass="w-40px" />
         </Form.Item>
         <Form.Item
           label="Country"
-          name="country"
+          name="stakeholderCountry"
           rules={[{ required: true, message: "Kindly select your country!" }]}
         >
-          <Select placeholder="Select an option">
-            {country.length &&
-              country.map((option) => (
-                <Option key={option.value} value={option.value}>
+          <Select
+            onSelect={(val: string) => onCountrySelected(val)}
+            placeholder="Select an option"
+          >
+            {countries.length &&
+              countries.map((option) => (
+                <Option key={option.name} value={option.name}>
                   {option.name}
                 </Option>
               ))}
@@ -191,13 +269,17 @@ const BusinessRepScreen: NextPage<BusinessRepPropType> = ({
         </Form.Item>
         <Form.Item
           label="State"
-          name="state"
+          name="stakeholderState"
           rules={[{ required: true, message: "Kindly select your state!" }]}
         >
-          <Select placeholder="Select an option">
-            {state.length &&
-              state.map((option) => (
-                <Option key={option.value} value={option.value}>
+          <Select
+            disabled={!states.length}
+            onSelect={(val: string) => onStateSelected(val)}
+            placeholder="Select an option"
+          >
+            {states.length &&
+              states.map((option) => (
+                <Option key={option.name} value={option.name}>
                   {option.name}
                 </Option>
               ))}
@@ -205,27 +287,34 @@ const BusinessRepScreen: NextPage<BusinessRepPropType> = ({
         </Form.Item>
         <Form.Item
           label="City"
-          name="city"
+          name="stakeholderCity"
           rules={[{ required: true, message: "Kindly select your city!" }]}
         >
-          <Select placeholder="Select an option">
-            {city.length &&
-              city.map((option) => (
-                <Option key={option.value} value={option.value}>
+          <Select disabled={!cities.length} placeholder="Select an option">
+            {cities.length &&
+              cities.map((option) => (
+                <Option key={option.name} value={option.name}>
                   {option.name}
                 </Option>
               ))}
           </Select>
         </Form.Item>
         <Form.Item
-          label="Select ID to Upload"
-          name="idType"
+          label="Street Address"
+          name="stakeholderAddress"
+          rules={[{ required: true, message: "Kindly input your street address!" }]}
+        >
+          <Input disabled={!cities.length} />
+        </Form.Item>
+        <Form.Item
+          label="Select ID Type"
+          name="StakeholderIdentityCardType"
           rules={[{ required: true, message: "Kindly select your id type!" }]}
         >
           <Select placeholder="Select an option">
             {idType.length &&
               idType.map((option) => (
-                <Option key={option.value} value={option.value}>
+                <Option key={option.name} value={option.value}>
                   {option.name}
                 </Option>
               ))}
@@ -243,18 +332,33 @@ const BusinessRepScreen: NextPage<BusinessRepPropType> = ({
 
         <Form.Item
           label="Password"
-          name="password"
-          rules={[{ required: true, message: "Kindly input your password!" }]}
+          name="Password"
+          rules={[
+            {
+              required: true,
+              message: "Kindly input a password!",
+            },
+            {
+              pattern: passwordPattern,
+              message:
+                "Password must minimum eight characters, at least one letter, one number and one special character",
+            },
+          ]}
         >
-          <Input type="password" />
+          <Input.Password />
         </Form.Item>
-
         <Form.Item
           label="Confirm Password"
-          name="confirmPassword"
-          rules={[{ required: true, message: "Passwords do not match!" }]}
+          name="ConfirmPassword"
+          validateStatus={validateStatus}
+          rules={[
+            {
+              required: true,
+              message: "Password do not match!",
+            },
+          ]}
         >
-          <Input type="password" />
+          <Input.Password onChange={(e) => confirmPass(e.target.value)} />
         </Form.Item>
 
         <Form.Item className="mt-10 text-right gap-x-8">

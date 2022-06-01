@@ -79,13 +79,13 @@ const ListerMenu: NextPage<any> = () => {
                     type="button"
                     onClick={() => toggleDropdown(!dropdown)}
                   >
-                    {menu.icon === "DropboxOutlined" && <DropboxOutlined />}
+                    {menu.icon === "DropboxOutlined" && <DropboxOutlined className="opacity-80" />}
                     <span>{menu.title}</span>
                     {dropdown && <DownOutlined className="text-[12px] ml-5" />}
                     {!dropdown && <UpOutlined className="text-[12px] ml-5" />}
                   </button>
                   <nav
-                    className={`flex flex-col gap-y-3 pt-3 px-2 pl-10  duration-200 transition-all ${
+                    className={`flex flex-col gap-y-3 pt-3 ml-10  duration-200 transition-all ${
                       dropdown ? "hidden opacity-0" : "opacity-100"
                     }`}
                   >
@@ -95,11 +95,20 @@ const ListerMenu: NextPage<any> = () => {
                         <button
                           type="button"
                           key={childMenu.link}
+                          className="text-left"
                           onClick={() => goTo(childMenu.link)}
                         >
                           {childMenu.title}
                         </button>
                       ))}
+                    <button
+                      type="button"
+                      key="addProject"
+                      className="text-left underline"
+                      onClick={() => goTo("addProject")}
+                    >
+                      + Add Project
+                    </button>
                   </nav>
                 </div>
               )}

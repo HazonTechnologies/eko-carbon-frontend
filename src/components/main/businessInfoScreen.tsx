@@ -1,36 +1,22 @@
+/* eslint-disable implicit-arrow-linebreak */
 import { Form, Input, Select } from "antd";
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
 // import Image from "next/image";
 // import { User } from "../../models/user";
 import ButtonUI from "../utilities/ButtonUI";
-import { AccountInformation } from "../../models/user";
 import { useLoading } from "../../context/loadingCtx";
-import { Industry } from "../../models/industry";
-import DropFile from "../utilities/DropFile";
+import { emailPattern, urlPattern } from "../../lib/common/regex";
+import { fetcher } from "../../lib/helperFunctions/fetcher";
+import { BusinessInfo } from "../../models/listers";
 // import imageLoader from "../../lib/helperFunctions/loader";
 // import ImageViewer from "./imageViewer";
 
 const { Option } = Select;
 
-const mockOptions: Industry[] = [
-  {
-    name: "Manufacturing",
-    value: "manufacturing",
-  },
-  {
-    name: "Finance",
-    value: "finance",
-  },
-  {
-    name: "Transportation",
-    value: "transportation",
-  },
-];
-
 interface BusinessInfoPropType {
   // eslint-disable-next-line no-unused-vars
-  onSubmit: (param: AccountInformation) => void;
+  onSubmit: (param: BusinessInfo) => void;
   goBack: () => void;
 }
 
@@ -39,23 +25,27 @@ const BusinessInfoScreen: NextPage<BusinessInfoPropType> = ({
   goBack,
 }) => {
   const { setLoadingStatus } = useLoading();
-  const [files, setFiles] = useState<File[]>([]);
+  const [form] = Form.useForm();
   const onError = (err: any) => {
     console.log(err);
   };
-  const onFilter = (input: any, option: any) => {
-    console.log(input);
-    return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
-  };
-  const [options, setOptions] = useState<Industry[]>([]);
+  const onFilter = (input: any, option: any) =>
+    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
 
+  const [options, setOptions] = useState<string[]>([]);
+
+  const fetchDependencies = () => {
+    setLoadingStatus(true);
+    fetcher("Account/dependencies")
+      .then((res) => {
+        if (!res.successful) return;
+        setOptions(res.data.industries);
+      })
+      .finally(() => setLoadingStatus(false));
+  };
   //   call API
   useEffect(() => {
-    setLoadingStatus(true);
-    setTimeout(() => {
-      setOptions(mockOptions);
-      setLoadingStatus(false);
-    }, 1000);
+    fetchDependencies();
   }, []);
 
   return (
@@ -64,6 +54,7 @@ const BusinessInfoScreen: NextPage<BusinessInfoPropType> = ({
       <Form
         name="basic"
         layout="vertical"
+        form={form}
         initialValues={{ bank: "zenith", phone: "+2349035108713" }}
         onFinish={onSubmit}
         onFinishFailed={onError}
@@ -71,7 +62,7 @@ const BusinessInfoScreen: NextPage<BusinessInfoPropType> = ({
       >
         <Form.Item
           label="Registered Business Name"
-          name="businessName"
+          name="BusinessName"
           rules={[
             { required: true, message: "Kindly input your business name!" },
           ]}
@@ -80,16 +71,17 @@ const BusinessInfoScreen: NextPage<BusinessInfoPropType> = ({
         </Form.Item>
         <Form.Item
           label="Business Email"
-          name="businessEmail"
+          name="BusinessEmail"
           rules={[
             { required: true, message: "Kindly input your business email!" },
+            { pattern: emailPattern, message: "Invalid email!" },
           ]}
         >
           <Input type="email" />
         </Form.Item>
         <Form.Item
           label="Business Address"
-          name="businessAddress"
+          name="BusinessAddress"
           rules={[
             { required: true, message: "Kindly input your business address!" },
           ]}
@@ -97,22 +89,11 @@ const BusinessInfoScreen: NextPage<BusinessInfoPropType> = ({
           <Input />
         </Form.Item>
         <Form.Item
-          label="RC Number"
-          name="rcNumber"
-          rules={[
-            {
-              required: true,
-              message: "Kindly input your business RC Number!",
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
           label="Website"
-          name="website"
+          name="Website"
           rules={[
             { required: true, message: "Kindly input your business Website!" },
+            { pattern: urlPattern, message: "Invalid Web Url!" },
           ]}
         >
           <Input />
@@ -120,7 +101,7 @@ const BusinessInfoScreen: NextPage<BusinessInfoPropType> = ({
 
         <Form.Item
           label="Industry"
-          name="industry"
+          name="Industry"
           rules={[
             {
               required: true,
@@ -136,15 +117,15 @@ const BusinessInfoScreen: NextPage<BusinessInfoPropType> = ({
           >
             {options.length &&
               options.map((option) => (
-                <Option key={option.value} value={option.value}>
-                  {option.name}
+                <Option key={option} value={option}>
+                  {option}
                 </Option>
               ))}
           </Select>
         </Form.Item>
         <Form.Item
           label="Summary"
-          name="summary"
+          name="Summary"
           rules={[
             {
               required: true,
@@ -153,39 +134,6 @@ const BusinessInfoScreen: NextPage<BusinessInfoPropType> = ({
           ]}
         >
           <Input.TextArea rows={4} />
-        </Form.Item>
-        <div>
-          <DropFile
-            title="Certificate of Incorporation"
-            acceptedFileTypes={["pdf", "jpeg", "jpg", "png"]}
-            files={files}
-            setFiles={setFiles}
-            allowMultiple={false}
-          />
-        </div>
-        <Form.Item
-          label="Password"
-          name="password"
-          rules={[
-            {
-              required: true,
-              message: "Kindly input a password!",
-            },
-          ]}
-        >
-          <Input.Password />
-        </Form.Item>
-        <Form.Item
-          label="Confirm Password"
-          name="confirmPassword"
-          rules={[
-            {
-              required: true,
-              message: "Password do not match!",
-            },
-          ]}
-        >
-          <Input.Password />
         </Form.Item>
         <Form.Item className="mt-10 text-right gap-x-8">
           <ButtonUI

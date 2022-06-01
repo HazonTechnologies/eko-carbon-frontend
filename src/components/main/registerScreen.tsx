@@ -1,8 +1,12 @@
 import { Form, Input } from "antd";
 import { NextPage } from "next";
-
+import { useCallback, useState } from "react";
+import debounce from "lodash.debounce";
 import CustomButton from "../utilities/ButtonUI";
 import { User } from "../../models/user";
+import { fetcher } from "../../lib/helperFunctions/fetcher";
+import { AntFormValidatingProps } from "../../models/utilities";
+import { emailPattern } from "../../lib/common/regex";
 
 interface RegisterPropType {
   // eslint-disable-next-line no-unused-vars
@@ -11,14 +15,44 @@ interface RegisterPropType {
   initialValues: { email: string } | null;
 }
 
+
+
 const RegisterScreen: NextPage<RegisterPropType> = ({
   onSubmit,
   googleCall,
   initialValues,
 }) => {
+  const [form] = Form.useForm();
+  const [validateStatus, setValidateStatus] = useState<AntFormValidatingProps>("");
   const onError = (err: any) => {
     console.log(err);
   };
+
+  const checkEmail = (val: string) => {
+    setValidateStatus("validating");
+    fetcher(`Account/check-email/${val}`).then((res) => {
+      if (res.code === 200) {
+        setValidateStatus("success");
+        return;
+      }
+      setValidateStatus("error");
+      form.setFields([{ name: "email", errors: ["Email already taken"] }]);
+    });
+  };
+
+  const debouncedSave = useCallback(
+    debounce((email: string) => checkEmail(email), 800),
+    [], // will be created only once initially
+  );
+
+  const checkEmailExist = (e: any) => {
+    const inputTarget = e.target as HTMLInputElement;
+    const email = inputTarget.value;
+    setValidateStatus("");
+    if (!email.match(emailPattern)) return;
+    debouncedSave(email);
+  };
+
   return (
     <div className="flex flex-col justify-start">
       <div className="w-[350px] m-[auto] shadow-1 rounded-lg bg-secondary-high p-6 my-2">
@@ -27,7 +61,7 @@ const RegisterScreen: NextPage<RegisterPropType> = ({
         <CustomButton
           onClickTrigger={googleCall}
           disabled={false}
-          bg="primary-high"
+          bg="secondary-high"
           color="primary-medium"
           htmlType="button"
           width="100%"
@@ -44,6 +78,7 @@ const RegisterScreen: NextPage<RegisterPropType> = ({
         <Form
           name="basic"
           layout="vertical"
+          form={form}
           initialValues={initialValues ?? {}}
           onFinish={onSubmit}
           onFinishFailed={onError}
@@ -52,11 +87,15 @@ const RegisterScreen: NextPage<RegisterPropType> = ({
           <Form.Item
             label="Email Address"
             name="email"
+            validateFirst={true}
+            validateStatus={validateStatus}
             rules={[
               { required: true, message: "Kindly input your email address!" },
+              { pattern: emailPattern, message: "Invalid Email" },
             ]}
+            hasFeedback
           >
-            <Input type="email" />
+            <Input onChange={checkEmailExist} type="email" />
           </Form.Item>
 
           <Form.Item className="mt-4">

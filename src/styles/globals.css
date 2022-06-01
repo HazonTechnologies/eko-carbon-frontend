@@ -120,6 +120,35 @@ button.ant-pagination-item-link,
     vertical-align: 0.1em;
 }
 
+
+/* .ant-form-vertical .ant-form-item {
+    flex-direction: column !important;
+} */
+
+.ant-form-item-control,
+.ant-form-item-label {
+    flex: unset !important;
+}
+
+.ant-col {
+    /* margin-bottom: 10px; */
+}
+
+.ant-input-number-input {
+    border-radius: 1em !important;
+}
+
+.ant-input-number {
+    border-radius: .6em;
+    padding: 3px 0;
+}
+
+.ant-select-selector {
+    border-radius: .4em !important;
+    height: 40px !important;
+    padding-top: 4px !important;
+}
+
 @media (max-width: 480px) {
     .ant-picker-panels {
         display: flex !important;

@@ -15,10 +15,17 @@ const SelectUI: NextPage<{
   menuItem: OptionType[];
   selected: string | null;
   width?: string;
-  bg?: string
+  bg?: string;
+  textSize?: string;
   selectOption: Dispatch<SetStateAction<null | string>>;
-}> = ({ menuItem = [], selectOption, selected, width, bg }) => (
-  <Select className={`${width ?? 'w-[120px]'} ${bg ?? 'bg-secondary-mid'} text-xs rounded-lg`} defaultValue={selected} onSelect={selectOption}>
+}> = ({ menuItem = [], selectOption, selected, width, bg, textSize }) => (
+  <Select
+    className={`${width ?? "w-[120px]"} ${
+      textSize ?? "text-xs"
+    }  rounded-lg`}
+    defaultValue={selected}
+    onSelect={selectOption}
+  >
     {menuItem.length &&
       menuItem.map((item) => (
         <Option key={item.value} value={item.value}>

@@ -27,6 +27,7 @@ const Register = () => {
   const { push } = useRouter();
 
   const [step, updateStep] = useState<number>(1);
+  const [acctStep, updateAcctStep] = useState<number>(0);
   const [userDetails, setUserDetails] = useState<{ email: string } | null>(
     null,
   );
@@ -84,7 +85,13 @@ const Register = () => {
       updateStep(1);
       return;
     }
-    updateStep(step - 1);
+    if (step === 3) {
+      if (acctStep === 1) {
+        updateStep(step - 1);
+        return;
+      }
+      updateAcctStep(acctStep - 1);
+    }
   };
 
   return (
@@ -110,7 +117,13 @@ const Register = () => {
           onSubmit={onRegLister}
         />
       )}
-      {step === 3 && <RegisterAccountInfoScreen onSubmitReg={onRegAccount} />}
+      {step === 3 && (
+        <RegisterAccountInfoScreen
+          currStep={acctStep}
+          setCurrStep={updateAcctStep}
+          onSubmitReg={onRegAccount}
+        />
+      )}
       {step === 4 && (
         <RegOffsetPersonalScreen
           googleCall={googleCall}
