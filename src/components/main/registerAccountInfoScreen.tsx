@@ -1,14 +1,13 @@
 /* eslint-disable no-unused-vars */
 import { NextPage } from "next";
-import { useState } from "react";
-import { AccountInformation } from "../../models/user";
+import { Dispatch, SetStateAction, useState } from "react";
 import Stepper from "../utilities/StepperUI";
 import BankInfoScreen from "./bankInfoScreen";
 import BusinessInfoScreen from "./businessInfoScreen";
 import BusinessRepScreen from "./businessRepScreen";
 import accountInfoSteps from "../../lib/common/accountInfoSteps";
 import { Step } from "../../models/utilities";
-import { BankInfo } from "../../models/listers";
+import { BankInfo, BusinessInfo } from "../../models/listers";
 
 // import { useState } from "react";
 // import { Option } from "../../models/option";
@@ -17,17 +16,22 @@ import { BankInfo } from "../../models/listers";
 
 interface RegisterAccountInfoPropType {
   // eslint-disable-next-line no-unused-vars
-  onSubmitReg: (bank: AccountInformation | any, info: any, rep: any) => void;
+  onSubmitReg: (bank: BankInfo | any, info: any, rep: any) => void;
+  setCurrStep: Dispatch<SetStateAction<number>>;
+  currStep: number;
 }
 const RegisterAccountInfoScreen: NextPage<RegisterAccountInfoPropType> = ({
   onSubmitReg,
+  currStep,
+  setCurrStep,
 }) => {
-  const [currStep, setCurrStep] = useState(0);
   const [bankInfo, setBankInfo] = useState<BankInfo | undefined>(undefined);
-  const [businessInfo, setBusinessInfo] = useState(null);
+  const [businessInfo, setBusinessInfo] = useState<BusinessInfo | undefined>(
+    undefined
+  );
   const [businessRep, setBusinessRep] = useState(null);
 
-  const onSubmit = (type: string, formData: AccountInformation | any) => {
+  const onSubmit = (type: string, formData: BankInfo | any) => {
     if (type === "bank") {
       setCurrStep(currStep + 1);
       setBankInfo(formData);
@@ -47,7 +51,10 @@ const RegisterAccountInfoScreen: NextPage<RegisterAccountInfoPropType> = ({
     <div className="flex flex-col justify-center items-center">
       <Stepper steps={accountInfoSteps()} currStep={currStep} />
       {currStep === 0 && (
-        <BankInfoScreen bankInfo={bankInfo} onSubmit={(formData) => onSubmit("bank", formData)} />
+        <BankInfoScreen
+          bankInfo={bankInfo}
+          onSubmit={(formData) => onSubmit("bank", formData)}
+        />
       )}
       {currStep === 1 && (
         <BusinessInfoScreen
@@ -57,6 +64,7 @@ const RegisterAccountInfoScreen: NextPage<RegisterAccountInfoPropType> = ({
       )}
       {currStep > 1 && (
         <BusinessRepScreen
+          businessName={businessInfo?.BusinessName}
           goBack={() => setCurrStep(currStep - 1)}
           onSubmit={(formData) => onSubmit("rep", formData)}
         />

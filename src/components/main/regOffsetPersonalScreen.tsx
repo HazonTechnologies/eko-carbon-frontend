@@ -1,23 +1,101 @@
 import { Form, Input } from "antd";
+import debounce from "lodash.debounce";
 import { NextPage } from "next";
 import Link from "next/link";
-import { User } from "../../models/user";
+import { useCallback, useState } from "react";
+import toast from "react-hot-toast";
+import { useLoading } from "../../context/loadingCtx";
+import { emailPattern, passwordPattern } from "../../lib/common/regex";
+import { fetcher, postApi } from "../../lib/helperFunctions/fetcher";
+import { OffsetterPersonal } from "../../models/offsetters";
+import { AntFormValidatingProps } from "../../models/utilities";
 import ButtonUI from "../utilities/ButtonUI";
 
 interface RegOffsetPersonalScreenPropType {
   // eslint-disable-next-line no-unused-vars
-  onSubmit: (param: User) => void;
+  onSubmit: (param: OffsetterPersonal) => void;
   // eslint-disable-next-line no-unused-vars
   googleCall: () => void;
 }
 
-const RegOffsetPersonalScreen: NextPage<RegOffsetPersonalScreenPropType> = ({
-  onSubmit,
-  googleCall,
-}) => {
+const RegOffsetPersonalScreen: NextPage<
+  RegOffsetPersonalScreenPropType
+> = () => {
+  const { setLoadingStatus } = useLoading();
+  const [form] = Form.useForm();
+  const [validateStatus, setValidateStatus] =
+    useState<AntFormValidatingProps>("");
+  const [validateCPassStatus, setValidateCPassStatus] =
+    useState<AntFormValidatingProps>("");
+  const [formValues, setFormValues] = useState<OffsetterPersonal | null>(null);
+  const [disableEmail, setDisableEmail] = useState(false);
+
   const onError = (err: any) => {
     console.log(err);
   };
+
+  const checkEmail = (val: string) => {
+    setValidateStatus("validating");
+    setDisableEmail(true);
+    fetcher(`Account/check-email/${val}`)
+      .then((res) => {
+        if (res.code === 200) {
+          setValidateStatus("success");
+          return;
+        }
+        setValidateStatus("error");
+        form.setFields([{ name: "email", errors: ["Email already taken"] }]);
+      })
+      .finally(() => {
+        setDisableEmail(false);
+      });
+  };
+
+  const debouncedSave = useCallback(
+    debounce((email: string) => checkEmail(email), 800),
+    []
+  );
+
+  const checkEmailExist = (e: any) => {
+    const inputTarget = e.target as HTMLInputElement;
+    const email = inputTarget.value;
+    setValidateStatus("");
+    if (!email.match(emailPattern)) return;
+    debouncedSave(email);
+  };
+
+  const confirmPass = (value: string) => {
+    const password = formValues?.Password;
+    console.warn(formValues, formValues?.Password);
+    if (!password) return;
+    if (value !== password) {
+      form.setFields([
+        { name: "ConfirmPassword", errors: ["Email already taken"] },
+      ]);
+      setValidateCPassStatus("error");
+      return;
+    }
+    form.setFields([{ name: "ConfirmPassword", errors: [""] }]);
+    setValidateCPassStatus("success");
+  };
+
+  const googleCall = () => {
+    console.log("google called");
+  };
+
+  const onSubmit = (values: OffsetterPersonal) => {
+    if (values.Password !== values.ConfirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+    setLoadingStatus(true);
+    postApi("Account/register-private-individual", values)
+      .then((res) => {
+        console.log(res);
+      })
+      .finally(() => setLoadingStatus(false));
+  };
+
   return (
     <div>
       <div className="w-[350px] m-[auto] shadow-1 rounded-lg bg-secondary-high p-6 my-2">
@@ -26,7 +104,7 @@ const RegOffsetPersonalScreen: NextPage<RegOffsetPersonalScreenPropType> = ({
         <ButtonUI
           onClickTrigger={googleCall}
           disabled={false}
-          bg="primary-high"
+          bg="secondary-high"
           color="primary-medium"
           htmlType="button"
           width="100%"
@@ -43,14 +121,16 @@ const RegOffsetPersonalScreen: NextPage<RegOffsetPersonalScreenPropType> = ({
         <Form
           name="basic"
           layout="vertical"
-          initialValues={{ remember: true }}
+          form={form}
+          onValuesChange={(_, values) => setFormValues(values)}
+          initialValues={{}}
           onFinish={onSubmit}
           onFinishFailed={onError}
           autoComplete="off"
         >
           <Form.Item
             label="First Name"
-            name="firstname"
+            name="Firstname"
             rules={[
               { required: true, message: "Kindly input your first name!" },
             ]}
@@ -59,7 +139,7 @@ const RegOffsetPersonalScreen: NextPage<RegOffsetPersonalScreenPropType> = ({
           </Form.Item>
           <Form.Item
             label="Last Name"
-            name="lastname"
+            name="Lastname"
             rules={[
               { required: true, message: "Kindly input your last name!" },
             ]}
@@ -68,27 +148,43 @@ const RegOffsetPersonalScreen: NextPage<RegOffsetPersonalScreenPropType> = ({
           </Form.Item>
           <Form.Item
             label="Email Address"
-            name="email"
+            name="Email"
+            validateFirst={true}
+            validateStatus={validateStatus}
             rules={[
               { required: true, message: "Kindly input your email address!" },
+              { pattern: emailPattern, message: "Invalid email!" },
             ]}
+            hasFeedback
           >
-            <Input type="email" />
+            <Input
+              type="email"
+              disabled={disableEmail}
+              onChange={checkEmailExist}
+            />
           </Form.Item>
 
           <Form.Item
             label="Password"
-            name="password"
-            rules={[{ required: true, message: "Kindly input your password!" }]}
+            name="Password"
+            rules={[
+              { required: true, message: "Kindly input your password!" },
+              {
+                pattern: passwordPattern,
+                message:
+                  "Password must minimum eight characters, at least one letter, one number and one special character",
+              },
+            ]}
           >
-            <Input type="password" />
+            <Input.Password />
           </Form.Item>
           <Form.Item
             label="Confirm Password"
-            name="confirmpassword"
+            name="ConfirmPassword"
+            validateStatus={validateCPassStatus}
             rules={[{ required: true, message: "Password do not match!" }]}
           >
-            <Input type="password" />
+            <Input.Password onChange={(e) => confirmPass(e.target.value)} />
           </Form.Item>
           <Form.Item className="mt-4">
             <ButtonUI disabled={false} htmlType="submit" width="100%">
@@ -99,7 +195,7 @@ const RegOffsetPersonalScreen: NextPage<RegOffsetPersonalScreenPropType> = ({
       </div>
       <p className="gap-2 flex justify-center">
         <span>Already have an account?</span>
-        <Link href="/register">
+        <Link href="/login">
           <a className="text-tertiary-high">Sign In</a>
         </Link>
       </p>

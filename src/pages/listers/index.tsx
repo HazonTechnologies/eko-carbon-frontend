@@ -30,7 +30,7 @@ const ListerHome = () => {
   }, [links]);
 
   return (
-    <div className="mt-10">
+    <div>
       <ListerBreadNav goTo={goTo} links={links} showDate={showDate} />
       {currentNav && currentNav === "/listers/overview" && <ListerOverview />}
       {currentNav && currentNav === "/listers/profile" && <Profile />}

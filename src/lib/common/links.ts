@@ -35,13 +35,14 @@ const listerLinks: ListerLink[] = [
     title: "Pre-Assessment",
     link: "/listers/pre-assessment",
     type: "link",
-    active: true,
+    active: false,
     icon: "PercentageOutlined",
   },
   {
     title: "Project",
     link: "project",
     type: "dropdown",
+    icon: "DropboxOutlined",
     active: false,
     children: [
       {
@@ -62,19 +63,13 @@ const listerLinks: ListerLink[] = [
         type: "link",
         active: false,
       },
-      {
-        title: "Add Project",
-        link: "addProject",
-        type: "popup",
-        active: false,
-      },
     ],
   },
   {
     title: "Archives",
     link: "/listers/archives",
     type: "link",
-    active: true,
+    active: false,
     icon: "SaveOutlined",
   },
 ];

@@ -55,7 +55,7 @@ const DropFile = ({
     const fileType: any = {};
     acceptedFileTypes.forEach((file) => {
       if (file === "pdf") {
-        fileType["application/pdf"] = ".pdf";
+        fileType["application/pdf"] = [".pdf"];
       }
       if (
         file === "jpg" ||
@@ -64,7 +64,7 @@ const DropFile = ({
         file === "gif" ||
         file === "svg"
       ) {
-        fileType[`images/${file}`] = `.${file}`;
+        fileType[`images/${file}`] = [`.${file}`];
       }
     });
     return fileType;

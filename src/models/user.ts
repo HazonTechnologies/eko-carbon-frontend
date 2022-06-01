@@ -7,9 +7,3 @@ export interface UserType {
   offsetType?: string | null;
 }
 
-export interface AccountInformation {
-  bank: string;
-  phoneNumber: string;
-  corporateAccountNumber: number;
-  accountName: string;
-}

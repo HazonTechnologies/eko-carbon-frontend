@@ -40,7 +40,7 @@ export default function ButtonUI({
       opacity-90
       hover:opacity-100
       ${color ? `hover:text-${color}` : "hover:text-secondary-high"}
-      ${bg ? `hover:bg-${color}` : "hover:bg-tertiary-high"}
+      ${bg ? `hover:bg-${bg}` : "hover:bg-tertiary-high"}
        px-3
        
       h-[45px]

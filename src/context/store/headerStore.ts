@@ -1,6 +1,6 @@
 export interface HeaderType {
   isShown: boolean;
 }
-export const initialState: any = {
+export const initialState: HeaderType = {
   isShown: false,
 };

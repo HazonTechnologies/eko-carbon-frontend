@@ -34,7 +34,7 @@ const Header: NextPage<any> = ({ toggleSideNav, isSideNavOpen, type }) => (
     </h2>
     {type === "entry" && (
       <button
-        className="bg-secondary-low px-3 py-2 rounded text-xs sm:text-sm"
+        className="bg-secondary-low px-3 py-2 rounded text-[10px] sm:text-sm"
         type="button"
       >
         Try Our Carbon Calculator

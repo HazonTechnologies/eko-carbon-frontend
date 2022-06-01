@@ -24,7 +24,7 @@ const LoginScreen: NextPage<LoginPropType> = ({
       <ButtonUI
         onClickTrigger={googleCall}
         disabled={false}
-        bg="primary-high"
+        bg="secondary-high"
         color="primary-medium"
         htmlType="button"
         width="100%"

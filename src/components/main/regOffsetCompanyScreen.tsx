@@ -1,10 +1,16 @@
+/* eslint-disable implicit-arrow-linebreak */
 import { Form, Input, Select } from "antd";
+import debounce from "lodash.debounce";
 import { NextPage } from "next";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useLoading } from "../../context/loadingCtx";
-import { Industry } from "../../models/industry";
+import { emailPattern, passwordPattern } from "../../lib/common/regex";
+import { fetcher, postApi } from "../../lib/helperFunctions/fetcher";
+import { OffsetterCompany } from "../../models/offsetters";
 import { User } from "../../models/user";
+import { AntFormValidatingProps } from "../../models/utilities";
 import ButtonUI from "../utilities/ButtonUI";
 
 interface RegOffsetCompanyScreenPropType {
@@ -15,42 +21,95 @@ interface RegOffsetCompanyScreenPropType {
 }
 const { Option } = Select;
 
-const mockOptions: Industry[] = [
-  {
-    name: "Manufacturing",
-    value: "manufacturing",
-  },
-  {
-    name: "Finance",
-    value: "finance",
-  },
-  {
-    name: "Transportation",
-    value: "transportation",
-  },
-];
-
-const RegOffsetCompanyScreen: NextPage<RegOffsetCompanyScreenPropType> = ({
-  onSubmit,
-  googleCall,
-}) => {
+const RegOffsetCompanyScreen: NextPage<RegOffsetCompanyScreenPropType> = () => {
   const { setLoadingStatus } = useLoading();
-  const [options, setOptions] = useState<Industry[]>([]);
+  const [form] = Form.useForm();
+  const [validateStatus, setValidateStatus] =
+    useState<AntFormValidatingProps>("");
+  const [validateCPassStatus, setValidateCPassStatus] =
+    useState<AntFormValidatingProps>("");
+  const [formValues, setFormValues] = useState<OffsetterCompany | null>(null);
+  const [options, setOptions] = useState<string[]>([]);
+  const [disableEmail, setDisableEmail] = useState(false);
+
+  const onFilter = (input: any, option: any) =>
+    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
   const onError = (err: any) => {
     console.log(err);
   };
 
-  const onFilter = (input: any, option: any) => {
-    console.log(input);
-    return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+  const checkEmail = (val: string) => {
+    setValidateStatus("validating");
+    setDisableEmail(true);
+    fetcher(`Account/check-email/${val}`)
+      .then((res) => {
+        if (res.code === 200) {
+          setValidateStatus("success");
+          return;
+        }
+        setValidateStatus("error");
+        form.setFields([{ name: "email", errors: ["Email already taken"] }]);
+      })
+      .finally(() => {
+        setDisableEmail(false);
+      });
   };
-  //   call API
-  useEffect(() => {
+
+  const debouncedSave = useCallback(
+    debounce((email: string) => checkEmail(email), 800),
+    []
+  );
+
+  const checkEmailExist = (e: any) => {
+    const inputTarget = e.target as HTMLInputElement;
+    const email = inputTarget.value;
+    setValidateStatus("");
+    if (!email.match(emailPattern)) return;
+    debouncedSave(email);
+  };
+
+  const confirmPass = (value: string) => {
+    const password = formValues?.Password;
+    console.warn(formValues, formValues?.Password);
+    if (!password) return;
+    if (value !== password) {
+      form.setFields([
+        { name: "ConfirmPassword", errors: ["Email already taken"] },
+      ]);
+      setValidateCPassStatus("error");
+      return;
+    }
+    form.setFields([{ name: "ConfirmPassword", errors: [""] }]);
+    setValidateCPassStatus("success");
+  };
+
+  const googleCall = () => {
+    console.log("google called");
+  };
+
+  const onSubmit = (values: OffsetterCompany) => {
+    if (values.Password !== values.ConfirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
     setLoadingStatus(true);
-    setTimeout(() => {
-      setOptions(mockOptions);
-      setLoadingStatus(false);
-    }, 1000);
+    postApi("Account/register-private-company", values)
+      .then((res) => {
+        console.log(res);
+      })
+      .finally(() => setLoadingStatus(false));
+  };
+  const fetchDependencies = () => {
+    setLoadingStatus(true);
+    fetcher("Account/dependencies")
+      .then((res) => {
+        if (!res.successful) return;
+        setOptions(res.data.industries);
+      })
+      .finally(() => setLoadingStatus(false));
+  };
+  useEffect(() => {
+    fetchDependencies();
   }, []);
 
   return (
@@ -61,7 +120,7 @@ const RegOffsetCompanyScreen: NextPage<RegOffsetCompanyScreenPropType> = ({
         <ButtonUI
           onClickTrigger={googleCall}
           disabled={false}
-          bg="primary-high"
+          bg="secondary-high"
           color="primary-medium"
           htmlType="button"
           width="100%"
@@ -78,14 +137,16 @@ const RegOffsetCompanyScreen: NextPage<RegOffsetCompanyScreenPropType> = ({
         <Form
           name="basic"
           layout="vertical"
-          initialValues={{ remember: true }}
+          initialValues={formValues ?? undefined}
+          form={form}
+          onValuesChange={(_, values) => setFormValues(values)}
           onFinish={onSubmit}
           onFinishFailed={onError}
           autoComplete="off"
         >
           <Form.Item
             label="Business Name"
-            name="businessName"
+            name="BusinessName"
             rules={[
               { required: true, message: "Kindly input your business name!" },
             ]}
@@ -94,19 +155,24 @@ const RegOffsetCompanyScreen: NextPage<RegOffsetCompanyScreenPropType> = ({
           </Form.Item>
           <Form.Item
             label="Business Email Address"
-            name="businessEmail"
+            name="BusinessEmail"
+            validateFirst={true}
+            validateStatus={validateStatus}
             rules={[
-              {
-                required: true,
-                message: "Kindly input your business email address!",
-              },
+              { required: true, message: "Kindly input your email address!" },
+              { pattern: emailPattern, message: "Invalid email!" },
             ]}
+            hasFeedback
           >
-            <Input type="email" />
+            <Input
+              disabled={disableEmail}
+              type="email"
+              onChange={checkEmailExist}
+            />
           </Form.Item>
           <Form.Item
             label="Business Address"
-            name="businessAddress"
+            name="BusinessAddress"
             rules={[
               {
                 required: true,
@@ -114,20 +180,20 @@ const RegOffsetCompanyScreen: NextPage<RegOffsetCompanyScreenPropType> = ({
               },
             ]}
           >
-            <Input />
+            <Input.TextArea rows={5} />
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
             label="RC Number"
-            name="rcNumber"
+            name="RcNumber"
             rules={[
               { required: true, message: "Kindly input your RC number!" },
             ]}
           >
             <Input type="number" />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item
             label="Industry"
-            name="industry"
+            name="Industry"
             rules={[
               {
                 required: true,
@@ -143,25 +209,33 @@ const RegOffsetCompanyScreen: NextPage<RegOffsetCompanyScreenPropType> = ({
             >
               {options.length &&
                 options.map((option) => (
-                  <Option key={option.value} value={option.value}>
-                    {option.name}
+                  <Option key={option} value={option}>
+                    {option}
                   </Option>
                 ))}
             </Select>
           </Form.Item>
           <Form.Item
             label="Password"
-            name="password"
-            rules={[{ required: true, message: "Kindly input your password!" }]}
+            name="Password"
+            rules={[
+              { required: true, message: "Kindly input your password!" },
+              {
+                pattern: passwordPattern,
+                message:
+                  "Password must minimum eight characters, at least one letter, one number and one special character",
+              },
+            ]}
           >
-            <Input type="password" />
+            <Input.Password />
           </Form.Item>
           <Form.Item
             label="Confirm Password"
-            name="confirmpassword"
+            name="ConfirmPassword"
+            validateStatus={validateCPassStatus}
             rules={[{ required: true, message: "Password do not match!" }]}
           >
-            <Input type="password" />
+            <Input.Password onChange={(e) => confirmPass(e.target.value)} />
           </Form.Item>
           <Form.Item className="mt-4">
             <ButtonUI disabled={false} htmlType="submit" width="100%">
@@ -172,8 +246,8 @@ const RegOffsetCompanyScreen: NextPage<RegOffsetCompanyScreenPropType> = ({
       </div>
       <p className="gap-2 flex justify-center">
         <span>Already have an account?</span>
-        <Link href="/register">
-          <a className="text-tertiary-high">Create an account</a>
+        <Link href="/login">
+          <a className="text-tertiary-high">Sign In</a>
         </Link>
       </p>
     </div>
