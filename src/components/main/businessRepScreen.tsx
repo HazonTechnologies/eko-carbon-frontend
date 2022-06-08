@@ -1,134 +1,79 @@
+/* eslint-disable object-curly-newline */
 import { Form, Input, Select } from "antd";
 import { NextPage } from "next";
-import { useEffect, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 import PhoneInput from "react-phone-input-2";
 
+import debounce from "lodash.debounce";
 // import { User } from "../../models/user";
 import ButtonUI from "../utilities/ButtonUI";
 import { BusinessRepInfo } from "../../models/listers";
-import { useLoading } from "../../context/loadingCtx";
 
 import DropFile from "../utilities/DropFile";
-import { fetcher } from "../../lib/helperFunctions/fetcher";
 import { AntFormValidatingProps, BooleanType } from "../../models/utilities";
-import { emailPattern, passwordPattern, phonePattern } from "../../lib/common/regex";
+import {
+  emailPattern,
+  passwordPattern,
+  phonePattern,
+} from "../../lib/common/regex";
+import { City, Dependencies, State } from "../../models/dependencies";
+import { fetcher } from "../../lib/helperFunctions/fetcher";
+import { idType, mockBooleanOptions } from "../../lib/common/dependencies";
 
 const { Option } = Select;
-
-interface City {
-  name: string;
-}
-
-interface State {
-  name: string;
-  cities: City[];
-}
-interface Country {
-  name: string;
-  phoneCode: string;
-  states: State[];
-}
-
-const mockBooleanOptions: BooleanType[] = [
-  {
-    name: "Yes",
-    value: true,
-  },
-  {
-    name: "No",
-    value: false,
-  },
-];
-const idType: { name: string; value: string }[] = [
-  {
-    name: "Voters Card",
-    value: "votersCard",
-  },
-  {
-    name: "National Identity Card",
-    value: "nic",
-  },
-];
-
-const defaultProjectScopes: { name: string; value: string }[] = [
-  {
-    name: "Municipal Solid Waste",
-    value: "msw",
-  },
-  {
-    name: "Agricultural Projects",
-    value: "ap",
-  },
-  {
-    name: "Afforestation & Reforestation",
-    value: "ar",
-  },
-  {
-    name: "Water, Sanitation & Hygiene Projects",
-    value: "wshp",
-  },
-  {
-    name: "Construction Projects (CDMW)",
-    value: "cp",
-  },
-  {
-    name: "Renewable Energy & Energy Efficient Project",
-    value: "reeep",
-  },
-];
 
 interface BusinessRepPropType {
   // eslint-disable-next-line no-unused-vars
   onSubmit: (param: BusinessRepInfo) => void;
   goBack: () => void;
+  dependencies: Dependencies | null;
+  businessRep: BusinessRepInfo | undefined;
+  setBusinessRep: Dispatch<SetStateAction<BusinessRepInfo | undefined>>;
+  setIdFiles: Dispatch<SetStateAction<File[]>>;
+  idFiles: File[];
   businessName: string | undefined;
 }
 
 const BusinessRepScreen: NextPage<BusinessRepPropType> = ({
   onSubmit,
   goBack,
+  businessRep,
+  setBusinessRep,
   businessName,
+  idFiles,
+  setIdFiles,
+  dependencies,
 }) => {
   const onError = (err: any) => {
     console.log(err);
   };
-  const [formValues, setFormValues] = useState<BusinessRepInfo | null>(null);
-  const [projectScopeOptions, setProjectScopeOptions] = useState<
-    { name: string; value: string }[]
-  >([]);
   const [options, setOptions] = useState<BooleanType[]>([]);
-  const [countries, setCountries] = useState<Country[]>([]);
   const [states, setStates] = useState<State[]>([]);
   const [cities, setCities] = useState<City[]>([]);
-  const [files, setFiles] = useState<File[]>([]);
 
   const [validateStatus, setValidateStatus] =
     useState<AntFormValidatingProps>("");
   const [form] = Form.useForm();
 
-  const { setLoadingStatus } = useLoading();
-
-  const fetchDependencies = () => {
-    setLoadingStatus(true);
-    fetcher("Account/dependencies")
-      .then((res) => {
-        if (!res.successful) return;
-        setCountries(res.data.countries);
-      })
-      .finally(() => setLoadingStatus(false));
-  };
   //   call API
   useEffect(() => {
-    fetchDependencies();
     setOptions(mockBooleanOptions);
-    setProjectScopeOptions(defaultProjectScopes);
   }, []);
 
   const onCountrySelected = (val: string) => {
     setStates([]);
     setCities([]);
-    const selectedCountry = countries.find((country) => country.name === val);
+    if (!dependencies || !dependencies.countries) return;
+    const selectedCountry = dependencies.countries.find(
+      (country) => country.name === val
+    );
     if (!selectedCountry) return;
     setStates(selectedCountry.states);
   };
@@ -140,7 +85,7 @@ const BusinessRepScreen: NextPage<BusinessRepPropType> = ({
   };
 
   const confirmPass = (value: string) => {
-    const password = formValues?.Password;
+    const password = businessRep?.Password;
     if (!password) return;
     if (value !== password) {
       setValidateStatus("error");
@@ -149,6 +94,42 @@ const BusinessRepScreen: NextPage<BusinessRepPropType> = ({
     form.setFields([{ name: "ConfirmPassword", errors: [""] }]);
     setValidateStatus("success");
   };
+
+  // validate email
+  const [validateEmailStatus, setValidateEmailStatus] =
+    useState<AntFormValidatingProps>("");
+  const checkEmail = (val: string) => {
+    setValidateEmailStatus("validating");
+    fetcher(`Account/check-email/${val}`)
+      .then((res) => {
+        if (res.code === 200) {
+          setValidateEmailStatus("success");
+          return;
+        }
+        setValidateEmailStatus("error");
+        form.setFields([{ name: "email", errors: ["Email already taken"] }]);
+      })
+      .catch(() => {
+        form.setFields([
+          { name: "email", errors: ["Email already taken"] },
+        ]);
+        setValidateEmailStatus("error");
+      });
+  };
+
+  const debouncedSave = useCallback(
+    debounce((email: string) => checkEmail(email), 800),
+    [] // will be created only once initially
+  );
+
+  const checkEmailExist = (e: any) => {
+    const inputTarget = e.target as HTMLInputElement;
+    const email = inputTarget.value;
+    setValidateStatus("");
+    if (!email.match(emailPattern)) return;
+    debouncedSave(email);
+  };
+  // validate email ends
 
   return (
     <div className="sm:w-[400px] w-[320px] m-[auto] shadow-1 rounded-lg bg-secondary-high p-10 my-2">
@@ -161,88 +142,83 @@ const BusinessRepScreen: NextPage<BusinessRepPropType> = ({
         name="basic"
         layout="vertical"
         form={form}
-        initialValues={{ bank: "zenith", phone: "+2349035108713" }}
-        onValuesChange={(_, values) => setFormValues(values)}
+        initialValues={businessRep}
+        onValuesChange={(_, values) => setBusinessRep(values)}
         onFinish={onSubmit}
         onFinishFailed={onError}
         autoComplete="off"
       >
         <Form.Item
           label="Project Scope"
-          name="projectScope"
+          name="ProjectScope"
           rules={[
             { required: true, message: "Kindly select a project scope!" },
           ]}
         >
-          <Select placeholder="Select a peoject scope">
-            {projectScopeOptions.length &&
-              projectScopeOptions.map((option) => (
-                <Option key={option.value} value={option.value}>
-                  {option.name}
+          <Select placeholder="Select a project scope">
+            {dependencies?.projectScopes &&
+              dependencies.projectScopes.map((option) => (
+                <Option key={option.key} value={option.key}>
+                  <span className="capitalize">{option.value}</span>
                 </Option>
               ))}
           </Select>
         </Form.Item>
         <Form.Item
-          label={`Are you a business owner at ${businessName ?? ''}`}
-          name="isbusinessOwner"
+          label={`Are you a business owner at ${businessName ?? ""}`}
+          name="IsBusinessOwner"
           rules={[{ required: true, message: "Kindly select an option!" }]}
         >
           <Select placeholder="Select an option">
             {options.length &&
               options.map((option) => (
                 <Option key={option.name} value={option.value}>
-                  {option.name}
+                  <span className="capitalize">{option.name}</span>
                 </Option>
               ))}
           </Select>
         </Form.Item>
         <Form.Item
-          label={`Do you own more than 25% at ${businessName ?? ''}`}
-          name="OwnsAboveQuarter"
+          label={`Do you own more than 25% at ${businessName ?? ""}`}
+          name="OwnMoreThanTwentyFivePercent"
           rules={[{ required: true, message: "Kindly select an option!" }]}
         >
           <Select placeholder="Select an option">
             {options.length &&
               options.map((option) => (
                 <Option key={option.name} value={option.value}>
-                  {option.name}
+                  <span className="capitalize">{option.name}</span>
                 </Option>
               ))}
           </Select>
         </Form.Item>
         <Form.Item
           label="Full Name"
-          name="stakeholderName"
+          name="FullName"
           rules={[{ required: true, message: "Kindly input your full name!" }]}
         >
           <Input />
         </Form.Item>
         <Form.Item
           label="Email Address"
-          name="stakeholderEmail"
+          name="Email"
+          validateFirst={true}
+          validateStatus={validateEmailStatus}
           rules={[
             { required: true, message: "Kindly input your email address!" },
             { pattern: emailPattern, message: "Invalid email!" },
           ]}
+          hasFeedback
         >
-          <Input />
+          <Input
+            disabled={validateEmailStatus === "validating"}
+            onChange={checkEmailExist}
+            type="email"
+          />
         </Form.Item>
-        {/* <Form.Item
-          label="BVN"
-          name="stakeholderBVN"
-          rules={[
-            {
-              required: true,
-              message: "Kindly input your Bank Verification Number!",
-            },
-          ]}
-        >
-          <Input type="number" />
-        </Form.Item> */}
         <Form.Item
           label="Phone number"
-          name="stakeholderPhoneNumber"
+          name="PhoneNumber"
           rules={[
             { required: true, message: "Kindly input your phone number!" },
             { pattern: phonePattern, message: "Invalid phone number!" },
@@ -252,24 +228,25 @@ const BusinessRepScreen: NextPage<BusinessRepPropType> = ({
         </Form.Item>
         <Form.Item
           label="Country"
-          name="stakeholderCountry"
+          name="Country"
           rules={[{ required: true, message: "Kindly select your country!" }]}
         >
           <Select
             onSelect={(val: string) => onCountrySelected(val)}
             placeholder="Select an option"
           >
-            {countries.length &&
-              countries.map((option) => (
+            {dependencies &&
+              dependencies.countries &&
+              dependencies.countries.map((option) => (
                 <Option key={option.name} value={option.name}>
-                  {option.name}
+                  <span className="capitalize">{option.name}</span>
                 </Option>
               ))}
           </Select>
         </Form.Item>
         <Form.Item
           label="State"
-          name="stakeholderState"
+          name="State"
           rules={[{ required: true, message: "Kindly select your state!" }]}
         >
           <Select
@@ -280,42 +257,44 @@ const BusinessRepScreen: NextPage<BusinessRepPropType> = ({
             {states.length &&
               states.map((option) => (
                 <Option key={option.name} value={option.name}>
-                  {option.name}
+                  <span className="capitalize">{option.name}</span>
                 </Option>
               ))}
           </Select>
         </Form.Item>
         <Form.Item
           label="City"
-          name="stakeholderCity"
+          name="City"
           rules={[{ required: true, message: "Kindly select your city!" }]}
         >
           <Select disabled={!cities.length} placeholder="Select an option">
             {cities.length &&
               cities.map((option) => (
                 <Option key={option.name} value={option.name}>
-                  {option.name}
+                  <span className="capitalize">{option.name}</span>
                 </Option>
               ))}
           </Select>
         </Form.Item>
         <Form.Item
           label="Street Address"
-          name="stakeholderAddress"
-          rules={[{ required: true, message: "Kindly input your street address!" }]}
+          name="StreetAddress"
+          rules={[
+            { required: true, message: "Kindly input your street address!" },
+          ]}
         >
-          <Input disabled={!cities.length} />
+          <Input />
         </Form.Item>
         <Form.Item
           label="Select ID Type"
-          name="StakeholderIdentityCardType"
+          name="IdentityCardType"
           rules={[{ required: true, message: "Kindly select your id type!" }]}
         >
           <Select placeholder="Select an option">
             {idType.length &&
               idType.map((option) => (
-                <Option key={option.name} value={option.value}>
-                  {option.name}
+                <Option key={option.value} value={option.value}>
+                  <span className="capitalize">{option.name}</span>
                 </Option>
               ))}
           </Select>
@@ -324,8 +303,8 @@ const BusinessRepScreen: NextPage<BusinessRepPropType> = ({
           <DropFile
             title="Upload ID"
             acceptedFileTypes={["pdf", "jpeg", "jpg", "png"]}
-            files={files}
-            setFiles={setFiles}
+            files={idFiles}
+            setFiles={setIdFiles}
             allowMultiple={false}
           />
         </div>

@@ -15,34 +15,37 @@ interface RegisterPropType {
   initialValues: { email: string } | null;
 }
 
-
-
 const RegisterScreen: NextPage<RegisterPropType> = ({
   onSubmit,
   googleCall,
   initialValues,
 }) => {
   const [form] = Form.useForm();
-  const [validateStatus, setValidateStatus] = useState<AntFormValidatingProps>("");
+  const [validateStatus, setValidateStatus] =
+    useState<AntFormValidatingProps>("");
   const onError = (err: any) => {
     console.log(err);
   };
 
   const checkEmail = (val: string) => {
     setValidateStatus("validating");
-    fetcher(`Account/check-email/${val}`).then((res) => {
-      if (res.code === 200) {
-        setValidateStatus("success");
-        return;
-      }
-      setValidateStatus("error");
-      form.setFields([{ name: "email", errors: ["Email already taken"] }]);
-    });
+    fetcher(`Account/check-email/${val}`)
+      .then((res) => {
+        if (res.code === 200) {
+          setValidateStatus("success");
+          return;
+        }
+        setValidateStatus("error");
+        form.setFields([{ name: "email", errors: ["Email already taken"] }]);
+      })
+      .catch(() => {
+        setValidateStatus("error");
+      });
   };
 
   const debouncedSave = useCallback(
     debounce((email: string) => checkEmail(email), 800),
-    [], // will be created only once initially
+    [] // will be created only once initially
   );
 
   const checkEmailExist = (e: any) => {
@@ -95,11 +98,19 @@ const RegisterScreen: NextPage<RegisterPropType> = ({
             ]}
             hasFeedback
           >
-            <Input onChange={checkEmailExist} type="email" />
+            <Input
+              disabled={validateStatus === "validating"}
+              onChange={checkEmailExist}
+              type="email"
+            />
           </Form.Item>
 
           <Form.Item className="mt-4">
-            <CustomButton disabled={false} htmlType="submit" width="100%">
+            <CustomButton
+              disabled={validateStatus !== "success" && !initialValues}
+              htmlType="submit"
+              width="100%"
+            >
               Submit
             </CustomButton>
           </Form.Item>

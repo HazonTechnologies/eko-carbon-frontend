@@ -53,18 +53,16 @@ const DropFile = ({
 
   const acceptedFileType = useMemo(() => {
     const fileType: any = {};
+    fileType[`image/*`] = [];
     acceptedFileTypes.forEach((file) => {
-      if (file === "pdf") {
-        fileType["application/pdf"] = [".pdf"];
-      }
       if (
         file === "jpg" ||
         file === "png" ||
         file === "jpeg" ||
         file === "gif" ||
-        file === "svg"
+        file === "pdf"
       ) {
-        fileType[`images/${file}`] = [`.${file}`];
+        fileType[`image/*`] = [...fileType[`image/*`], `.${file}`];
       }
     });
     return fileType;

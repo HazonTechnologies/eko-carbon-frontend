@@ -1,25 +1,22 @@
 import React, { useEffect } from "react";
+import { useRouter } from "next/router";
 import Header from "../components/main/header";
 import { useUser } from "../context/userCtx";
-
+import { useHistory } from "../context/historyCtx";
+import checkUserData from "../lib/helperFunctions/checkUserData";
 
 const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
-  const { state } = useUser();
+  const { history } = useHistory();
+  const { dispatch, state } = useUser();
+  const { push } = useRouter();
+  const { state: UserState } = useUser();
 
   useEffect(() => {
-    if (!state.userData) {
-      const userData = localStorage.getItem("eko_user");
-      console.warn(userData);
-      // call user data from local storage and redirect based on user type
-      // dispatch({
-      //   type: Types.SetUser,
-      //   payload: {
-      //     value: null,
-      //   },
-      // });
-    }
+    checkUserData(state.userPayload, dispatch, push, "listers", history);
   }, []);
-
+  if (UserState.userPayload) {
+    return null;
+  }
   return (
     <div className="layout">
       <Header type="entry" />

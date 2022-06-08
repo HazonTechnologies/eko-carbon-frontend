@@ -1,14 +1,12 @@
 /* eslint-disable implicit-arrow-linebreak */
 import { Form, Input, Select } from "antd";
 import { NextPage } from "next";
-import { useEffect, useState } from "react";
 // import Image from "next/image";
 // import { User } from "../../models/user";
 import ButtonUI from "../utilities/ButtonUI";
-import { useLoading } from "../../context/loadingCtx";
 import { emailPattern, urlPattern } from "../../lib/common/regex";
-import { fetcher } from "../../lib/helperFunctions/fetcher";
 import { BusinessInfo } from "../../models/listers";
+import { Dependencies } from "../../models/dependencies";
 // import imageLoader from "../../lib/helperFunctions/loader";
 // import ImageViewer from "./imageViewer";
 
@@ -18,35 +16,22 @@ interface BusinessInfoPropType {
   // eslint-disable-next-line no-unused-vars
   onSubmit: (param: BusinessInfo) => void;
   goBack: () => void;
+  businessInfo: BusinessInfo | undefined;
+  dependencies: Dependencies | null;
 }
 
 const BusinessInfoScreen: NextPage<BusinessInfoPropType> = ({
   onSubmit,
   goBack,
+  businessInfo,
+  dependencies,
 }) => {
-  const { setLoadingStatus } = useLoading();
   const [form] = Form.useForm();
   const onError = (err: any) => {
     console.log(err);
   };
   const onFilter = (input: any, option: any) =>
     option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
-
-  const [options, setOptions] = useState<string[]>([]);
-
-  const fetchDependencies = () => {
-    setLoadingStatus(true);
-    fetcher("Account/dependencies")
-      .then((res) => {
-        if (!res.successful) return;
-        setOptions(res.data.industries);
-      })
-      .finally(() => setLoadingStatus(false));
-  };
-  //   call API
-  useEffect(() => {
-    fetchDependencies();
-  }, []);
 
   return (
     <div className="sm:w-[400px] w-[320px] m-[auto] shadow-1 rounded-lg bg-secondary-high p-10 my-2">
@@ -55,7 +40,7 @@ const BusinessInfoScreen: NextPage<BusinessInfoPropType> = ({
         name="basic"
         layout="vertical"
         form={form}
-        initialValues={{ bank: "zenith", phone: "+2349035108713" }}
+        initialValues={businessInfo ?? {}}
         onFinish={onSubmit}
         onFinishFailed={onError}
         autoComplete="off"
@@ -115,10 +100,11 @@ const BusinessInfoScreen: NextPage<BusinessInfoPropType> = ({
             optionFilterProp="children"
             filterOption={onFilter}
           >
-            {options.length &&
-              options.map((option) => (
-                <Option key={option} value={option}>
-                  {option}
+            {dependencies &&
+              dependencies.industries &&
+              dependencies.industries.map((option) => (
+                <Option key={option.key} value={option.key}>
+                  <span className="capitalize">{option.value}</span>
                 </Option>
               ))}
           </Select>

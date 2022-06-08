@@ -61,7 +61,7 @@ const LoginScreen: NextPage<LoginPropType> = ({
           name="password"
           rules={[{ required: true, message: "Kindly input your password!" }]}
         >
-          <Input type="password" />
+          <Input.Password />
         </Form.Item>
         <span className="-mt-10 text-xs text-tertiary-high">
           Forgot Password?

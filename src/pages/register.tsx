@@ -3,15 +3,16 @@
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import RegisterAccountInfoScreen from "../components/main/registerAccountInfoScreen";
 
 // import { useLoading } from "../context/loadingCtx";
-import RegisterScreen from "../components/main/registerScreen";
 import RegisterUserTypeScreen from "../components/main/registerUserTypeScreen";
 import RegOffsetCompanyScreen from "../components/main/regOffsetCompanyScreen";
 import RegOffsetPersonalScreen from "../components/main/regOffsetPersonalScreen";
 import { Types } from "../context/actions/header.actions";
 import { useHeader } from "../context/headerCtx";
+import { useLoading } from "../context/loadingCtx";
 import DefaultLayout from "../layouts/defaultLayout";
 import {
   userTypes,
@@ -19,21 +20,43 @@ import {
   typeSubHeader,
   typeHeader,
 } from "../lib/common/registerTypes";
+import { fetcher, postApi } from "../lib/helperFunctions/fetcher";
 import { Option } from "../models/utilities";
+import { Dependencies } from "../models/dependencies";
+
+// interface Dependencies {
+//   bankInfo:
+// }
 
 const Register = () => {
   // const { setLoadingStatus } = useLoading();
   // const id = useId();
   const { push } = useRouter();
 
+  const { setLoadingStatus } = useLoading();
+
   const [step, updateStep] = useState<number>(1);
   const [acctStep, updateAcctStep] = useState<number>(0);
-  const [userDetails, setUserDetails] = useState<{ email: string } | null>(
-    null,
-  );
   const [userType, setUserType] = useState<Option | null>(null);
   // const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const { dispatch: headerDispatch } = useHeader();
+
+  const [dependencies, setDependencies] = useState<Dependencies | null>(null);
+
+  const getDependencies = () => {
+    setLoadingStatus(true);
+    fetcher("Account/dependencies")
+      .then((res) => {
+        if (res.successful) {
+          setDependencies(res.data);
+        }
+      })
+      .finally(() => setLoadingStatus(false));
+  };
+
+  useEffect(() => {
+    getDependencies();
+  }, []);
 
   useEffect(() => {
     if (step === 1) {
@@ -41,14 +64,16 @@ const Register = () => {
     }
   }, [step, headerDispatch]);
 
-  const onRegLister = (values: any) => {
-    console.log(values);
-    setUserDetails(values);
-    updateStep(3);
-  };
-  const onRegAccount = (bankValues: any, infoValues: any, repValues: any) => {
-    console.warn(bankValues, infoValues, repValues);
-    push("listers");
+  const onRegAccount = (payload: FormData) => {
+    setLoadingStatus(true);
+    postApi("Account/register-lister", payload)
+      .then((res) => {
+        if (!res.successful) {
+          toast.error(res.message);
+        }
+      })
+      .finally(() => setLoadingStatus(false));
+    // push("listers");
   };
   const selectUserType = (type: Option) => {
     setUserType(type);
@@ -57,11 +82,11 @@ const Register = () => {
       return;
     }
     if (type.value === "offset_personal") {
-      updateStep(4);
+      updateStep(3);
       return;
     }
 
-    updateStep(5);
+    updateStep(4);
   };
 
   const onRegOffsetPersonal = (values: any) => {
@@ -81,12 +106,12 @@ const Register = () => {
     if (step === 1) {
       push("login");
     }
-    if (step === 4 || step === 5) {
+    if (step === 3 || step === 4) {
       updateStep(1);
       return;
     }
-    if (step === 3) {
-      if (acctStep === 1) {
+    if (step === 2) {
+      if (acctStep === 0) {
         updateStep(step - 1);
         return;
       }
@@ -111,26 +136,20 @@ const Register = () => {
         />
       )}
       {step === 2 && (
-        <RegisterScreen
-          initialValues={userDetails}
-          googleCall={googleCall}
-          onSubmit={onRegLister}
-        />
-      )}
-      {step === 3 && (
         <RegisterAccountInfoScreen
+          dependencies={dependencies}
           currStep={acctStep}
           setCurrStep={updateAcctStep}
           onSubmitReg={onRegAccount}
         />
       )}
-      {step === 4 && (
+      {step === 3 && (
         <RegOffsetPersonalScreen
           googleCall={googleCall}
           onSubmit={onRegOffsetPersonal}
         />
       )}
-      {step === 5 && (
+      {step === 6 && (
         <RegOffsetCompanyScreen
           googleCall={googleCall}
           onSubmit={onRegOffsetCompany}

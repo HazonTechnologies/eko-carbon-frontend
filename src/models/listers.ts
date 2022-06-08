@@ -6,10 +6,11 @@ export interface ListerBoard {
 }
 
 export interface BankInfo {
-  PhoneNumber: string;
-  BankCode: string;
-  CorporateAccountNumber: string;
-  CorporateAccountName: string;
+  BankCountryName: string;
+  BankName: string;
+  BankAccountType: string;
+  AccountNumber: string;
+  AccountName: string;
 }
 
 export interface ProfileInfo {
@@ -34,13 +35,6 @@ export interface ProfileInfo {
   };
 }
 
-export interface UserPayload {
-  type: "listers" | "offsetters";
-  token: string;
-  refreshToken: string;
-  Email: string;
-}
-
 export interface BusinessInfo {
   BusinessName: string;
   BusinessAddress: string;
@@ -48,51 +42,88 @@ export interface BusinessInfo {
   Website: string;
   Industry: string;
   Summary: string;
+  businessName: string;
+  businessAddress: string;
+  businessEmail: string;
+  website: string;
+  industry: string;
+  summary: string;
 }
 
 export interface BusinessRepInfo {
-  projectScope:string;
-  isbusinessOwner: boolean;
-  OwnsAboveQuarter: boolean;
-  stakeholderName: string;
-  stakeholderEmail: string;
-  stakeholderBVN: string;
-  stakeholderPhoneNumber: string;
-  stakeholderCountry: string;
-  stakeholderState: string;
-  stakeholderCity: string;
-  stakeholderAddress: string;
-  StakeholderIdentityCardType: string;
-  StakeholderIdentityCard:File;
+  ProjectScope: string;
+  IsBusinessOwner: boolean;
+  OwnMoreThanTwentyFivePercent: boolean;
+  FullName: string;
+  Email: string;
+  PhoneNumber: string;
+  Country: string;
+  State: string;
+  City: string;
+  StreetAddress: string;
+  IdentityCardType: string;
   Password: string;
   ConfirmPassword: string;
 }
+export interface Profile {
+  bankInformation: BankInfo;
+  company: BusinessInfo;
+}
+export interface Permission {
+  key: string;
+  value: string;
+}
+export interface Role {
+  name: string;
+  id: number;
+  description: string;
+  permissions: Permission[];
+}
+export interface UserPayload {
+  type: "listers" | "offsetters";
+  jwToken: string;
+  refreshToken: string;
+  refreshTokenExpiresIn: number;
+  isVerified: boolean;
+  Email: string;
+}
+
+export interface Lister extends BusinessInfo, BusinessRepInfo, BankInfo {
+  IdentityCard: File;
+}
 
 export interface ListerUser extends UserPayload {
-  FullName: string;
-  Email: string;
-  Password?: string;
-  ConfirmPassword?: string;
-  CorporateAccountNumber: string;
-  BankCode: string;
-  PhoneNumber: string;
-  CorporateAccountName: string;
-  BusinessName: string;
-  BusinessEmail: string;
-  BusinessAddress: string;
-  RcNumber: number;
-  Website: string;
-  CertificateOfInc: File;
-  IsBusinessOwner: boolean;
-  OwnsAboveQuarter: boolean;
-  stakeholderName: string;
-  stakeholderEmail: string;
-  stakeholderBVN: string;
-  stakeholderPhoneNumber: string;
-  stakeholderCountry: string;
-  stakeholderState: string;
-  stakeholderCity: string;
-  stakeholderAddress: string;
-  StakeholderIdentityCard: File;
-  StakeholderIdentityCardType: number;
+  profile: Profile;
+  roles: Role;
+}
+
+interface Picture {
+  idType: number;
+  name: string;
+  path: string;
+  url: string;
+}
+
+export interface ProjectEntryT {
+  ProjectType: string;
+  ProjectName: string;
+  ProjectDescription: string;
+  CO2Tonnes: number;
+  ProjectPicture: File[];
+  ExternalLinks: string[];
+  Tags: string[];
+  IsDraft: boolean;
+  name: string;
+  approved: boolean;
+  archived: boolean;
+  cO2Tonnes: number;
+  description: [{ details: string }];
+  externalLink: { name: string };
+  isDraft: false;
+  lister: null;
+  listerId: 5;
+  pictures: Picture[];
+  projectId: number;
+  projectType: string;
+  tags: string[];
 }

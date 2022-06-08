@@ -15,6 +15,7 @@ import { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { useUser } from "../../context/userCtx";
 import { listerLinks } from "../../lib/common/links";
 import { ListerLink } from "../../models/link";
 import ProjectEntry from "./projectEntry";
@@ -27,19 +28,25 @@ const ListerMenu: NextPage<any> = () => {
   const [listerMenu, setListerMenu] = useState<ListerLink[]>(listerLinks);
   const [dropdown, toggleDropdown] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const { state } = useUser();
 
   const { push } = useRouter();
 
   useEffect(() => {
-    setListerMenu(listerLinks);
+    console.log(listerLinks.slice(1));
+    const company = listerLinks[0];
+    company.title = state.userPayload?.profile?.company?.businessName ?? "";
+    console.log(company);
+    setListerMenu([company, ...listerLinks.slice(1)]);
   }, []);
 
-  const goTo = (link: string) => {
+  const goTo = (link: string | undefined) => {
     if (link === "addProject") {
       setIsModalVisible(true);
       return;
     }
 
+    if (!link) return;
     push(link);
   };
 
@@ -79,7 +86,9 @@ const ListerMenu: NextPage<any> = () => {
                     type="button"
                     onClick={() => toggleDropdown(!dropdown)}
                   >
-                    {menu.icon === "DropboxOutlined" && <DropboxOutlined className="opacity-80" />}
+                    {menu.icon === "DropboxOutlined" && (
+                      <DropboxOutlined className="opacity-80" />
+                    )}
                     <span>{menu.title}</span>
                     {dropdown && <DownOutlined className="text-[12px] ml-5" />}
                     {!dropdown && <UpOutlined className="text-[12px] ml-5" />}
@@ -90,7 +99,7 @@ const ListerMenu: NextPage<any> = () => {
                     }`}
                   >
                     {menu.children &&
-                      menu.children.length &&
+                      !!menu.children.length &&
                       menu.children.map((childMenu) => (
                         <button
                           type="button"
@@ -101,6 +110,14 @@ const ListerMenu: NextPage<any> = () => {
                           {childMenu.title}
                         </button>
                       ))}
+                    {!menu?.children?.length && (
+                      <button
+                        type="button"
+                        className="text-left opacity-50 text-xs"
+                      >
+                        No Active Project
+                      </button>
+                    )}
                     <button
                       type="button"
                       key="addProject"

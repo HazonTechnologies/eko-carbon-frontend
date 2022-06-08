@@ -6,6 +6,6 @@ export interface Link {
 
 export interface ListerLink extends Link {
   children?: ListerLink[];
-  type: "link" | "popup" | "dropdown";
+  type: "link" | "popup" | "dropdown" | "default";
   icon?: string;
 }

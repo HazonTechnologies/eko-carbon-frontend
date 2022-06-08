@@ -1,45 +1,34 @@
 /* eslint-disable comma-dangle */
 /* eslint-disable implicit-arrow-linebreak */
 import { Form, Input, Select } from "antd";
-import PhoneInput from "react-phone-input-2";
 
 import { NextPage } from "next";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 // import { User } from "../../models/user";
 import debounce from "lodash.debounce";
 import toast from "react-hot-toast";
 import ButtonUI from "../utilities/ButtonUI";
-import { useLoading } from "../../context/loadingCtx";
 import { BankInfo } from "../../models/listers";
-import { fetcher, postApi } from "../../lib/helperFunctions/fetcher";
+import { postApi } from "../../lib/helperFunctions/fetcher";
 import { AntFormValidatingProps } from "../../models/utilities";
-import { phonePattern } from "../../lib/common/regex";
+import { Dependencies } from "../../models/dependencies";
 
 const { Option } = Select;
-
-interface Bank {
-  name: string;
-  code: number;
-}
-interface AccountType {
-  name: string;
-  value: string;
-}
-
-const defaultAcctType: AccountType[] = [
-  { name: "Savings", value: "savings" },
-  { name: "Current", value: "current" },
-];
 
 interface BankInfoPropType {
   // eslint-disable-next-line no-unused-vars
   onSubmit: (param: BankInfo) => void;
   bankInfo: BankInfo | undefined;
+  dependencies: Dependencies | null;
   // eslint-disable-next-line no-unused-vars
 }
 
-const BankInfoScreen: NextPage<BankInfoPropType> = ({ onSubmit, bankInfo }) => {
+const BankInfoScreen: NextPage<BankInfoPropType> = ({
+  onSubmit,
+  bankInfo,
+  dependencies,
+}) => {
   const [formValues, setFormValues] = useState<BankInfo | null>(null);
   const [validateStatus, setValidateStatus] =
     useState<AntFormValidatingProps>("");
@@ -48,38 +37,19 @@ const BankInfoScreen: NextPage<BankInfoPropType> = ({ onSubmit, bankInfo }) => {
   const onError = (err: any) => {
     console.log(err);
   };
-  const onFilter = (input: any, option: any) => {
-    console.log(input);
-    return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
-  };
-  const [options, setOptions] = useState<Bank[]>([]);
-  const [accountTypeOptions, setAccountTypeOptions] = useState<AccountType[]>(
-    []
-  );
-  const { setLoadingStatus } = useLoading();
+  const onFilter = (input: any, option: any) =>
+    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+
   const [disableAcctNum, setDisableAcctNum] = useState(false);
 
-  //   call API
-
-  const fetchBanks = () => {
-    setLoadingStatus(true);
-    fetcher("Account/all-banks")
-      .then((res) => {
-        if (res.successful) {
-          setOptions(res.data);
-        }
-      })
-      .finally(() => setLoadingStatus(false));
-  };
-  const validatingAccount = (accountNumber: string, bankCode: string) => {
+  const validatingAccount = (accountNumber: string, bankName: string) => {
+    const bankCode = dependencies?.banks.find((bank) => bank.name === bankName)?.code;
     setValidateStatus("validating");
     setDisableAcctNum(true);
     postApi(`Account/validate-account`, { accountNumber, bankCode })
       .then((res) => {
         if (!res.successful) return;
-        form.setFields([
-          { name: "CorporateAccountName", value: res.data.account_Name },
-        ]);
+        form.setFields([{ name: "AccountName", value: res.data.account_Name }]);
         setValidateStatus("success");
       })
       .catch(() => {
@@ -90,12 +60,18 @@ const BankInfoScreen: NextPage<BankInfoPropType> = ({ onSubmit, bankInfo }) => {
   };
   const debouncedSave = useCallback(
     debounce(
-      (acctNum: string, bankCode: string) =>
-        validatingAccount(acctNum, bankCode),
+      (acctNum: string, bankName: string) =>
+        validatingAccount(acctNum, bankName),
       800
     ),
     []
   );
+
+  const resetAcctNum = () => {
+    form.setFields([{ name: "AccountNumber", value: "" }]);
+    form.setFields([{ name: "AccountName", value: "" }]);
+    setValidateStatus("");
+  };
 
   const validateAccount = (acctNum: string) => {
     setValidateStatus("");
@@ -106,18 +82,13 @@ const BankInfoScreen: NextPage<BankInfoPropType> = ({ onSubmit, bankInfo }) => {
     }
     if (acctNum.length !== 10) return;
     if (!formValues) return;
-    if (!formValues.BankCode) {
+    if (!formValues.BankName) {
       toast.error("Kindly select a bank");
       return;
     }
     setValidateStatus("");
-    debouncedSave(acctNum, formValues.BankCode);
+    debouncedSave(acctNum, formValues.BankName);
   };
-
-  useEffect(() => {
-    fetchBanks();
-    setAccountTypeOptions(defaultAcctType);
-  }, []);
 
   return (
     <div className="sm:w-[400px] w-[320px] m-[auto] shadow-1 rounded-lg bg-secondary-high p-10 my-2">
@@ -133,30 +104,15 @@ const BankInfoScreen: NextPage<BankInfoPropType> = ({ onSubmit, bankInfo }) => {
         autoComplete="off"
       >
         <Form.Item
-          label="Phone number"
-          name="PhoneNumber"
-          rules={[
-            { required: true, message: "Kindly input your phone number!" },
-            { pattern: phonePattern, message: "Invalid phone number!" },
-          ]}
+          label="Country"
+          name="BankCountryName"
+          rules={[{ required: true, message: "Kindly select your country!" }]}
         >
-          <PhoneInput country="ng" containerClass="w-40px" />
-        </Form.Item>
-
-        <Form.Item
-          label="Bank Name"
-          name="BankCode"
-          rules={[{ required: true, message: "Kindly select a bank!" }]}
-        >
-          <Select
-            showSearch
-            placeholder="Select a bank"
-            optionFilterProp="children"
-            filterOption={onFilter}
-          >
-            {options.length &&
-              options.map((option) => (
-                <Option key={option.code} value={option.code}>
+          <Select placeholder="Select an option">
+            {dependencies &&
+              dependencies.countries &&
+              dependencies.countries.map((option) => (
+                <Option key={option.name} value={option.name}>
                   {option.name}
                 </Option>
               ))}
@@ -164,7 +120,7 @@ const BankInfoScreen: NextPage<BankInfoPropType> = ({ onSubmit, bankInfo }) => {
         </Form.Item>
         <Form.Item
           label="Bank Type"
-          name="accountType"
+          name="BankAccountType"
           rules={[
             { required: true, message: "Kindly select an account Type!" },
           ]}
@@ -175,9 +131,31 @@ const BankInfoScreen: NextPage<BankInfoPropType> = ({ onSubmit, bankInfo }) => {
             optionFilterProp="children"
             filterOption={onFilter}
           >
-            {accountTypeOptions.length &&
-              accountTypeOptions.map((option) => (
-                <Option key={option.value} value={option.value}>
+            {dependencies &&
+              dependencies.bankAccountTypes &&
+              dependencies.bankAccountTypes.map((option) => (
+                <Option key={option.key} value={option.key}>
+                  <span className="capitalize">{option.value}</span>
+                </Option>
+              ))}
+          </Select>
+        </Form.Item>
+        <Form.Item
+          label="Bank Name"
+          name="BankName"
+          rules={[{ required: true, message: "Kindly select a bank!" }]}
+        >
+          <Select
+            showSearch
+            placeholder="Select a bank"
+            optionFilterProp="children"
+            filterOption={onFilter}
+            onSelect={() => resetAcctNum()}
+          >
+            {dependencies &&
+              dependencies.banks &&
+              dependencies.banks.map((option) => (
+                <Option key={option.name} value={option.name}>
                   {option.name}
                 </Option>
               ))}
@@ -186,7 +164,7 @@ const BankInfoScreen: NextPage<BankInfoPropType> = ({ onSubmit, bankInfo }) => {
         <Form.Item
           shouldUpdate
           label="Corporate Account Number"
-          name="CorporateAccountNumber"
+          name="AccountNumber"
           rules={[
             {
               required: true,
@@ -210,7 +188,7 @@ const BankInfoScreen: NextPage<BankInfoPropType> = ({ onSubmit, bankInfo }) => {
         </Form.Item>
         <Form.Item
           label="Account Name"
-          name="CorporateAccountName"
+          name="AccountName"
           rules={[
             {
               required: true,
