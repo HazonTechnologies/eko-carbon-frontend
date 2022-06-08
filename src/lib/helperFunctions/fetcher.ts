@@ -1,5 +1,7 @@
+/* eslint-disable no-restricted-globals */
 import Axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import toast from "react-hot-toast";
+import { getUserToken } from "./tokenValidation";
 
 interface ResApi {
   code: number;
@@ -67,7 +69,11 @@ export async function fetcher(url: string): Promise<ResApi> {
 }
 
 const requestHandler = (request: AxiosRequestConfig<any>) => {
-  console.log(request);
+  const token = `Bearer ${getUserToken()?.jwToken}`;
+  request.headers = {
+    ...request.headers,
+    Authorization: token,
+  };
   return request;
 };
 
@@ -84,24 +90,34 @@ const responseHandler = (response: AxiosResponse<any, any>) => {
   return response;
 };
 
-const updateToken = async () => {
-  const res = await postApi("/authorization", { refreshToken: "sjjs" });
-  return res.data.token;
-};
+// const updateToken = async () => {
+//   if (!getUserToken()) {
+//     location.reload();
+//     return;
+//   }
+//   const res = await postApi("Account/refresh-token", {
+//     refreshToken: getUserToken()?.refreshToken,
+//   });
+//   return res.data.token;
+// };
 
 const errorHandler = (error: any) => {
   if (error.config && error.response && error.response.status === 401) {
-    return updateToken()
-      .then((token: string) => {
-        error.config.headers.token = token;
-        return customAxios.request(error.config);
-      })
-      .catch(() => {
-        // go to login page
-      });
+    // return updateToken()
+    //   .then((token: string) => {
+    //     console.warn("Here it is being valled");
+    //     error.config.headers.token = token;
+    //     return customAxios.request(error.config);
+    //   })
+    //   .catch(() => {
+    //     console.warn("called");
+    //     // go to login page
+    //   });
   }
   console.log(error.config);
-  toast.error("Check your internet connection");
+  toast.error(
+    "An error occured, Kindly check your internet connection and try again, if it persists kindly reach out to the support team"
+  );
   return Promise.reject(error);
 };
 

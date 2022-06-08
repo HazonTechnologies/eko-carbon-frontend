@@ -1,4 +1,6 @@
-import { UserPayload } from "../../models/listers";
+/* eslint-disable no-unused-vars */
+import { ListerUser } from "../../models/listers";
+import { UserType } from "../store/userStore";
 
 type ActionMap<M extends { [index: string]: any }> = {
   [Key in keyof M]: M[Key] extends undefined
@@ -12,13 +14,16 @@ type ActionMap<M extends { [index: string]: any }> = {
 };
 
 export enum Types {
-  // eslint-disable-next-line no-unused-vars
+  SetProjects = "SET_PROJECTS",
   SetUser = "SET_USER",
 }
 
 export type ShownPayload = {
+  [Types.SetProjects]: {
+    value: UserType['projects'];
+  };
   [Types.SetUser]: {
-    value: UserPayload | null;
+    value: UserType['userPayload'];
   };
 };
 export type ShownActions =

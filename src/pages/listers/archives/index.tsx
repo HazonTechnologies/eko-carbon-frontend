@@ -6,6 +6,7 @@ import { Tabs } from "antd";
 import ButtonUI from "../../../components/utilities/ButtonUI";
 import ListerLayout from "../../../layouts/listerLayout";
 import ProjectEntry from "../../../components/main/projectEntry";
+import Projects from "../../../components/main/projects";
 
 const { TabPane } = Tabs;
 
@@ -37,16 +38,16 @@ const Archives = () => {
         <div>
           <Tabs defaultActiveKey="1" onChange={callback}>
             <TabPane tab="Completed" key="1">
-              Content of Tab Pane 1
+              <Projects status="active" />
             </TabPane>
             <TabPane tab="Pending" key="2">
-              Content of Tab Pane 2
+              <Projects status="pending" />
             </TabPane>
             <TabPane tab="Rejected" key="3">
-              Content of Tab Pane 3
+              <Projects status="rejected" />
             </TabPane>
             <TabPane tab="Drafts" key="4">
-              Content of Tab Pane 4
+              <Projects status="draft" />
             </TabPane>
           </Tabs>
         </div>

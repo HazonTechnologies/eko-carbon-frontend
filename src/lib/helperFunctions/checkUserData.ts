@@ -1,24 +1,32 @@
+/* eslint-disable no-restricted-globals */
 /* eslint-disable no-unused-vars */
 import { Dispatch } from "react";
 
 import { ShownActions, Types } from "../../context/actions/user.actions";
-import { UserPayload } from "../../models/listers";
-
+import { ListerUser, UserPayload } from "../../models/listers";
 
 export default function checkUserData(
-  userState: UserPayload | null,
+  userState: UserPayload | null | {},
   dispatch: Dispatch<ShownActions>,
   push: (url: string) => void,
   layoutType: "listers" | "offsetters",
+  history: string[]
 ): void {
   if (!userState) {
     const userData = localStorage.getItem("eko_user");
     if (!userData) return push("login");
-    const ekoUser: UserPayload = JSON.parse(userData);
+    const ekoUser: ListerUser = JSON.parse(userData);
     dispatch({ type: Types.SetUser, payload: { value: ekoUser } });
-    if (layoutType !== ekoUser.type) {
-      push(`/${layoutType}`);
+    console.warn(ekoUser);
+    if (ekoUser.profile.company) {
+      push("/listers");
     }
+
+    // check layout type matches with the user data
+
+    // if (layoutType !== ekoUser.type) {
+    //   push(`/${layoutType}`);
+    // }
   }
 }
 

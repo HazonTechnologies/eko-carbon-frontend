@@ -45,24 +45,24 @@ const listerLinks: ListerLink[] = [
     icon: "DropboxOutlined",
     active: false,
     children: [
-      {
-        title: "Eko Farma",
-        link: "jnfo4552",
-        type: "link",
-        active: false,
-      },
-      {
-        title: "I meet Farma",
-        link: "jnfo453744",
-        type: "link",
-        active: false,
-      },
-      {
-        title: "Wellness Plus",
-        link: "jnfo4529383",
-        type: "link",
-        active: false,
-      },
+      // {
+      //   title: "Eko Farma",
+      //   link: "jnfo4552",
+      //   type: "link",
+      //   active: false,
+      // },
+      // {
+      //   title: "I meet Farma",
+      //   link: "jnfo453744",
+      //   type: "link",
+      //   active: false,
+      // },
+      // {
+      //   title: "Wellness Plus",
+      //   link: "jnfo4529383",
+      //   type: "link",
+      //   active: false,
+      // },
     ],
   },
   {

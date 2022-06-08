@@ -16,7 +16,9 @@ const DropdownUI: NextPage<{
     <Menu>
       {menuItem.length &&
         menuItem.map((item) => (
-          <Menu.Item onClick={() => selectOption(item)}>{item.title}</Menu.Item>
+          <Menu.Item key={item.value} onClick={() => selectOption(item)}>
+            {item.title}
+          </Menu.Item>
         ))}
     </Menu>
   );

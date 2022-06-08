@@ -1,16 +1,37 @@
-// import { useRouter } from "next/router";
-// import { useId } from "react";
-// import { postApi } from "../lib/helperFunctions/fetcher";
-// import { useLoading } from "../context/loadingCtx";
+import { useRouter } from "next/router";
+import toast from "react-hot-toast";
+import { useLoading } from "../context/loadingCtx";
 import LoginScreen from "../components/main/loginScreen";
 import DefaultLayout from "../layouts/defaultLayout";
+import { postApi } from "../lib/helperFunctions/fetcher";
+import { User } from "../models/user";
 
 const Login = () => {
-  // const { setLoadingStatus } = useLoading();
-  // const id = useId();
-  // const { push } = useRouter();
-  const onSubmit = (values: any) => {
+  const { setLoadingStatus } = useLoading();
+  const { push } = useRouter();
+
+  const authenticate = (val: User) => {
+    setLoadingStatus(true);
+    postApi("Account/authenticate", val)
+      .then((res) => {
+        if (res.successful) {
+          toast.success(res.message);
+          if (res.data.profile?.company) {
+            localStorage.setItem("eko_user", JSON.stringify(res.data));
+            // checkUserData(UserState.userData, UserDispatch, push, "listers");
+            push("/listers");
+          }
+        } else {
+          toast.error(res.message);
+        }
+        console.log(res);
+      })
+      .finally(() => setLoadingStatus(false));
+  };
+
+  const onSubmit = (values: User) => {
     console.log("Success:", values);
+    authenticate(values);
   };
 
   const onError = (errorInfo: any) => {

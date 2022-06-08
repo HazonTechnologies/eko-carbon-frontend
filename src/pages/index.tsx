@@ -11,7 +11,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (!state.userData) {
+    if (!state.userPayload) {
       const userData = localStorage.getItem('eko_user');
       console.warn(userData);
       // call user data from local storage and redirect based on user type
