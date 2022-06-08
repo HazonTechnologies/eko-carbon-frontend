@@ -26,6 +26,8 @@ const ConfirmEmail = () => {
     const query: any = { ...router.query };
     if (query.code) {
       confirmAccount(query);
+    } else {
+      router.push("/login");
     }
   }, [router]);
 

@@ -5,6 +5,8 @@ import { Dispatch } from "react";
 import { ShownActions, Types } from "../../context/actions/user.actions";
 import { ListerUser, UserPayload } from "../../models/listers";
 
+const excludedPages = ["/register/", "/login/", "/confirm-email/"];
+
 export default function checkUserData(
   userState: UserPayload | null | {},
   dispatch: Dispatch<ShownActions>,
@@ -14,11 +16,17 @@ export default function checkUserData(
 ): void {
   if (!userState) {
     const userData = localStorage.getItem("eko_user");
-    if (!userData) return push("login");
+    console.log(location.pathname);
+    if (!userData) {
+      if (!excludedPages.includes(location.pathname)) {
+        return push("login");
+      }
+      return;
+    }
     const ekoUser: ListerUser = JSON.parse(userData);
     dispatch({ type: Types.SetUser, payload: { value: ekoUser } });
     console.warn(ekoUser);
-    if (ekoUser.profile.company) {
+    if (ekoUser?.profile?.company) {
       push("/listers");
     }
 
