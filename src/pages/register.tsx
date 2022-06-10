@@ -1,9 +1,9 @@
 // import { useRouter } from "next/router";
 // import { useId, useState } from "react";
+import toast from "react-hot-toast";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import RegisterAccountInfoScreen from "../components/main/registerAccountInfoScreen";
 
 // import { useLoading } from "../context/loadingCtx";
@@ -70,7 +70,10 @@ const Register = () => {
       .then((res) => {
         if (!res.successful) {
           toast.error(res.message);
+          return;
         }
+        toast.success(res.message);
+        push("/login");
       })
       .finally(() => setLoadingStatus(false));
     // push("listers");

@@ -9,8 +9,8 @@ import {
   useState,
 } from "react";
 
-import PhoneInput from "react-phone-input-2";
 
+import PhoneInput from "react-phone-input-2";
 import debounce from "lodash.debounce";
 // import { User } from "../../models/user";
 import ButtonUI from "../utilities/ButtonUI";
@@ -102,7 +102,7 @@ const BusinessRepScreen: NextPage<BusinessRepPropType> = ({
     setValidateEmailStatus("validating");
     fetcher(`Account/check-email/${val}`)
       .then((res) => {
-        if (res.code === 200) {
+        if (!res.data) {
           setValidateEmailStatus("success");
           return;
         }
@@ -111,7 +111,7 @@ const BusinessRepScreen: NextPage<BusinessRepPropType> = ({
       })
       .catch(() => {
         form.setFields([
-          { name: "email", errors: ["Email already taken"] },
+          { name: "Email ", errors: ["Email already taken"] },
         ]);
         setValidateEmailStatus("error");
       });
