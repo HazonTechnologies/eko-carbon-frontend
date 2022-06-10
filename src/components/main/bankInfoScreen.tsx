@@ -163,7 +163,7 @@ const BankInfoScreen: NextPage<BankInfoPropType> = ({
         </Form.Item>
         <Form.Item
           shouldUpdate
-          label="Corporate Account Number"
+          label="Account Number"
           name="AccountNumber"
           rules={[
             {
