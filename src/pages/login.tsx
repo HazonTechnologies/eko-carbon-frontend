@@ -48,6 +48,7 @@ const Login = () => {
         onSubmit={onSubmit}
         onError={onError}
         googleCall={googleCall}
+        onAdmin={false}
       />
     </div>
   );

@@ -1,28 +1,36 @@
 import { useEffect } from "react";
+import { useRouter } from "next/router";
 // import { Types } from "../context/actions/user.actions";
 import { useLoading } from "../context/loadingCtx";
 import { useUser } from "../context/userCtx";
+import checkUserData from "../lib/helperFunctions/checkUserData";
+import { useHistory } from "../context/historyCtx";
 
 export default function Home() {
   const { loading, setLoadingStatus } = useLoading();
-  const { state } = useUser();
+  const { push } = useRouter();
+  const { history } = useHistory();
+
+  const { state: UserState, dispatch: UserDispatch } = useUser();
   const toggle = () => {
     setLoadingStatus(!loading);
   };
 
   useEffect(() => {
-    if (!state.userPayload) {
-      const userData = localStorage.getItem('eko_user');
-      console.warn(userData);
-      // call user data from local storage and redirect based on user type
-      // dispatch({
-      //   type: Types.SetUser,
-      //   payload: {
-      //     value: null,
-      //   },
-      // });
-    }
-  }, [state]);
+    checkUserData(
+      UserState.userPayload,
+      UserDispatch,
+      push,
+      "index",
+      history
+    );
+    console.log(UserState);
+  }, []);
+
+  if (!UserState.userPayload) {
+    return null;
+  }
+
 
   return (
     <>

@@ -11,7 +11,7 @@ export default function checkUserData(
   userState: UserPayload | null | {},
   dispatch: Dispatch<ShownActions>,
   push: (url: string) => void,
-  layoutType: "listers" | "offsetters",
+  layoutType: "listers" | "offsetters" | "index",
   history: string[]
 ): void {
   if (!userState) {
@@ -25,8 +25,8 @@ export default function checkUserData(
     }
     const ekoUser: ListerUser = JSON.parse(userData);
     dispatch({ type: Types.SetUser, payload: { value: ekoUser } });
-    console.warn(ekoUser);
     if (ekoUser?.profile?.company) {
+      if (layoutType === 'listers') return;
       push("/listers");
     }
 
