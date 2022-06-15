@@ -11,7 +11,7 @@ export default function checkUserData(
   userState: UserPayload | null | {},
   dispatch: Dispatch<ShownActions>,
   push: (url: string) => void,
-  layoutType: "listers" | "offsetters",
+  layoutType: "listers" | "offsetters" | "index",
   history: string[]
 ): void {
   if (!userState) {
