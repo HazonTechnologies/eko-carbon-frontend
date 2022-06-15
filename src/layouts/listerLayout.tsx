@@ -1,12 +1,12 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import useSWR from "swr";
 import Header from "../components/main/header";
 import SideNav from "../components/main/sideNav";
 import { Types } from "../context/actions/user.actions";
 import { useHistory } from "../context/historyCtx";
 import { useUser } from "../context/userCtx";
+import { ProjectsUrl } from "../lib/common/endpoints";
 import checkUserData from "../lib/helperFunctions/checkUserData";
 // import { useHeader } from "../context/headerCtx";
 
@@ -17,7 +17,7 @@ const ListerLayout = ({ children }: { children: React.ReactNode }) => {
 
   const { state: UserState, dispatch: UserDispatch } = useUser();
 
-  const { data, error } = useSWR("Project/my-projects");
+  const { data } = useSWR(ProjectsUrl);
 
   useEffect(() => {
     checkUserData(
@@ -36,9 +36,6 @@ const ListerLayout = ({ children }: { children: React.ReactNode }) => {
     }
   }, [data]);
 
-  if (error) {
-    toast.error("Couldn't fetch projects, Try again");
-  }
 
   if (!UserState.userPayload) {
     return null;

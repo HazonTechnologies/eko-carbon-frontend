@@ -1,36 +1,42 @@
+import Image from "next/image";
+import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { useHistory } from "../context/historyCtx";
 // import { Types } from "../context/actions/user.actions";
-import { useLoading } from "../context/loadingCtx";
 import { useUser } from "../context/userCtx";
+import checkUserData from "../lib/helperFunctions/checkUserData";
+import imageLoader from "../lib/helperFunctions/loader";
 
 export default function Home() {
-  const { loading, setLoadingStatus } = useLoading();
-  const { state } = useUser();
-  const toggle = () => {
-    setLoadingStatus(!loading);
-  };
+  const { history } = useHistory();
+  const { push } = useRouter();
+  const { state: UserState, dispatch: UserDispatch } = useUser();
 
   useEffect(() => {
-    if (!state.userPayload) {
-      const userData = localStorage.getItem('eko_user');
-      console.warn(userData);
-      // call user data from local storage and redirect based on user type
-      // dispatch({
-      //   type: Types.SetUser,
-      //   payload: {
-      //     value: null,
-      //   },
-      // });
-    }
-  }, [state]);
+    setTimeout(() => {
+      checkUserData(
+        UserState.userPayload,
+        UserDispatch,
+        push,
+        "listers",
+        history
+      );
+    }, 1000);
+  }, []);
 
   return (
-    <>
-      {JSON.stringify(loading)}
-      <div>Hello World</div>
-      <button type="button" onClick={toggle}>
-        Hello
-      </button>
-    </>
+    <div className="flex justify-center items-center h-[100vh]">
+      <div className="bounce-in-top">
+        <Image
+          priority={true}
+          unoptimized={true}
+          loader={imageLoader}
+          src="/assets/icons/logo.svg"
+          alt="Icon"
+          width={300}
+          height={300}
+        />
+      </div>
+    </div>
   );
 }

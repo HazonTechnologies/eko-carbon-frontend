@@ -1,6 +1,7 @@
 import "../styles/globals.css";
 import type { AppProps as NextAppProps } from "next/app";
 import { NextComponentType } from "next";
+import NextNProgress from "nextjs-progressbar";
 import { SWRConfig } from "swr";
 import React, { FC } from "react";
 import { PhotoProvider } from "react-photo-view";
@@ -27,6 +28,8 @@ function MyApp({ Component, pageProps }: AppProps) {
       value={{
         fetcher,
         dedupingInterval: 10000,
+        revalidateOnFocus: false,
+        shouldRetryOnError: false,
       }}
     >
       <LoadingProvider>
@@ -36,6 +39,11 @@ function MyApp({ Component, pageProps }: AppProps) {
               <HeaderProvider>
                 <DismissableToast />
                 <LoadingComp />
+                <NextNProgress
+                  color="#f1f1f1"
+                  height={1}
+                  options={{ showSpinner: false }}
+                />
                 <>{getLayout(<Component {...pageProps} />)}</>
               </HeaderProvider>
             </HistoryProvider>

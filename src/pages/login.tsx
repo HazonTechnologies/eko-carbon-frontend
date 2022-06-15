@@ -5,6 +5,7 @@ import LoginScreen from "../components/main/loginScreen";
 import DefaultLayout from "../layouts/defaultLayout";
 import { postApi } from "../lib/helperFunctions/fetcher";
 import { User } from "../models/user";
+import { refreshTokens } from "../lib/helperFunctions/refreshTokens";
 
 const Login = () => {
   const { setLoadingStatus } = useLoading();
@@ -15,12 +16,14 @@ const Login = () => {
     postApi("Account/authenticate", val)
       .then((res) => {
         if (res.successful) {
+          refreshTokens();
           toast.success(res.message);
           if (res.data.profile?.company) {
             localStorage.setItem("eko_user", JSON.stringify(res.data));
             // checkUserData(UserState.userData, UserDispatch, push, "listers");
             push("/listers");
           }
+          refreshTokens();
         } else {
           toast.error(res.message);
         }

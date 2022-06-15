@@ -52,7 +52,7 @@ const steps: Step[] = [
 const ListerRecentActivity = () => (
   <>
     <div className="ml-2 mb-2">
-      <h2 className="text-base mb-5">Recent Activity</h2>
+      <h3 className="text-base mb-5">Recent Activity</h3>
     </div>
     <div className="overflow-scroll px-1 pl-3 h-[360px]">
       <Stepper steps={steps} />
