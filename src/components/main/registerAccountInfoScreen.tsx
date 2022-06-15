@@ -27,7 +27,7 @@ interface RegisterAccountInfoPropType {
   onSubmitReg: (val: FormData) => void;
   setCurrStep: Dispatch<SetStateAction<number>>;
   currStep: number;
-  dependencies: Dependencies | null;
+  dependencies: Dependencies | undefined;
 }
 const RegisterAccountInfoScreen: NextPage<RegisterAccountInfoPropType> = ({
   onSubmitReg,

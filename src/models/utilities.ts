@@ -22,3 +22,12 @@ export interface BooleanType {
   name: string;
   value: boolean;
 }
+
+
+export interface ResApi<T> {
+  code: number;
+  data: T;
+  errors: string[];
+  message: string;
+  successful: boolean;
+}

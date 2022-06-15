@@ -3,11 +3,12 @@ import { Form, Input, Select } from "antd";
 import debounce from "lodash.debounce";
 import { NextPage } from "next";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import toast from "react-hot-toast";
 import { useLoading } from "../../context/loadingCtx";
 import { emailPattern, passwordPattern } from "../../lib/common/regex";
 import { fetcher, postApi } from "../../lib/helperFunctions/fetcher";
+import { Dependencies } from "../../models/dependencies";
 import { OffsetterCompany } from "../../models/offsetters";
 import { User } from "../../models/user";
 import { AntFormValidatingProps } from "../../models/utilities";
@@ -18,10 +19,13 @@ interface RegOffsetCompanyScreenPropType {
   onSubmit: (param: User) => void;
   // eslint-disable-next-line no-unused-vars
   googleCall: () => void;
+  dependencies: Dependencies | undefined;
 }
 const { Option } = Select;
 
-const RegOffsetCompanyScreen: NextPage<RegOffsetCompanyScreenPropType> = () => {
+const RegOffsetCompanyScreen: NextPage<RegOffsetCompanyScreenPropType> = ({
+  dependencies,
+}) => {
   const { setLoadingStatus } = useLoading();
   const [form] = Form.useForm();
   const [validateStatus, setValidateStatus] =
@@ -29,7 +33,6 @@ const RegOffsetCompanyScreen: NextPage<RegOffsetCompanyScreenPropType> = () => {
   const [validateCPassStatus, setValidateCPassStatus] =
     useState<AntFormValidatingProps>("");
   const [formValues, setFormValues] = useState<OffsetterCompany | null>(null);
-  const [options, setOptions] = useState<string[]>([]);
   const [disableEmail, setDisableEmail] = useState(false);
 
   const onFilter = (input: any, option: any) =>
@@ -99,18 +102,6 @@ const RegOffsetCompanyScreen: NextPage<RegOffsetCompanyScreenPropType> = () => {
       })
       .finally(() => setLoadingStatus(false));
   };
-  const fetchDependencies = () => {
-    setLoadingStatus(true);
-    fetcher("Account/dependencies")
-      .then((res) => {
-        if (!res.successful) return;
-        setOptions(res.data.industries);
-      })
-      .finally(() => setLoadingStatus(false));
-  };
-  useEffect(() => {
-    fetchDependencies();
-  }, []);
 
   return (
     <div>
@@ -126,7 +117,7 @@ const RegOffsetCompanyScreen: NextPage<RegOffsetCompanyScreenPropType> = () => {
           width="100%"
           icon="googleIcon.svg"
         >
-          Sign In With Google
+          Sign Up With Google
         </ButtonUI>
 
         <div className="w-[100%] my-6 opacity-30 items-center flex justify-evenly">
@@ -207,10 +198,11 @@ const RegOffsetCompanyScreen: NextPage<RegOffsetCompanyScreenPropType> = () => {
               optionFilterProp="children"
               filterOption={onFilter}
             >
-              {options.length &&
-                options.map((option) => (
-                  <Option key={option} value={option}>
-                    {option}
+              {dependencies &&
+                dependencies.industries &&
+                dependencies.industries.map((option) => (
+                  <Option key={option.key} value={option.key}>
+                    <span className="capitalize">{option.value}</span>
                   </Option>
                 ))}
             </Select>

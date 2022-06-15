@@ -30,7 +30,7 @@ const ListerPieChart = () => {
   return (
     <>
       <div className="flex justify-between items-center mb-2">
-        <h2>Offsetters</h2>
+        <h3>Offsetters</h3>
         <SelectUI
           menuItem={dateRanges}
           selectOption={selectDateRange}

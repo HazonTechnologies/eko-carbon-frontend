@@ -37,7 +37,8 @@ const dummyProfileInfo: ProfileInfo = {
     header: "About the company",
     summary: `lorem ipsum dolor amet conecticur lorem ipsum dolor amet conecticur lorem ipsum dolor amet conecticur lorem ipsum dolor amet conecticur lorem ipsum dolor amet conecticur lorem ipsum dolor amet conecticur lorem ipsum dolor amet conecticur lorem ipsum dolor amet conecticur lorem ipsum dolor amet conecticur`,
     list: [
-      `lorem ipsum dolor conecticur lorem ipsum dolor conecticur lorem ipsum dolor conecticur lorem ipsum dolor conecticur `,
+      `lorem ipsum dolor conecticur lorem ipsum dolor conecticur lorem ipsum dolor conecticur lorem ipsum dolor conecticur`,
+      `Natalie loves older men`,
       `lorem ipsum dolor conecticur lorem ipsum dolor conecticur lorem ipsum dolor`,
       `lorem ipsum dolor conecticur lorem ipsum dolor conecticur lorem ipsum dolor lorem ipsum dolor conecticur lorem ipsum dolor conecticur lorem ipsum dolor conecticur lorem ipsum dolor conecticur lorem ipsum dolor conecticur`,
     ],

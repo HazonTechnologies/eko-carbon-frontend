@@ -1,17 +1,10 @@
 /* eslint-disable object-curly-newline */
 import { Form, Input, Select } from "antd";
 import { NextPage } from "next";
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import PhoneInput from "react-phone-input-2";
 
-import debounce from "lodash.debounce";
 // import { User } from "../../models/user";
 import ButtonUI from "../utilities/ButtonUI";
 import { BusinessRepInfo } from "../../models/listers";
@@ -24,7 +17,6 @@ import {
   phonePattern,
 } from "../../lib/common/regex";
 import { City, Dependencies, State } from "../../models/dependencies";
-import { fetcher } from "../../lib/helperFunctions/fetcher";
 import { idType, mockBooleanOptions } from "../../lib/common/dependencies";
 
 const { Option } = Select;
@@ -33,7 +25,7 @@ interface BusinessRepPropType {
   // eslint-disable-next-line no-unused-vars
   onSubmit: (param: BusinessRepInfo) => void;
   goBack: () => void;
-  dependencies: Dependencies | null;
+  dependencies: Dependencies | undefined;
   businessRep: BusinessRepInfo | undefined;
   setBusinessRep: Dispatch<SetStateAction<BusinessRepInfo | undefined>>;
   setIdFiles: Dispatch<SetStateAction<File[]>>;
@@ -94,42 +86,6 @@ const BusinessRepScreen: NextPage<BusinessRepPropType> = ({
     form.setFields([{ name: "ConfirmPassword", errors: [""] }]);
     setValidateStatus("success");
   };
-
-  // validate email
-  const [validateEmailStatus, setValidateEmailStatus] =
-    useState<AntFormValidatingProps>("");
-  const checkEmail = (val: string) => {
-    setValidateEmailStatus("validating");
-    fetcher(`Account/check-email/${val}`)
-      .then((res) => {
-        if (res.code === 200) {
-          setValidateEmailStatus("success");
-          return;
-        }
-        setValidateEmailStatus("error");
-        form.setFields([{ name: "email", errors: ["Email already taken"] }]);
-      })
-      .catch(() => {
-        form.setFields([
-          { name: "email", errors: ["Email already taken"] },
-        ]);
-        setValidateEmailStatus("error");
-      });
-  };
-
-  const debouncedSave = useCallback(
-    debounce((email: string) => checkEmail(email), 800),
-    [] // will be created only once initially
-  );
-
-  const checkEmailExist = (e: any) => {
-    const inputTarget = e.target as HTMLInputElement;
-    const email = inputTarget.value;
-    setValidateStatus("");
-    if (!email.match(emailPattern)) return;
-    debouncedSave(email);
-  };
-  // validate email ends
 
   return (
     <div className="sm:w-[400px] w-[320px] m-[auto] shadow-1 rounded-lg bg-secondary-high p-10 my-2">
@@ -202,19 +158,12 @@ const BusinessRepScreen: NextPage<BusinessRepPropType> = ({
         <Form.Item
           label="Email Address"
           name="Email"
-          validateFirst={true}
-          validateStatus={validateEmailStatus}
           rules={[
             { required: true, message: "Kindly input your email address!" },
             { pattern: emailPattern, message: "Invalid email!" },
           ]}
-          hasFeedback
         >
-          <Input
-            disabled={validateEmailStatus === "validating"}
-            onChange={checkEmailExist}
-            type="email"
-          />
+          <Input type="email" />
         </Form.Item>
         <Form.Item
           label="Phone number"

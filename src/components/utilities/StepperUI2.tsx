@@ -39,7 +39,7 @@ export default ({ steps = [] }: StepperProp) => (
             />
           )}
           <div className="flex ml-3 flex-col">
-            <h2 className="">{step.name}</h2>
+            <h4 className="">{step.name}</h4>
             <p className="opacity-70 text-xs">{step.description}</p>
           </div>
         </div>

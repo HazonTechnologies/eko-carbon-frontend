@@ -27,7 +27,7 @@ const ListerAreaChart = () => {
     <>
       <div className="flex justify-between items-start">
         <div className="pb-8">
-          <h2 className="text-base">Total Offset Bids</h2>
+          <h3 className="text-base">Total Offset Bids</h3>
           <p>{numberWithCommas(3000000)}</p>
         </div>
         <SelectUI

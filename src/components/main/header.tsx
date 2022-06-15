@@ -16,6 +16,7 @@ import { Option } from "../../models/utilities";
 import { useUser } from "../../context/userCtx";
 import { Types } from "../../context/actions/user.actions";
 import { removeUserToken } from "../../lib/helperFunctions/tokenValidation";
+import { stopRefreshTokens } from "../../lib/helperFunctions/refreshTokens";
 // import headerLinks from "../../lib/common/links";
 const menu: Option[] = [{ title: "Logout", value: "logout" }];
 
@@ -26,6 +27,7 @@ const Header: NextPage<any> = ({ toggleSideNav, isSideNavOpen, type }) => {
     if (opt.value === "logout") {
       push("/login");
       dispatch({ type: Types.SetUser, payload: { value: null } });
+      stopRefreshTokens();
       removeUserToken();
     }
   };

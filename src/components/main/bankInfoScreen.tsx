@@ -20,7 +20,7 @@ interface BankInfoPropType {
   // eslint-disable-next-line no-unused-vars
   onSubmit: (param: BankInfo) => void;
   bankInfo: BankInfo | undefined;
-  dependencies: Dependencies | null;
+  dependencies: Dependencies | undefined;
   // eslint-disable-next-line no-unused-vars
 }
 
@@ -43,7 +43,9 @@ const BankInfoScreen: NextPage<BankInfoPropType> = ({
   const [disableAcctNum, setDisableAcctNum] = useState(false);
 
   const validatingAccount = (accountNumber: string, bankName: string) => {
-    const bankCode = dependencies?.banks.find((bank) => bank.name === bankName)?.code;
+    const bankCode = dependencies?.banks.find(
+      (bank) => bank.name === bankName
+    )?.code;
     setValidateStatus("validating");
     setDisableAcctNum(true);
     postApi(`Account/validate-account`, { accountNumber, bankCode })
@@ -163,7 +165,7 @@ const BankInfoScreen: NextPage<BankInfoPropType> = ({
         </Form.Item>
         <Form.Item
           shouldUpdate
-          label="Corporate Account Number"
+          label="Account Number"
           name="AccountNumber"
           rules={[
             {

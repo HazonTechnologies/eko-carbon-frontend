@@ -16,7 +16,7 @@ const ListerBoard = () => {
 
   return (
     <div className="px-5 py-2 my-4 boxProps2">
-      <h2 className="opacity-60 my-2 ml-4 text-sm">Project Views</h2>
+      <h3 className="opacity-60 my-2 ml-4 text-sm">Project Views</h3>
       <div className="flex items-center justify-between gap-x-4 p-3 overflow-x-scroll">
         {boardDetails &&
           boardDetails.map((board, index) => (
