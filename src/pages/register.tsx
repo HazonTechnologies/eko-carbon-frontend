@@ -1,9 +1,9 @@
 // import { useRouter } from "next/router";
 // import { useId, useState } from "react";
+import toast from "react-hot-toast";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import useSWR from "swr";
 import RegisterAccountInfoScreen from "../components/main/registerAccountInfoScreen";
 
