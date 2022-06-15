@@ -26,7 +26,7 @@ export default function checkUserData(
     const ekoUser: ListerUser = JSON.parse(userData);
     dispatch({ type: Types.SetUser, payload: { value: ekoUser } });
     console.warn(ekoUser);
-    if (ekoUser?.profile?.company) {
+    if (ekoUser.userType === 0) {
       push("/listers");
     }
 
