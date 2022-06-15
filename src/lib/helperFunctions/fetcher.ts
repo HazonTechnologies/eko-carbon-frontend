@@ -90,16 +90,16 @@ const responseHandler = (response: AxiosResponse<any, any>) => {
   return response;
 };
 
-// const updateToken = async () => {
-//   if (!getUserToken()) {
-//     location.reload();
-//     return;
-//   }
-//   const res = await postApi("Account/refresh-token", {
-//     refreshToken: getUserToken()?.refreshToken,
-//   });
-//   return res.data.token;
-// };
+export const updateToken = async () => {
+  if (!getUserToken()) {
+    location.reload();
+    return;
+  }
+  const res = await postApi("Account/refresh-token", {
+    refreshToken: getUserToken()?.refreshToken,
+  });
+  return res.data;
+};
 
 const errorHandler = (error: any) => {
   if (error.config && error.response && error.response.status === 401) {

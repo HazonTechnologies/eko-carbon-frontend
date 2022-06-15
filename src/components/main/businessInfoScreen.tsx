@@ -1,12 +1,17 @@
 /* eslint-disable implicit-arrow-linebreak */
 import { Form, Input, Select } from "antd";
+import debounce from "lodash.debounce";
 import { NextPage } from "next";
+import { useCallback, useState } from "react";
 // import Image from "next/image";
 // import { User } from "../../models/user";
 import ButtonUI from "../utilities/ButtonUI";
 import { emailPattern, urlPattern } from "../../lib/common/regex";
 import { BusinessInfo } from "../../models/listers";
 import { Dependencies } from "../../models/dependencies";
+import { fetcher } from "../../lib/helperFunctions/fetcher";
+import { AntFormValidatingProps } from "../../models/utilities";
+import { VerifyEmailUrl } from "../../lib/common/endpoints";
 // import imageLoader from "../../lib/helperFunctions/loader";
 // import ImageViewer from "./imageViewer";
 
@@ -17,7 +22,7 @@ interface BusinessInfoPropType {
   onSubmit: (param: BusinessInfo) => void;
   goBack: () => void;
   businessInfo: BusinessInfo | undefined;
-  dependencies: Dependencies | null;
+  dependencies: Dependencies | undefined;
 }
 
 const BusinessInfoScreen: NextPage<BusinessInfoPropType> = ({
@@ -32,6 +37,41 @@ const BusinessInfoScreen: NextPage<BusinessInfoPropType> = ({
   };
   const onFilter = (input: any, option: any) =>
     option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+
+  // validate email
+  const [validateEmailStatus, setValidateEmailStatus] =
+    useState<AntFormValidatingProps>("");
+
+  const checkEmail = (val: string) => {
+    setValidateEmailStatus("validating");
+    fetcher(`${VerifyEmailUrl}/${val}`)
+      .then((res) => {
+        if (!res.data) {
+          setValidateEmailStatus("success");
+          return;
+        }
+        setValidateEmailStatus("error");
+        form.setFields([{ name: "email", errors: ["Email already taken"] }]);
+      })
+      .catch(() => {
+        form.setFields([{ name: "email", errors: ["Email already taken"] }]);
+        setValidateEmailStatus("error");
+      });
+  };
+
+  const debouncedSave = useCallback(
+    debounce((email: string) => checkEmail(email), 800),
+    [] // will be created only once initially
+  );
+
+  const checkEmailExist = (e: any) => {
+    const inputTarget = e.target as HTMLInputElement;
+    const email = inputTarget.value;
+    setValidateEmailStatus("");
+    if (!email.match(emailPattern)) return;
+    debouncedSave(email);
+  };
+  // validate email ends
 
   return (
     <div className="sm:w-[400px] w-[320px] m-[auto] shadow-1 rounded-lg bg-secondary-high p-10 my-2">
@@ -57,12 +97,19 @@ const BusinessInfoScreen: NextPage<BusinessInfoPropType> = ({
         <Form.Item
           label="Business Email"
           name="BusinessEmail"
+          validateFirst={true}
+          validateStatus={validateEmailStatus}
           rules={[
             { required: true, message: "Kindly input your business email!" },
             { pattern: emailPattern, message: "Invalid email!" },
           ]}
+          hasFeedback
         >
-          <Input type="email" />
+          <Input
+            disabled={validateEmailStatus === "validating"}
+            onChange={checkEmailExist}
+            type="email"
+          />
         </Form.Item>
         <Form.Item
           label="Business Address"

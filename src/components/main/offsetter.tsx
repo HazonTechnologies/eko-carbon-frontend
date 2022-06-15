@@ -38,7 +38,7 @@ const OffsetterTable = () => {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <h2>Offsetters</h2>
+        <h3>Offsetters</h3>
         <SelectUI
           menuItem={dateRanges}
           selectOption={selectDateRange}

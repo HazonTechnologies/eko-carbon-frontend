@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import useSWR from "swr";
 import RegisterAccountInfoScreen from "../components/main/registerAccountInfoScreen";
 
 // import { useLoading } from "../context/loadingCtx";
@@ -20,9 +21,10 @@ import {
   typeSubHeader,
   typeHeader,
 } from "../lib/common/registerTypes";
-import { fetcher, postApi } from "../lib/helperFunctions/fetcher";
-import { Option } from "../models/utilities";
+import { postApi } from "../lib/helperFunctions/fetcher";
+import { Option, ResApi } from "../models/utilities";
 import { Dependencies } from "../models/dependencies";
+import { DependenciesUrl, RegisterListerUrl } from "../lib/common/endpoints";
 
 // interface Dependencies {
 //   bankInfo:
@@ -41,22 +43,9 @@ const Register = () => {
   // const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const { dispatch: headerDispatch } = useHeader();
 
-  const [dependencies, setDependencies] = useState<Dependencies | null>(null);
-
-  const getDependencies = () => {
-    setLoadingStatus(true);
-    fetcher("Account/dependencies")
-      .then((res) => {
-        if (res.successful) {
-          setDependencies(res.data);
-        }
-      })
-      .finally(() => setLoadingStatus(false));
-  };
-
-  useEffect(() => {
-    getDependencies();
-  }, []);
+  const { data: dependencies } = useSWR<ResApi<Dependencies> | undefined>(
+    DependenciesUrl
+  );
 
   useEffect(() => {
     if (step === 1) {
@@ -66,14 +55,14 @@ const Register = () => {
 
   const onRegAccount = (payload: FormData) => {
     setLoadingStatus(true);
-    postApi("Account/register-lister", payload)
+    postApi(RegisterListerUrl, payload)
       .then((res) => {
         if (!res.successful) {
           toast.error(res.message);
           return;
         }
         toast.success(res.message);
-        push("/login");
+        push("login");
       })
       .finally(() => setLoadingStatus(false));
     // push("listers");
@@ -140,7 +129,7 @@ const Register = () => {
       )}
       {step === 2 && (
         <RegisterAccountInfoScreen
-          dependencies={dependencies}
+          dependencies={dependencies?.data}
           currStep={acctStep}
           setCurrStep={updateAcctStep}
           onSubmitReg={onRegAccount}
@@ -152,8 +141,9 @@ const Register = () => {
           onSubmit={onRegOffsetPersonal}
         />
       )}
-      {step === 6 && (
+      {step === 4 && (
         <RegOffsetCompanyScreen
+          dependencies={dependencies?.data}
           googleCall={googleCall}
           onSubmit={onRegOffsetCompany}
         />

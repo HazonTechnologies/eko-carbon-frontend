@@ -33,7 +33,7 @@ const ProjectEntry = ({
   setIsModalVisible,
 }: ProjectEntryType) => {
   // const [profileInfo, setProfileInfo] = useState<ProfileInfo>(dummyProfileInfo);
-  const { setLoadingStatus } = useLoading();
+  const { loading, setLoadingStatus } = useLoading();
   const { mutate } = useSWRConfig();
 
   const [form] = Form.useForm();
@@ -274,7 +274,7 @@ const ProjectEntry = ({
               bg="secondary-high"
               color="primary-high"
               className="bg-secondary-high h-[35px]"
-              disabled={false}
+              disabled={loading}
               htmlType="button"
               onClickTrigger={() => setIsModalVisible(false)}
               width="25%"
@@ -284,7 +284,7 @@ const ProjectEntry = ({
             <ButtonUI
               bg="tertiary-mid"
               className="bg-tertiary-mid hover:bg-tertiary-mid h-[35px]"
-              disabled={false}
+              disabled={loading}
               onClickTrigger={() => saveToDraft()}
               htmlType="button"
               width="25%"
@@ -293,7 +293,7 @@ const ProjectEntry = ({
             </ButtonUI>
             <ButtonUI
               className="h-[35px]"
-              disabled={false}
+              disabled={loading}
               htmlType="submit"
               width="25%"
             >
