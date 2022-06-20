@@ -19,16 +19,16 @@ export default function checkUserData(
     console.log(location.pathname);
     if (!userData) {
       if (!excludedPages.includes(location.pathname)) {
-        return push("login");
+        return push("/login");
       }
       return;
     }
     const ekoUser: ListerUser = JSON.parse(userData);
     dispatch({ type: Types.SetUser, payload: { value: ekoUser } });
     console.warn(ekoUser);
-    if (ekoUser.userType === 0) {
-      push("/listers");
-    }
+    // if (ekoUser.userType === 0) {
+    //   push("/listers");
+    // }
 
     // check layout type matches with the user data
 

@@ -1,7 +1,8 @@
 /* eslint-disable no-restricted-globals */
 import Axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import toast from "react-hot-toast";
-import { getUserToken } from "./tokenValidation";
+import { UserPayload } from "../../models/listers";
+import { getUserToken, removeUserToken, setUserToken } from "./tokenValidation";
 
 interface ResApi {
   code: number;
@@ -58,9 +59,9 @@ export async function deleteApi(
   }
 }
 
-export async function fetcher(url: string): Promise<ResApi> {
+export async function fetcher(url: string, headers: any = {}): Promise<ResApi> {
   try {
-    const res = await customAxios.get(url);
+    const res = await customAxios.get(url, { headers });
     return res.data;
   } catch (err: any) {
     console.error(err);
@@ -91,10 +92,6 @@ const responseHandler = (response: AxiosResponse<any, any>) => {
 };
 
 export const updateToken = async () => {
-  if (!getUserToken()) {
-    location.reload();
-    return;
-  }
   const res = await postApi("Account/refresh-token", {
     refreshToken: getUserToken()?.refreshToken,
   });
@@ -103,16 +100,24 @@ export const updateToken = async () => {
 
 const errorHandler = (error: any) => {
   if (error.config && error.response && error.response.status === 401) {
-    // return updateToken()
-    //   .then((token: string) => {
-    //     console.warn("Here it is being valled");
-    //     error.config.headers.token = token;
-    //     return customAxios.request(error.config);
-    //   })
-    //   .catch(() => {
-    //     console.warn("called");
-    //     // go to login page
-    //   });
+    return updateToken()
+      .then((res: UserPayload) => {
+        error.config.headers.token = res.jwToken;
+        console.warn(res);
+        console.warn(res);
+        console.warn(res);
+        console.warn(res);
+        setUserToken(res);
+        return customAxios.request(error.config);
+      })
+      .catch(() => {
+        console.warn("failed to get token");
+        console.warn("failed to get token");
+        console.warn("failed to get token");
+        removeUserToken();
+        location.reload();
+        // go to login page
+      });
   }
   console.log(error.config);
   toast.error(

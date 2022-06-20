@@ -81,7 +81,7 @@ const DropFile = ({
         multiple={allowMultiple}
       >
         {({ getRootProps, getInputProps }) => (
-          <section className="border border-primary-lower rounded py-3">
+          <section className="border border-primary-lower px-3 rounded py-3">
             <div {...getRootProps()}>
               <input {...getInputProps()} />
               <div className="flex flex-col items-center justify-center">

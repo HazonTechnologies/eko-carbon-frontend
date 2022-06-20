@@ -2,24 +2,53 @@
 /* eslint-disable implicit-arrow-linebreak */
 import { Divider, Form, InputNumber } from "antd";
 import { NextPage } from "next";
+import { useState } from "react";
+import { CalculateRecyclable } from "../../lib/common/endpoints";
+import { postApi } from "../../lib/helperFunctions/fetcher";
+import { PaystackConfig } from "../../models/utilities";
 // import Link from "next/link";
-import { User } from "../../models/user";
 import ButtonUI from "../utilities/ButtonUI";
+import PaystackPaymentButton from "./paystackPayment";
 
 interface RecyclePreAssessmentPropType {
   // eslint-disable-next-line no-unused-vars
-  onSubmit: (param: User) => void;
-  // eslint-disable-next-line no-unused-vars
-  onError: (param: any) => void;
+  intiateTrans: PaystackConfig;
+  paymentButton: string;
 }
 
 const RecyclePreAssessment: NextPage<RecyclePreAssessmentPropType> = ({
-  onSubmit,
-  onError,
+  intiateTrans,
+  paymentButton,
 }) => {
+  const [formValues, setFormValues] = useState<any>(null);
+
   const onChange = (val: any) => {
     console.log(val);
   };
+
+  const onClose = () => {
+    console.warn("Clossed");
+  };
+
+  const fetchResult = (values: any) => {
+    postApi(CalculateRecyclable, values).then((res) => {
+      console.warn(res);
+    });
+  };
+
+  const onSuccess = (ref: any) => {
+    console.warn(formValues, ref);
+    const vals = Object.keys(formValues).reduce((acc, curr) => {
+      if (formValues[curr]) {
+        return { ...acc, [curr]: formValues[curr] };
+      }
+      return acc;
+    }, {});
+
+    console.warn(vals, ref);
+    fetchResult({ ...vals, referenceId: ref.reference });
+  };
+
 
   const cancel = () => {
     console.warn("cancel");
@@ -32,20 +61,11 @@ const RecyclePreAssessment: NextPage<RecyclePreAssessmentPropType> = ({
       <Form
         name="basic"
         layout="vertical"
-        initialValues={{ remember: true }}
-        onFinish={onSubmit}
-        onFinishFailed={onError}
+        onValuesChange={(_, values) => setFormValues(values)}
         autoComplete="off"
       >
         <div className="flex justify-between flex-wrap">
-          <Form.Item
-            className="w-[250px]"
-            label="Books (kg)"
-            name="books"
-            rules={[
-              { required: true, message: "Kindly input your email address!" },
-            ]}
-          >
+          <Form.Item className="w-[250px]" label="Books (kg)" name="books">
             <InputNumber
               className="w-[100%]"
               formatter={(value) =>
@@ -59,9 +79,6 @@ const RecyclePreAssessment: NextPage<RecyclePreAssessmentPropType> = ({
             label="Cardboards (kg)"
             name="cardboards"
             className="w-[250px]"
-            rules={[
-              { required: true, message: "Kindly input your email address!" },
-            ]}
           >
             <InputNumber
               className="w-[100%]"
@@ -76,9 +93,6 @@ const RecyclePreAssessment: NextPage<RecyclePreAssessmentPropType> = ({
             label="Magazines (kg)"
             name="magazines"
             className="w-[250px]"
-            rules={[
-              { required: true, message: "Kindly input your email address!" },
-            ]}
           >
             <InputNumber
               className="w-[100%]"
@@ -93,9 +107,6 @@ const RecyclePreAssessment: NextPage<RecyclePreAssessmentPropType> = ({
             label="Newspapers (kg)"
             name="newspapers"
             className="w-[250px]"
-            rules={[
-              { required: true, message: "Kindly input your email address!" },
-            ]}
           >
             <InputNumber
               className="w-[100%]"
@@ -110,9 +121,6 @@ const RecyclePreAssessment: NextPage<RecyclePreAssessmentPropType> = ({
             label="Plastics ADPE (kg)"
             name="plasticsADPE"
             className="w-[250px]"
-            rules={[
-              { required: true, message: "Kindly input your email address!" },
-            ]}
           >
             <InputNumber
               className="w-[100%]"
@@ -127,9 +135,6 @@ const RecyclePreAssessment: NextPage<RecyclePreAssessmentPropType> = ({
             label="Plastics LDPE (kg)"
             name="plasticsLDE"
             className="w-[250px]"
-            rules={[
-              { required: true, message: "Kindly input your email address!" },
-            ]}
           >
             <InputNumber
               className="w-[100%]"
@@ -144,9 +149,6 @@ const RecyclePreAssessment: NextPage<RecyclePreAssessmentPropType> = ({
             label="Plastics PVE (kg)"
             name="plasticsPVE"
             className="w-[250px]"
-            rules={[
-              { required: true, message: "Kindly input your email address!" },
-            ]}
           >
             <InputNumber
               className="w-[100%]"
@@ -161,9 +163,6 @@ const RecyclePreAssessment: NextPage<RecyclePreAssessmentPropType> = ({
             label="Metal Scraps (kg)"
             name="metalScraps"
             className="w-[250px]"
-            rules={[
-              { required: true, message: "Kindly input your email address!" },
-            ]}
           >
             <InputNumber
               className="w-[100%]"
@@ -178,9 +177,6 @@ const RecyclePreAssessment: NextPage<RecyclePreAssessmentPropType> = ({
             label="Metal Mixed Cans (kg)"
             name="metalMixedCans"
             className="w-[250px]"
-            rules={[
-              { required: true, message: "Kindly input your email address!" },
-            ]}
           >
             <InputNumber
               className="w-[100%]"
@@ -195,9 +191,6 @@ const RecyclePreAssessment: NextPage<RecyclePreAssessmentPropType> = ({
             label="Electromagnetic Waste (kg)"
             name="electromagneticWaste"
             className="w-[250px]"
-            rules={[
-              { required: true, message: "Kindly input your email address!" },
-            ]}
           >
             <InputNumber
               className="w-[100%]"
@@ -208,14 +201,7 @@ const RecyclePreAssessment: NextPage<RecyclePreAssessmentPropType> = ({
               onChange={onChange}
             />
           </Form.Item>
-          <Form.Item
-            label="Glass (kg)"
-            name="glass"
-            className="w-[250px]"
-            rules={[
-              { required: true, message: "Kindly input your email address!" },
-            ]}
-          >
+          <Form.Item label="Glass (kg)" name="glass" className="w-[250px]">
             <InputNumber
               className="w-[100%]"
               formatter={(value) =>
@@ -235,13 +221,12 @@ const RecyclePreAssessment: NextPage<RecyclePreAssessmentPropType> = ({
           >
             Cancel
           </ButtonUI>
-          <ButtonUI
-            disabled={false}
-            htmlType="submit"
-            className="!sm:px-10 px-7"
-          >
-            Pay $50 to calculate
-          </ButtonUI>
+          <PaystackPaymentButton
+            config={intiateTrans}
+            buttonTitle={paymentButton}
+            onSuccess={onSuccess}
+            onClose={onClose}
+          />
         </Form.Item>
       </Form>
     </>

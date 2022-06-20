@@ -85,7 +85,7 @@ export interface UserPayload {
   refreshToken: string;
   refreshTokenExpiresIn: number;
   isVerified: boolean;
-  Email: string;
+  email: string;
 }
 
 export interface Lister extends BusinessInfo, BusinessRepInfo, BankInfo {
@@ -105,7 +105,7 @@ interface Picture {
   url: string;
 }
 
-export interface ProjectEntryT {
+export interface ListerProject {
   ProjectType: string;
   ProjectName: string;
   ProjectDescription: string;

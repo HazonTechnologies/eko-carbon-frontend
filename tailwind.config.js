@@ -30,6 +30,7 @@ module.exports = {
         },
         fontFamily: {
             'header': ['Epilogue', 'system-ui'],
+            'header-light': ['Nunito+Sans', 'system-ui'],
             'body': ['Inter', 'system-ui', 'sans-serif'],
 
         },

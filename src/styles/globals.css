@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Epilogue:wght@700&family=Inter&family=Nunito+Sans:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Epilogue:wght@700;500;400&family=Inter&family=Nunito+Sans:wght@400;700&display=swap");
 @import url("react-credit-cards/es/styles-compiled.css");
 @import url("react-quill/dist/quill.snow.css");
 
@@ -163,6 +163,10 @@ a {
     display: none;
 }
 
+.ant-divider-horizontal {
+    margin: 18px 0;
+}
+
 .boxProps {
     @apply shadow-1 bg-secondary-high rounded-lg;
 }
@@ -224,6 +228,11 @@ button.ant-pagination-item-link,
     padding-top: 4px !important;
 }
 
+.ant-tabs-ink-bar,
+.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    @apply text-tertiary-high;
+}
+
 @media (max-width: 480px) {
     .ant-picker-panels {
         display: flex !important;
@@ -268,50 +277,50 @@ button.ant-pagination-item-link,
         transform: translateY(-500px);
         -webkit-animation-timing-function: ease-in;
         animation-timing-function: ease-in;
-        opacity: 0
+        opacity: 0;
     }
     38% {
         -webkit-transform: translateY(0);
         transform: translateY(0);
         -webkit-animation-timing-function: ease-out;
         animation-timing-function: ease-out;
-        opacity: 1
+        opacity: 1;
     }
     55% {
         -webkit-transform: translateY(-65px);
         transform: translateY(-65px);
         -webkit-animation-timing-function: ease-in;
-        animation-timing-function: ease-in
+        animation-timing-function: ease-in;
     }
     72% {
         -webkit-transform: translateY(0);
         transform: translateY(0);
         -webkit-animation-timing-function: ease-out;
-        animation-timing-function: ease-out
+        animation-timing-function: ease-out;
     }
     81% {
         -webkit-transform: translateY(-28px);
         transform: translateY(-28px);
         -webkit-animation-timing-function: ease-in;
-        animation-timing-function: ease-in
+        animation-timing-function: ease-in;
     }
     90% {
         -webkit-transform: translateY(0);
         transform: translateY(0);
         -webkit-animation-timing-function: ease-out;
-        animation-timing-function: ease-out
+        animation-timing-function: ease-out;
     }
     95% {
         -webkit-transform: translateY(-8px);
         transform: translateY(-8px);
         -webkit-animation-timing-function: ease-in;
-        animation-timing-function: ease-in
+        animation-timing-function: ease-in;
     }
     100% {
         -webkit-transform: translateY(0);
         transform: translateY(0);
         -webkit-animation-timing-function: ease-out;
-        animation-timing-function: ease-out
+        animation-timing-function: ease-out;
     }
 }
 
@@ -321,54 +330,54 @@ button.ant-pagination-item-link,
         transform: translateY(-500px);
         -webkit-animation-timing-function: ease-in;
         animation-timing-function: ease-in;
-        opacity: 0
+        opacity: 0;
     }
     38% {
         -webkit-transform: translateY(0);
         transform: translateY(0);
         -webkit-animation-timing-function: ease-out;
         animation-timing-function: ease-out;
-        opacity: 1
+        opacity: 1;
     }
     55% {
         -webkit-transform: translateY(-65px);
         transform: translateY(-65px);
         -webkit-animation-timing-function: ease-in;
-        animation-timing-function: ease-in
+        animation-timing-function: ease-in;
     }
     72% {
         -webkit-transform: translateY(0);
         transform: translateY(0);
         -webkit-animation-timing-function: ease-out;
-        animation-timing-function: ease-out
+        animation-timing-function: ease-out;
     }
     81% {
         -webkit-transform: translateY(-28px);
         transform: translateY(-28px);
         -webkit-animation-timing-function: ease-in;
-        animation-timing-function: ease-in
+        animation-timing-function: ease-in;
     }
     90% {
         -webkit-transform: translateY(0);
         transform: translateY(0);
         -webkit-animation-timing-function: ease-out;
-        animation-timing-function: ease-out
+        animation-timing-function: ease-out;
     }
     95% {
         -webkit-transform: translateY(-8px);
         transform: translateY(-8px);
         -webkit-animation-timing-function: ease-in;
-        animation-timing-function: ease-in
+        animation-timing-function: ease-in;
     }
     100% {
         -webkit-transform: translateY(0);
         transform: translateY(0);
         -webkit-animation-timing-function: ease-out;
-        animation-timing-function: ease-out
+        animation-timing-function: ease-out;
     }
 }
 
 .bounce-in-top {
     -webkit-animation: bounce-in-top 1.5s both;
-    animation: bounce-in-top 1.5s both
+    animation: bounce-in-top 1.5s both;
 }
