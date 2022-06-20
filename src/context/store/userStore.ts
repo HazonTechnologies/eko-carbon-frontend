@@ -1,8 +1,8 @@
-import { ListerUser, ProjectEntryT } from "../../models/listers";
+import { ListerProject, ListerUser } from "../../models/listers";
 
 export interface UserType {
   userPayload: ListerUser | null;
-  projects: ProjectEntryT[];
+  projects: ListerProject[];
 }
 
 export const initialState: UserType = {

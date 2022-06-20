@@ -31,3 +31,10 @@ export interface ResApi<T> {
   message: string;
   successful: boolean;
 }
+
+
+export interface PaystackConfig {
+  email: string;
+  amount: number;
+  publicKey: string;
+}

@@ -11,22 +11,21 @@ export default function checkUserData(
   userState: UserPayload | null | {},
   dispatch: Dispatch<ShownActions>,
   push: (url: string) => void,
-  layoutType: "listers" | "offsetters" | "index",
+  layoutType: "listers" | "offsetters" | "default",
   history: string[]
 ): void {
   if (!userState) {
     const userData = localStorage.getItem("eko_user");
-    console.log(location.pathname);
     if (!userData) {
+      if (layoutType === "default") return;
       if (!excludedPages.includes(location.pathname)) {
-        return push("login");
+        return push("/login");
       }
       return;
     }
     const ekoUser: ListerUser = JSON.parse(userData);
     dispatch({ type: Types.SetUser, payload: { value: ekoUser } });
-    console.warn(ekoUser);
-    if (ekoUser.userType === 0) {
+    if (ekoUser.userType === 3 && layoutType !== "listers") {
       push("/listers");
     }
 

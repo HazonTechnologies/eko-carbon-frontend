@@ -12,6 +12,7 @@ interface DropFileProp {
   files: File[];
   setFiles: React.Dispatch<React.SetStateAction<File[]>>;
   acceptedFileTypes: FileTypes[];
+  onAdd: () => void;
   title?: string;
   width?: number;
   height?: number;
@@ -21,20 +22,23 @@ const ListerDropFile = ({
   allowMultiple,
   setFiles,
   acceptedFileTypes,
-  //   width,
-  //   height,
   title,
+  onAdd,
 }: DropFileProp) => {
   const processFile = (acceptedFile: File[], errors: any) => {
-    //   toast.error("Hello")
     if (errors && errors.length) {
       toast.error(errors[0].errors[0].message);
       return;
     }
     if (acceptedFile.length) {
       const file = acceptedFile;
-      if (!allowMultiple) return setFiles(file);
+      if (!allowMultiple) {
+        setFiles(file);
+        onAdd();
+        return;
+      }
       setFiles((selectedFile) => [...file, ...selectedFile]);
+      onAdd();
     }
   };
 
