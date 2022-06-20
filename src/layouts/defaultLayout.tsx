@@ -12,7 +12,7 @@ const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
   const { state: UserState } = useUser();
 
   useEffect(() => {
-    checkUserData(state.userPayload, dispatch, push, "listers", history);
+    checkUserData(state.userPayload, dispatch, push, "default", history);
   }, []);
   if (UserState.userPayload) {
     return null;

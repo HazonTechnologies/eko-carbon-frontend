@@ -39,6 +39,7 @@ export interface BusinessInfo {
   BusinessName: string;
   BusinessAddress: string;
   BusinessEmail: string;
+  description: string;
   Website: string;
   Industry: string;
   Summary: string;

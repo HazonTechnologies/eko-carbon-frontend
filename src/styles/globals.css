@@ -104,6 +104,13 @@ a {
     border: 1px solid rgba(0, 0, 0, 0.096);
 }
 
+
+/* .ant-btn:focus,
+.ant-btn:hover {
+    @apply text-secondary-high;
+    @apply border-primary-low
+} */
+
 .lds-ripple {
     display: inline-block;
     position: relative;
@@ -228,9 +235,12 @@ button.ant-pagination-item-link,
     padding-top: 4px !important;
 }
 
-.ant-tabs-ink-bar,
 .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
     @apply text-tertiary-high;
+}
+
+.ant-tabs-ink-bar {
+    @apply bg-tertiary-high;
 }
 
 @media (max-width: 480px) {

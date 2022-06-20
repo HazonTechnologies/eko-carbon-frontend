@@ -11,13 +11,13 @@ export default function checkUserData(
   userState: UserPayload | null | {},
   dispatch: Dispatch<ShownActions>,
   push: (url: string) => void,
-  layoutType: "listers" | "offsetters" | "index",
+  layoutType: "listers" | "offsetters" | "default",
   history: string[]
 ): void {
   if (!userState) {
     const userData = localStorage.getItem("eko_user");
-    console.log(location.pathname);
     if (!userData) {
+      if (layoutType === "default") return;
       if (!excludedPages.includes(location.pathname)) {
         return push("/login");
       }
@@ -25,10 +25,9 @@ export default function checkUserData(
     }
     const ekoUser: ListerUser = JSON.parse(userData);
     dispatch({ type: Types.SetUser, payload: { value: ekoUser } });
-    console.warn(ekoUser);
-    // if (ekoUser.userType === 0) {
-    //   push("/listers");
-    // }
+    if (ekoUser.userType === 3 && layoutType !== "listers") {
+      push("/listers");
+    }
 
     // check layout type matches with the user data
 

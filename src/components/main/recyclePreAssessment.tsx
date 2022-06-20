@@ -3,7 +3,7 @@
 import { Divider, Form, InputNumber } from "antd";
 import { NextPage } from "next";
 import { useState } from "react";
-import { CalculateRecyclable } from "../../lib/common/endpoints";
+import { CalculateRecyclableUrl } from "../../lib/common/endpoints";
 import { postApi } from "../../lib/helperFunctions/fetcher";
 import { PaystackConfig } from "../../models/utilities";
 // import Link from "next/link";
@@ -31,7 +31,7 @@ const RecyclePreAssessment: NextPage<RecyclePreAssessmentPropType> = ({
   };
 
   const fetchResult = (values: any) => {
-    postApi(CalculateRecyclable, values).then((res) => {
+    postApi(CalculateRecyclableUrl, values).then((res) => {
       console.warn(res);
     });
   };

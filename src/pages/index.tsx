@@ -18,7 +18,7 @@ export default function Home() {
         UserState.userPayload,
         UserDispatch,
         push,
-        "listers",
+        "default",
         history
       );
     }, 1000);
