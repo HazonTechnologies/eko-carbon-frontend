@@ -1,12 +1,12 @@
 /* eslint-disable no-unused-vars */
-import { ProjectEntryT } from "../../models/listers";
+import { ListerProject } from "../../models/listers";
 
 // import icons needed for the logic
 
 interface ProjectPropType {
   // eslint-disable-next-line no-unused-vars
-  project: ProjectEntryT;
-  selectProject: (param: ProjectEntryT) => void;
+  project: ListerProject;
+  selectProject: (param: ListerProject) => void;
 }
 
 const Project = ({
