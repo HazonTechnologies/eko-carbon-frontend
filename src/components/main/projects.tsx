@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { useMemo } from "react";
 import { useUser } from "../../context/userCtx";
-import { ProjectEntryT } from "../../models/listers";
+import { ListerProject } from "../../models/listers";
 import Project from "./project";
 
 // import icons needed for the logic
@@ -9,7 +9,6 @@ import Project from "./project";
 interface ProjectsPropType {
   // eslint-disable-next-line no-unused-vars
   status: "active" | "pending" | "draft" | "rejected";
-  //   selectProject: (param: ProjectEntryT) => void;
 }
 
 const Projects = ({ status }: ProjectsPropType) => {
@@ -17,11 +16,11 @@ const Projects = ({ status }: ProjectsPropType) => {
     state: { projects },
   } = useUser();
 
-  const onSelectProject = (project: ProjectEntryT) => {
+  const onSelectProject = (project: ListerProject) => {
     console.warn(project);
   };
 
-  const getProject: ProjectEntryT[] = useMemo(() => {
+  const getProject: ListerProject[] = useMemo(() => {
     if (!projects || !projects.length) return [];
     if (status === "active") {
       return projects.filter((project) => project.archived);

@@ -12,9 +12,13 @@ import {
   UpdateListerCompanyDesUrl,
 } from "../../lib/common/endpoints";
 import Editor from "./editor";
+import { useUser } from "../../context/userCtx";
 
 const Profile = () => {
   const [profileInfo, setProfileInfo] = useState<ProfileInfo>(dummyProfileInfo);
+  const {
+    state: { userPayload },
+  } = useUser();
   useEffect(() => {
     setProfileInfo(dummyProfileInfo);
   }, []);
@@ -22,13 +26,13 @@ const Profile = () => {
   return (
     <div className="flex flex-col gap-4 p-4 bg-secondary-high m-2 rounded-l mt-8">
       <div id="overview">
-        <h2 className="text-base my-3">{profileInfo.overview.header}</h2>
+        <h2 className="text-base my-3">{userPayload?.profile.company.businessName ?? profileInfo.overview.header}</h2>
         <h6 className="opacity-60 my-2 text-xs">
           {profileInfo.overview.subheader}
         </h6>
         <Divider />
         <p className="bg-tertiary-low text-tertiary-high p-6 rounded">
-          {profileInfo.overview.summary}
+          {userPayload?.profile.company.summary ?? profileInfo.overview.summary}
         </p>
         <Gallery
           imageListUrl={GetListerCompanyPicUrl}

@@ -42,7 +42,7 @@ const ModalPopUp2: NextPage<ModalPopUpType> = ({
       }}
       cancelButtonProps={{
         className:
-          "opacity-70  hover:text-primary-high hover:border-primary-low  hover:opacity-100",
+          "opacity-70 hover:text-primary-high hover:border-primary-low  hover:opacity-100",
       }}
     >
       {children}

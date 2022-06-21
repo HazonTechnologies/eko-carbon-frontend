@@ -36,7 +36,8 @@ const BusinessInfoScreen: NextPage<BusinessInfoPropType> = ({
     console.log(err);
   };
   const onFilter = (input: any, option: any) =>
-    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+    option.children.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
+    0;
 
   // validate email
   const [validateEmailStatus, setValidateEmailStatus] =

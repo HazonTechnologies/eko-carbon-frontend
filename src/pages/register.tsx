@@ -62,7 +62,7 @@ const Register = () => {
           return;
         }
         toast.success(res.message);
-        push("login");
+        push(`confirm-email?email=${payload.get("BusinessEmail")}`);
       })
       .finally(() => setLoadingStatus(false));
     // push("listers");

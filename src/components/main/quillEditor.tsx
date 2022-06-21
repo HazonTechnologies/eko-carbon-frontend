@@ -45,7 +45,7 @@ const QuillEditor = ({
         <h2 className="text-base font-header">{title}</h2>
         <div className="flex gap-x-3">
           <ButtonUI
-            onClickTrigger={() => actionTriggered("save")}
+            onClickTrigger={() => actionTriggered('cancel')}
             htmlType="button"
             className="h-[33px]"
             bg="secondary-low"

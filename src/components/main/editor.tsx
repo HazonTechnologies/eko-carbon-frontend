@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 // import { ColumnType, TablePaginationConfig } from "antd/lib/table";
 // import { FilterValue, SorterResult } from "antd/lib/table/interface";
+import toast from "react-hot-toast";
 import ReactHtmlParser from "react-html-parser";
 
 import { EditOutlined } from "@ant-design/icons";
@@ -22,7 +23,10 @@ const Editor = ({ setContentUrl }: EditorPropType) => {
   } = useUser();
   const [content, setContent] = useState<string>(DefaultFul());
   useEffect(() => {
-    console.warn(userPayload?.profile, userPayload?.profile.company.description);
+    console.warn(
+      userPayload?.profile,
+      userPayload?.profile.company.description
+    );
     if (!userPayload?.profile?.company?.description) return;
     setContent(userPayload.profile.company.description);
   }, []);
@@ -33,8 +37,9 @@ const Editor = ({ setContentUrl }: EditorPropType) => {
     setLoadingStatus(true);
     postApi(setContentUrl, { description })
       .then((res) => {
-        console.warn(res);
         if (!res.successful) return;
+        toast.success(res.message);
+        toggleEditor(false);
         console.warn("success", res);
       })
       .finally(() => setLoadingStatus(false));
@@ -79,7 +84,6 @@ const Editor = ({ setContentUrl }: EditorPropType) => {
         />
       )}
     </>
-
   );
 };
 
