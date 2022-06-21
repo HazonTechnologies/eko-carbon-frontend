@@ -17,7 +17,7 @@ import ButtonUI from "../utilities/ButtonUI";
 import ModalPopUp from "../utilities/modal";
 import DropFile from "../utilities/DropFile";
 import { Dependencies } from "../../models/dependencies";
-import { ProjectEntryT } from "../../models/listers";
+import { ListerProject } from "../../models/listers";
 import { fetcher, postApi } from "../../lib/helperFunctions/fetcher";
 import { useLoading } from "../../context/loadingCtx";
 
@@ -37,7 +37,7 @@ const ProjectEntry = ({
   const { mutate } = useSWRConfig();
 
   const [form] = Form.useForm();
-  const [initialValues, setInitialValue] = useState<ProjectEntryT | null>(null);
+  const [initialValues, setInitialValue] = useState<ListerProject | null>(null);
   const [ProjectPicture, setProjectPicture] = useState<File[]>([]);
   const tag = useRef<any>(null);
   const [Tags, setTags] = useState<string[]>([]);
@@ -63,7 +63,7 @@ const ProjectEntry = ({
 
   const saveToDraft = () => {
     setInitialValue(form.getFieldsValue());
-    const payload: ProjectEntryT = {
+    const payload: ListerProject = {
       ...form.getFieldsValue(),
       IsDraft: true,
       Tags,
@@ -86,10 +86,10 @@ const ProjectEntry = ({
     onProjectEntry(formDataVal);
   };
 
-  const onSubmit = (values: ProjectEntryT) => {
+  const onSubmit = (values: ListerProject) => {
     console.log(values, Tags);
     setInitialValue(values);
-    const payload: ProjectEntryT = {
+    const payload: ListerProject = {
       ...values,
       IsDraft: false,
       Tags,

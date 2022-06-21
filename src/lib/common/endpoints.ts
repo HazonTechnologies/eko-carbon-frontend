@@ -12,3 +12,5 @@ export const UpdateListerCompanyDesUrl = 'Account/update-company-description';
 export const UpdatePasswordUrl = 'Account/change-password';
 export const UpdateListerProfilePicUrl = 'Account/update-profile-picture';
 export const UpdateListerCompanyUrl = 'Account/update-company-details';
+export const ResendEmailUrl = 'Account/resend-email-confirmation';
+export const ForgotPasswordUrl = 'Account/forgot-password';

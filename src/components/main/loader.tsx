@@ -8,7 +8,7 @@ const LoadingComp = () => {
       {loading && (
         <div
           style={{ backgroundColor: "#000" }}
-          className="h-[100vh] w-[100vw] opacity-40 fixed top-0 z-50 flex justify-center items-center bg-black"
+          className="h-[100vh] w-[100vw] opacity-40 fixed top-0 z-[1000] flex justify-center items-center bg-black"
         >
           <div className="lds-ripple">
             <div></div>

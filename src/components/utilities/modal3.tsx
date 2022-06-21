@@ -12,7 +12,7 @@ interface ModalPopUpType {
   okText: string;
 }
 
-const ModalPopUp2: NextPage<ModalPopUpType> = ({
+const ModalPopUp3: NextPage<ModalPopUpType> = ({
   isModalVisible,
   setIsModalVisible,
   title,
@@ -38,7 +38,7 @@ const ModalPopUp2: NextPage<ModalPopUpType> = ({
       okText={okText}
       okButtonProps={{
         className:
-          "opacity-70 border-none focus:bg-error bg-error text-secondary-high hover:bg-error hover:text-secondary-high hover:opacity-100",
+          "opacity-70 border-none focus:bg-success bg-success text-secondary-high hover:bg-success hover:text-secondary-high hover:opacity-100",
       }}
       cancelButtonProps={{
         className:
@@ -50,4 +50,4 @@ const ModalPopUp2: NextPage<ModalPopUpType> = ({
   );
 };
 
-export default ModalPopUp2;
+export default ModalPopUp3;

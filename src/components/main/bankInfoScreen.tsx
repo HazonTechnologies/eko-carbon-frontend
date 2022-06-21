@@ -38,8 +38,10 @@ const BankInfoScreen: NextPage<BankInfoPropType> = ({
     console.log(err);
   };
   const onFilter = (input: any, option: any) =>
+    option.children.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
+    0;
+  const onFilterBank = (input: any, option: any) =>
     option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
-
   const [disableAcctNum, setDisableAcctNum] = useState(false);
 
   const validatingAccount = (accountNumber: string, bankName: string) => {
@@ -151,7 +153,7 @@ const BankInfoScreen: NextPage<BankInfoPropType> = ({
             showSearch
             placeholder="Select a bank"
             optionFilterProp="children"
-            filterOption={onFilter}
+            filterOption={onFilterBank}
             onSelect={() => resetAcctNum()}
           >
             {dependencies &&
