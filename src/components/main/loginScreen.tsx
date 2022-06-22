@@ -139,7 +139,7 @@ const LoginScreen: NextPage<LoginPropType> = ({
             height={60}
           />
         )}
-        <div className="w-[350px] m-[auto] shadow-1 rounded-lg bg-secondary-high p-6 my-2">
+        <div className="w-[350px] m-[auto] boxProps p-6 my-2">
           <h2 className="text-3xl text-bond font-header">Sign in</h2>
           {!onAdmin && <p className="text-sm my-4 mb-8">Sign in now</p>}
           {onAdmin && (
