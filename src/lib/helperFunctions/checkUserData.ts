@@ -6,7 +6,7 @@ import { ShownActions, Types } from "../../context/actions/user.actions";
 import { ListerUser, UserPayload } from "../../models/listers";
 import { removeUserToken } from "./tokenValidation";
 
-const excludedPages = ["/confirm-email/"];
+const excludedPages = ["/confirm-email/", "/reset-password/"];
 
 export default function checkUserData(
   userState: UserPayload | null | {},

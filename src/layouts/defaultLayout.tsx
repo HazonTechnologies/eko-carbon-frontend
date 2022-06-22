@@ -9,14 +9,12 @@ const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
   const { history } = useHistory();
   const { dispatch, state } = useUser();
   const { push } = useRouter();
-  const { state: UserState } = useUser();
+  // const { state: UserState } = useUser();
 
   useEffect(() => {
     checkUserData(state.userPayload, dispatch, push, "default", history);
   }, []);
-  if (UserState.userPayload) {
-    return null;
-  }
+
   return (
     <div className="layout">
       <Header type="entry" />
