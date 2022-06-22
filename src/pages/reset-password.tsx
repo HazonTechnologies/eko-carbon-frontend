@@ -26,16 +26,23 @@ const ResetPasswordPage = () => {
       console.warn(router.query);
       console.warn(router.query);
       console.warn(router.isReady);
+      if (router.query.c && router.query.email) {
+        const queryP = {
+          token: router.query.c as string,
+          email: router.query.email as string,
+        };
+        setQueryParams(queryP);
+      }
     }, 5000);
 
     // if (!router.query.c || !router.query.email) {
     //   // router.push("login");
     //   return;
     // }
-    const queryP = {
-      token: router.query.c as string,
-      email: router.query.email as string,
-    };
+    // const queryP = {
+    //   token: router.query.c as string,
+    //   email: router.query.email as string,
+    // };
     // setQueryParams(queryP);
   }, [router]);
 
