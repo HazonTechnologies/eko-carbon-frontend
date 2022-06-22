@@ -18,9 +18,13 @@ const ResetPasswordPage = () => {
 
   useEffect(() => {
     console.error("Is router ready");
-    if (!router.isReady) return;
-    console.error("Here we go again");
-    console.error("Here we go again");
+    console.error("Here we go again before", window.location);
+    console.error("Here we go again before", window.location);
+    console.error("Here we go again before", window.location);
+    // if (!router.isReady) return;
+    console.error(router.query);
+    console.error("Here we go again", window.location);
+    console.error("Here we go again", window.location);
     const urlSearchParams = new URLSearchParams(window.location.search);
     const token = urlSearchParams.get("c");
     const email = urlSearchParams.get("email");
@@ -36,7 +40,7 @@ const ResetPasswordPage = () => {
       email,
     };
     setQueryParams(queryP);
-  }, [router]);
+  }, []);
 
   if (!queryParams) return undefined;
 
