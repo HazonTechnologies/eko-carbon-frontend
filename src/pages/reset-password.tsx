@@ -20,6 +20,9 @@ const ResetPasswordPage = () => {
     const urlSearchParams = new URLSearchParams(window.location.search);
     const token = urlSearchParams.get("c");
     const email = urlSearchParams.get("email");
+    console.warn(token, email, urlSearchParams);
+    console.warn(token, email, urlSearchParams);
+    console.warn(token, email, urlSearchParams);
     if (!token || !email) {
       router.push("login");
       return;
