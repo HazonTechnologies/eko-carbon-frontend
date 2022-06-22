@@ -17,34 +17,19 @@ const ResetPasswordPage = () => {
   const [queryParams, setQueryParams] = useState<QueryParamType | null>(null);
 
   useEffect(() => {
-    console.error(router.isReady);
-    console.error(router.query);
-    console.error(router.isReady);
-    console.error(router.query);
     if (!router.isReady) return;
-    console.warn(router.query);
-    console.warn(router.query);
-    console.warn(router.isReady);
-    if (router.query.c && router.query.email) {
-      const queryP = {
-        token: router.query.c as string,
-        email: router.query.email as string,
-      };
-      setQueryParams(queryP);
+    if (!router.query.c || !router.query.email) {
+      router.push("login");
+      return;
     }
-
-    // if (!router.query.c || !router.query.email) {
-    //   // router.push("login");
-    //   return;
-    // }
-    // const queryP = {
-    //   token: router.query.c as string,
-    //   email: router.query.email as string,
-    // };
-    // setQueryParams(queryP);
+    const queryP = {
+      token: router.query.c as string,
+      email: router.query.email as string,
+    };
+    setQueryParams(queryP);
   }, [router]);
 
-  // if (!queryParams) return undefined;
+  if (!queryParams) return undefined;
 
   return (
     <ResetPassword
