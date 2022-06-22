@@ -28,7 +28,7 @@ const ResetPasswordPage = () => {
     console.warn(token, email, urlSearchParams);
     console.warn(token, email, urlSearchParams);
     if (!token || !email) {
-      router.push("login");
+      // router.push("login");
       return;
     }
     const queryP = {
