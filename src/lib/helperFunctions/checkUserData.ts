@@ -18,7 +18,12 @@ export default function checkUserData(
   if (!userState) {
     const userData = localStorage.getItem("eko_user");
     if (!userData) {
+      console.warn(userData, layoutType, location.pathname);
+      console.warn(userData, layoutType, location.pathname);
       if (layoutType === "default" && location.pathname !== '/') return;
+      console.warn(userData, layoutType, location.pathname);
+      console.warn(userData, layoutType, location.pathname);
+      console.warn(userData, layoutType, location.pathname);
       return push("/login");
     }
     const ekoUser: ListerUser = JSON.parse(userData);
