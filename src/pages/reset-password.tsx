@@ -22,6 +22,12 @@ const ResetPasswordPage = () => {
     console.error(router.isReady);
     console.error(router.query);
 
+    setTimeout(() => {
+      console.warn(router.query);
+      console.warn(router.query);
+      console.warn(router.isReady);
+    }, 5000);
+
     if (!router.query.c || !router.query.email) {
       // router.push("login");
       return;
