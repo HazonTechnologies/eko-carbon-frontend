@@ -17,6 +17,9 @@ const ResetPasswordPage = () => {
   const [queryParams, setQueryParams] = useState<QueryParamType | null>(null);
 
   useEffect(() => {
+    console.error("Here we go again");
+    console.error("Here we go again");
+    console.error("Here we go again");
     const urlSearchParams = new URLSearchParams(window.location.search);
     const token = urlSearchParams.get("c");
     const email = urlSearchParams.get("email");
