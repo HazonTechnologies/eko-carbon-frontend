@@ -4,8 +4,9 @@ import { Dispatch } from "react";
 
 import { ShownActions, Types } from "../../context/actions/user.actions";
 import { ListerUser, UserPayload } from "../../models/listers";
+import { removeUserToken } from "./tokenValidation";
 
-const excludedPages = ["/register/", "/login/", "/confirm-email/"];
+const excludedPages = ["/confirm-email/"];
 
 export default function checkUserData(
   userState: UserPayload | null | {},
@@ -17,23 +18,18 @@ export default function checkUserData(
   if (!userState) {
     const userData = localStorage.getItem("eko_user");
     if (!userData) {
-      if (layoutType === "default") return;
-      if (!excludedPages.includes(location.pathname)) {
-        return push("/login");
-      }
-      return;
+      if (layoutType === "default" && location.pathname !== '/') return;
+      return push("/login");
     }
     const ekoUser: ListerUser = JSON.parse(userData);
     dispatch({ type: Types.SetUser, payload: { value: ekoUser } });
+    if (excludedPages.includes(location.pathname)) {
+      removeUserToken();
+      return;
+    }
     if (ekoUser.userType === 3 && layoutType !== "listers") {
       push("/listers");
     }
-
-    // check layout type matches with the user data
-
-    // if (layoutType !== ekoUser.type) {
-    //   push(`/${layoutType}`);
-    // }
   }
 }
 

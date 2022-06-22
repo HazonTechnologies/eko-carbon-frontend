@@ -10,6 +10,7 @@ interface PaystackPaymentPropType {
   config: PaystackConfig;
   buttonTitle: string;
   className?: string;
+  canMakePayment: () => boolean;
 }
 
 const PaystackPaymentButton = ({
@@ -18,6 +19,7 @@ const PaystackPaymentButton = ({
   config,
   buttonTitle,
   className,
+  canMakePayment
 }: PaystackPaymentPropType) => {
   useEffect(() => {
     console.warn(config);
@@ -29,6 +31,7 @@ const PaystackPaymentButton = ({
       htmlType="button"
       className={`!sm:px-10 px-7 ${className ?? ""}`}
       onClickTrigger={() => {
+        if (!canMakePayment()) return;
         initializePayment(onSuccess, onClose);
       }}
     >
