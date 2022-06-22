@@ -17,7 +17,8 @@ const ResetPasswordPage = () => {
   const [queryParams, setQueryParams] = useState<QueryParamType | null>(null);
 
   useEffect(() => {
-    console.error("Here we go again");
+    console.error("Is router ready");
+    if (!router.isReady) return;
     console.error("Here we go again");
     console.error("Here we go again");
     const urlSearchParams = new URLSearchParams(window.location.search);
@@ -35,7 +36,7 @@ const ResetPasswordPage = () => {
       email,
     };
     setQueryParams(queryP);
-  }, []);
+  }, [router]);
 
   if (!queryParams) return undefined;
 
