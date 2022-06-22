@@ -44,7 +44,7 @@ const ResetPasswordPage = () => {
     //   email: router.query.email as string,
     // };
     // setQueryParams(queryP);
-  }, [router]);
+  }, []);
 
   // if (!queryParams) return undefined;
 
