@@ -5,6 +5,7 @@ import {
   SearchOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import Link from "next/link";
 import { NextPage } from "next";
 import { Avatar, Badge } from "antd";
 import Image from "next/image";
@@ -45,15 +46,19 @@ const Header: NextPage<any> = ({ toggleSideNav, isSideNavOpen, type }) => {
         />
       )}
       <h2 className="-mb-1">
-        <Image
-          priority={true}
-          unoptimized={true}
-          loader={imageLoader}
-          src="/assets/icons/logo_white.svg"
-          alt="Icon"
-          width={160}
-          height={60}
-        />
+        <Link href="/">
+          <a>
+            <Image
+              priority={true}
+              unoptimized={true}
+              loader={imageLoader}
+              src="/assets/icons/logo_white.svg"
+              alt="Icon"
+              width={160}
+              height={60}
+            />
+          </a>
+        </Link>
       </h2>
       {type === "entry" && (
         <button

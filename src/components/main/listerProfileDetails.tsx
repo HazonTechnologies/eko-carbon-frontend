@@ -1,14 +1,15 @@
 import { Divider, Form, Input } from "antd";
 import toast from "react-hot-toast";
+import useSWR, { mutate } from "swr";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CustomButton from "../utilities/ButtonUI";
 
-import { ListerProject } from "../../models/listers";
-import { useUser } from "../../context/userCtx";
+import { ListerUser } from "../../models/listers";
 import DropFile from "../utilities/DropFile";
 import { useLoading } from "../../context/loadingCtx";
 import { postApi } from "../../lib/helperFunctions/fetcher";
+import { GetUserDetailsUrl } from "../../lib/common/endpoints";
 
 interface ListerProfilePropType {
   updateProfileLink: string;
@@ -19,18 +20,41 @@ const ListerProfileDetails = ({
   updateProfileLink,
   reRouteLink,
 }: ListerProfilePropType) => {
-  const {
-    state: { userPayload },
-  } = useUser();
+  const { data } = useSWR(GetUserDetailsUrl);
 
   const { setLoadingStatus } = useLoading();
   const [form] = Form.useForm();
   const { push } = useRouter();
   const [files, setFiles] = useState<File[]>([]);
+  const [userPayload, setUserPayload] = useState<ListerUser | null>(null);
 
-  const onSubmit = (values: ListerProject) => {
+  useEffect(() => {
+    console.warn(data);
+    console.warn(data);
+    console.warn(data);
+    if (data) {
+      setUserPayload(data.data);
+    }
+  }, [data]);
+
+  const onSubmit = (values: ListerUser) => {
+    if (!values.businessName && !values.summary && !files[0]) {
+      toast.error("One or more field(s) is required");
+      return;
+    }
+
+    const formVal = new FormData();
+    if (values.businessName) {
+      formVal.append("businessName", values.businessName);
+    }
+    if (values.summary) {
+      formVal.append("summary", values.summary);
+    }
+    if (files[0]) {
+      formVal.append("picture", files[0]);
+    }
     setLoadingStatus(true);
-    postApi(updateProfileLink, values)
+    postApi(updateProfileLink, formVal)
       .then((res) => {
         if (!res.successful) {
           toast.error(res.message);
@@ -38,12 +62,12 @@ const ListerProfileDetails = ({
         }
         toast.success(res.message);
         form.resetFields();
+        mutate(GetUserDetailsUrl);
         if (reRouteLink) {
           push(reRouteLink);
         }
       })
       .finally(() => setLoadingStatus(false));
-    console.warn(values);
   };
 
   const onError = (err: any) => {

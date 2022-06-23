@@ -16,3 +16,4 @@ export const UpdateListerCompanyUrl = 'Account/update-company-details';
 export const ResendEmailUrl = 'Account/resend-email-confirmation';
 export const ForgotPasswordUrl = 'Account/forgot-password';
 export const ResetPasswordUrl = 'Account/reset-password';
+export const GetUserDetailsUrl = 'Account/user-details';

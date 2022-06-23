@@ -1,6 +1,8 @@
 /* eslint-disable no-unused-vars */
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import useSWR from "swr";
 import { useUser } from "../../context/userCtx";
+import { ProjectsUrl } from "../../lib/common/endpoints";
 import { ListerProject } from "../../models/listers";
 import Project from "./project";
 
@@ -12,16 +14,20 @@ interface ProjectsPropType {
 }
 
 const Projects = ({ status }: ProjectsPropType) => {
-  const {
-    state: { projects },
-  } = useUser();
+  const { data } = useSWR(ProjectsUrl);
 
+  const [projects, setProjects] = useState<ListerProject[]>([]);
+
+  useEffect(() => {
+    if (data && data.data) {
+      setProjects(data.data);
+    }
+  }, [data]);
   const onSelectProject = (project: ListerProject) => {
     console.warn(project);
   };
 
   const getProject: ListerProject[] = useMemo(() => {
-    if (!projects || !projects.length) return [];
     if (status === "active") {
       return projects.filter((project) => project.archived);
     }
@@ -47,7 +53,11 @@ const Projects = ({ status }: ProjectsPropType) => {
           />
         ))}
 
-      {!getProject.length && <p className="text-center m-auto mt-10 opacity-80 text-base">No projects available &#x1F61E;</p>}
+      {!getProject.length && (
+        <p className="text-center m-auto mt-10 opacity-80 text-base">
+          No projects available &#x1F61E;
+        </p>
+      )}
     </div>
   );
 };
