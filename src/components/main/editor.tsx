@@ -3,13 +3,14 @@ import React, { useEffect, useState } from "react";
 // import { FilterValue, SorterResult } from "antd/lib/table/interface";
 import toast from "react-hot-toast";
 import ReactHtmlParser from "react-html-parser";
+import useSWR from "swr";
 
 import { EditOutlined } from "@ant-design/icons";
 import DefaultFul from "../../lib/common/defaultLister";
 import QuillEditor from "./quillEditor";
-import { useUser } from "../../context/userCtx";
 import { postApi } from "../../lib/helperFunctions/fetcher";
 import { useLoading } from "../../context/loadingCtx";
+import { GetUserDetailsUrl } from "../../lib/common/endpoints";
 
 interface EditorPropType {
   //   getContentUrl: string;
@@ -18,18 +19,14 @@ interface EditorPropType {
 
 const Editor = ({ setContentUrl }: EditorPropType) => {
   const { setLoadingStatus } = useLoading();
-  const {
-    state: { userPayload },
-  } = useUser();
+  const { data } = useSWR(GetUserDetailsUrl);
+
   const [content, setContent] = useState<string>(DefaultFul());
   useEffect(() => {
-    console.warn(
-      userPayload?.profile,
-      userPayload?.profile.company.description
-    );
-    if (!userPayload?.profile?.company?.description) return;
-    setContent(userPayload.profile.company.description);
-  }, []);
+    if (data) {
+      setContent(data.data.profile.company.description);
+    }
+  }, [data]);
 
   const [showEditor, toggleEditor] = useState<boolean>(false);
 
@@ -52,7 +49,6 @@ const Editor = ({ setContentUrl }: EditorPropType) => {
     }
 
     toggleEditor(!showEditor);
-    console.log(val);
     if (val === "cancel") {
       toggleEditor(false);
       return;

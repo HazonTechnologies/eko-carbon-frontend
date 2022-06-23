@@ -12,13 +12,8 @@ const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
   // const { state: UserState } = useUser();
 
   useEffect(() => {
-    console.warn("Default");
-    console.warn("Default");
     checkUserData(state.userPayload, dispatch, push, "default", history);
-    console.warn("Default");
-    console.warn("Default");
-    console.warn("Default");
-  }, []);
+  }, [state]);
 
   return (
     <div className="layout">

@@ -95,6 +95,8 @@ export interface Lister extends BusinessInfo, BusinessRepInfo, BankInfo {
 
 export interface ListerUser extends UserPayload {
   profile: Profile;
+  summary?: string;
+  businessName?: string;
   userType: number;
   roles: Role;
 }

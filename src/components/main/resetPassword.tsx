@@ -63,7 +63,7 @@ const ResetPassword = ({
   };
 
   return (
-    <div className="flex flex-col h-[80vh] justify-center items-center">
+    <div className="flex flex-col h-[90vh] justify-center items-center">
       <div className="w-[350px] m-[auto] boxProps p-6 my-2">
         <h2 className="font-header font-medium text-2xl mb-1">Reset Password</h2>
         <p className="text-sm ">
@@ -111,14 +111,6 @@ const ResetPassword = ({
           </Form.Item>
 
           <Form.Item className="mt-4 text-right">
-            <CustomButton
-              htmlType="submit"
-              bg="secondary-high"
-              color="primary-high"
-              className="px-8 mx-2"
-            >
-              Cancel
-            </CustomButton>
             <CustomButton htmlType="submit">Reset Password</CustomButton>
           </Form.Item>
         </Form>

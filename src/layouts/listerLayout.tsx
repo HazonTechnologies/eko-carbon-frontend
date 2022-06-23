@@ -1,12 +1,9 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import useSWR from "swr";
 import Header from "../components/main/header";
 import SideNav from "../components/main/sideNav";
-import { Types } from "../context/actions/user.actions";
 import { useHistory } from "../context/historyCtx";
 import { useUser } from "../context/userCtx";
-import { ProjectsUrl } from "../lib/common/endpoints";
 import checkUserData from "../lib/helperFunctions/checkUserData";
 // import { useHeader } from "../context/headerCtx";
 
@@ -17,7 +14,6 @@ const ListerLayout = ({ children }: { children: React.ReactNode }) => {
 
   const { state: UserState, dispatch: UserDispatch } = useUser();
 
-  const { data } = useSWR(ProjectsUrl);
 
   useEffect(() => {
     checkUserData(
@@ -29,12 +25,6 @@ const ListerLayout = ({ children }: { children: React.ReactNode }) => {
     );
     console.log(UserState);
   }, []);
-
-  useEffect(() => {
-    if (data && data.data) {
-      UserDispatch({ type: Types.SetProjects, payload: { value: data.data } });
-    }
-  }, [data]);
 
 
   if (!UserState.userPayload) {
