@@ -12,7 +12,7 @@ const nextConfig = {
     env: {
         NEXT_PUBLIC_SERVER_BASE_URL: `${devIP}/api/v${version}/`,
     },
-    trailingSlash: false,
+    trailingSlash: true,
 };
 
 
