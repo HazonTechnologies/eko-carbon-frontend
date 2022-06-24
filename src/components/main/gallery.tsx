@@ -89,7 +89,7 @@ const Gallery = ({ imageListUrl, deleteUrl, addUrl }: GalleryPropType) => {
                 <img
                   src={item.url}
                   alt={item.name}
-                  className="object-contain w-[250px] h-[250px] border"
+                  className="object-cover w-[250px] h-[250px] border"
                 />
               </PhotoView>
               <DeleteFilled
