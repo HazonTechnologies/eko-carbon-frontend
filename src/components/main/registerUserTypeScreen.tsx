@@ -27,7 +27,7 @@ const RegisterUserTypeScreen: NextPage<RegisterUserTypePropType> = ({
     <h2 className="text-xl sm:text-2xl font-header font-normal">{header}</h2>
     <p className="font-light mb-10 text-center">{subHeader}</p>
     <div>
-      <OptionsUI selected={selected} options={options} select={onSelect} />
+      <OptionsUI height={80} selected={selected} options={options} select={onSelect} />
     </div>
   </div>
 );

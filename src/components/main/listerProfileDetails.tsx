@@ -26,33 +26,33 @@ const ListerProfileDetails = ({
   const [form] = Form.useForm();
   const { push } = useRouter();
   const [files, setFiles] = useState<File[]>([]);
-  const [userPayload, setUserPayload] = useState<ListerUser | null>(null);
 
   useEffect(() => {
-    console.warn(data);
-    console.warn(data);
-    console.warn(data);
     if (data) {
-      setUserPayload(data.data);
+      const payload: ListerUser = data.data.profile.company;
+      form.setFields([
+        { name: "businessName", value: payload.businessName },
+        { name: "summary", value: payload.summary },
+      ]);
     }
   }, [data]);
 
   const onSubmit = (values: ListerUser) => {
-    if (!values.businessName && !values.summary && !files[0]) {
-      toast.error("One or more field(s) is required");
+    if (!values.businessName || !values.summary) {
+      toast.error("Business Name and Summary is required");
       return;
     }
 
     const formVal = new FormData();
-    if (values.businessName) {
-      formVal.append("businessName", values.businessName);
-    }
-    if (values.summary) {
-      formVal.append("summary", values.summary);
-    }
-    if (files[0]) {
+
+    formVal.append("businessName", values.businessName);
+
+    formVal.append("summary", values.summary);
+
+    if (files.length) {
       formVal.append("picture", files[0]);
     }
+
     setLoadingStatus(true);
     postApi(updateProfileLink, formVal)
       .then((res) => {
@@ -70,10 +70,6 @@ const ListerProfileDetails = ({
       .finally(() => setLoadingStatus(false));
   };
 
-  const onError = (err: any) => {
-    console.log(err);
-  };
-
   return (
     <div className="flex flex-col justify-start">
       <div className="">
@@ -82,13 +78,12 @@ const ListerProfileDetails = ({
           Please Update your public company profile here
         </p>
         <Divider />
+
         <Form
           name="basic"
           layout="vertical"
           form={form}
-          initialValues={userPayload?.profile.company ?? {}}
           onFinish={onSubmit}
-          onFinishFailed={onError}
           autoComplete="off"
         >
           <Form.Item label="Company Name" name="businessName">

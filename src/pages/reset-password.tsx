@@ -23,7 +23,7 @@ const ResetPasswordPage = () => {
       return;
     }
     const queryP = {
-      token: router.query.c as string,
+      token: encodeURIComponent(router.query.c as string),
       email: router.query.email as string,
     };
     setQueryParams(queryP);

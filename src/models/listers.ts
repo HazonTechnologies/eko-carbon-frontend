@@ -49,6 +49,10 @@ export interface BusinessInfo {
   website: string;
   industry: string;
   summary: string;
+  profilePicture: {
+    name: string;
+    url: string;
+  };
 }
 
 export interface BusinessRepInfo {
@@ -95,8 +99,8 @@ export interface Lister extends BusinessInfo, BusinessRepInfo, BankInfo {
 
 export interface ListerUser extends UserPayload {
   profile: Profile;
-  summary?: string;
-  businessName?: string;
+  summary: string;
+  businessName: string;
   userType: number;
   roles: Role;
 }
@@ -123,7 +127,7 @@ export interface ListerProject {
   cO2Tonnes: number;
   description: [{ details: string }];
   externalLink: { name: string };
-  isDraft: false;
+  drafted: false;
   lister: null;
   listerId: 5;
   pictures: Picture[];

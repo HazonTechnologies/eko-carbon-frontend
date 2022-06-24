@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 // import { FilterValue, SorterResult } from "antd/lib/table/interface";
 import toast from "react-hot-toast";
 import ReactHtmlParser from "react-html-parser";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 
 import { EditOutlined } from "@ant-design/icons";
 import DefaultFul from "../../lib/common/defaultLister";
@@ -37,7 +37,6 @@ const Editor = ({ setContentUrl }: EditorPropType) => {
         if (!res.successful) return;
         toast.success(res.message);
         toggleEditor(false);
-        console.warn("success", res);
       })
       .finally(() => setLoadingStatus(false));
   };
@@ -47,14 +46,8 @@ const Editor = ({ setContentUrl }: EditorPropType) => {
       saveContent(content);
       return;
     }
-
-    toggleEditor(!showEditor);
-    if (val === "cancel") {
-      toggleEditor(false);
-      return;
-    }
-    // make request to server
-    console.log(content);
+    mutate(GetUserDetailsUrl);
+    toggleEditor(false);
   };
 
   return (

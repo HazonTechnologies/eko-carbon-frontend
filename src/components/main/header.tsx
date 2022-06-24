@@ -1,4 +1,5 @@
 // import Link from "next/link";
+import { useEffect, useState } from "react";
 import {
   AlignLeftOutlined,
   BellOutlined,
@@ -24,8 +25,10 @@ const menu: Option[] = [
 ];
 
 const Header: NextPage<any> = ({ toggleSideNav, isSideNavOpen, type }) => {
-  const { dispatch } = useUser();
+  const { state: UserState, dispatch } = useUser();
   const { push } = useRouter();
+  const [avatarLink, setAvatarLink] = useState<string | undefined>(undefined);
+
   const onClickAvatar = (opt: Option) => {
     if (opt.value === "logout") {
       push("/login");
@@ -33,9 +36,15 @@ const Header: NextPage<any> = ({ toggleSideNav, isSideNavOpen, type }) => {
       removeUserToken();
     }
     if (opt.value === "profile") {
-      push("listers/profile");
+      push("/listers/profile");
     }
   };
+
+  useEffect(() => {
+    if (UserState) {
+      setAvatarLink(UserState.userPayload?.profile.company.profilePicture.url);
+    }
+  }, [UserState]);
 
   return (
     <header className="fixed w-[100vw] z-50 bg-tertiary-high sm:px-8 p-1 px-3 flex justify-between items-center text-secondary-mid">
@@ -96,6 +105,17 @@ const Header: NextPage<any> = ({ toggleSideNav, isSideNavOpen, type }) => {
               <Avatar
                 size={28}
                 className="!bg-transparent border border-secondary-high -mb-1"
+                src={(
+                  <Image
+                    priority={true}
+                    unoptimized={true}
+                    alt="User Avatar"
+                    loader={imageLoader}
+                    width={40}
+                    height={40}
+                    src={`${avatarLink ?? "/"}`}
+                  />
+                )}
                 icon={<UserOutlined />}
               />
             </DropdownUI>

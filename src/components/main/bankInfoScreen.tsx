@@ -123,7 +123,7 @@ const BankInfoScreen: NextPage<BankInfoPropType> = ({
           </Select>
         </Form.Item>
         <Form.Item
-          label="Bank Type"
+          label="Account Type"
           name="BankAccountType"
           rules={[
             { required: true, message: "Kindly select an account Type!" },

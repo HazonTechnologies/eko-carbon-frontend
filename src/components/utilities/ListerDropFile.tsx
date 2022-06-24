@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { PlusOutlined } from "@ant-design/icons";
 import React, { useMemo } from "react";
 import Dropzone from "react-dropzone";
@@ -12,7 +13,7 @@ interface DropFileProp {
   files: File[];
   setFiles: React.Dispatch<React.SetStateAction<File[]>>;
   acceptedFileTypes: FileTypes[];
-  onAdd: () => void;
+  onAdd: (selectedFiles: File[]) => void;
   title?: string;
   width?: number;
   height?: number;
@@ -21,6 +22,7 @@ interface DropFileProp {
 const ListerDropFile = ({
   allowMultiple,
   setFiles,
+  files,
   acceptedFileTypes,
   title,
   onAdd,
@@ -34,11 +36,11 @@ const ListerDropFile = ({
       const file = acceptedFile;
       if (!allowMultiple) {
         setFiles(file);
-        onAdd();
+        onAdd(file);
         return;
       }
       setFiles((selectedFile) => [...file, ...selectedFile]);
-      onAdd();
+      onAdd([...file, ...files]);
     }
   };
 

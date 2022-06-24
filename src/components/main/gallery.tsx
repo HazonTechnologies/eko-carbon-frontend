@@ -33,24 +33,23 @@ const Gallery = ({ imageListUrl, deleteUrl, addUrl }: GalleryPropType) => {
   const [images, setImages] = useState<ImageType[]>([]);
   const [files, setFiles] = useState<File[]>([]);
 
-  const onAdd = () => {
+  const onAdd = (selectedFiles: File[]) => {
     setLoadingStatus(true);
     const formData = new FormData();
-    formData.append("Picture", files[0]);
+    formData.append("Picture", selectedFiles[0]);
     postApi(addUrl, formData)
       .then((res) => {
         if (!res.successful) return;
+        setImages(res.data);
         mutate(imageListUrl);
       })
       .finally(() => setLoadingStatus(false));
-
-    // if (images.find((image) => image === URL.createObjectURL(files[0]))) return;
-    // setImages([...images, URL.createObjectURL(files[0])]);
   };
+
 
   const remove = (item: ImageType) => {
     setIsModalVisible(true);
-    setSelectedID(item.idType);
+    setSelectedID(item.pictureId);
   };
 
   const onOk = () => {
@@ -60,6 +59,7 @@ const Gallery = ({ imageListUrl, deleteUrl, addUrl }: GalleryPropType) => {
     deleteApi(`${deleteUrl}/${selectedID}`)
       .then((res) => {
         if (!res.successful) return;
+        setImages(res.data);
         mutate(imageListUrl);
       })
       .finally(() => setLoadingStatus(false));
@@ -84,10 +84,7 @@ const Gallery = ({ imageListUrl, deleteUrl, addUrl }: GalleryPropType) => {
       <PhotoProvider>
         <div className="flex flex-wrap justify-center sm:justify-start gap-4 my-3 items-center cursor-pointer">
           {images.map((item) => (
-            <div
-              key={item.pictureId}
-              className="flex flex-col"
-            >
+            <div key={item.pictureId} className="flex flex-col">
               <PhotoView src={item.url}>
                 <img
                   src={item.url}
