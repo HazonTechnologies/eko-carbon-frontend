@@ -33,12 +33,10 @@ const ListerMenu: NextPage<any> = () => {
   const { push } = useRouter();
 
   useEffect(() => {
-    console.log(listerLinks.slice(1));
     const company = listerLinks[0];
     company.title = state.userPayload?.profile?.company?.businessName ?? "";
-    console.log(company);
     setListerMenu([company, ...listerLinks.slice(1)]);
-  }, []);
+  }, [state]);
 
   const goTo = (link: string | undefined) => {
     if (link === "addProject") {

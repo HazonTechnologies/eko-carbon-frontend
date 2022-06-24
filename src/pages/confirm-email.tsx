@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import ButtonUI from "../components/utilities/ButtonUI";
 import { useLoading } from "../context/loadingCtx";
 import DefaultLayout from "../layouts/defaultLayout";
-import { ResendEmailUrl } from "../lib/common/endpoints";
+import { ConfirmEmailUrl, ResendEmailUrl } from "../lib/common/endpoints";
 import { fetcher, postApi } from "../lib/helperFunctions/fetcher";
 import formatFileName from "../lib/helperFunctions/formatFileName";
 
@@ -21,7 +21,7 @@ const ConfirmEmail = () => {
   const confirmAccount = (query: QueryType) => {
     router.push("/login");
     fetcher(
-      `Account/confirm-email?userId=${query.userId}&code=${query.code}`
+      `${ConfirmEmailUrl}?userId=${query.userId}&code=${query.code}`
     ).then((res) => {
       if (!res.successful) return;
       toast.success(res.message);
@@ -39,10 +39,15 @@ const ConfirmEmail = () => {
   }, [currentCount]);
 
   useEffect(() => {
-    const query: any = { ...router.query };
-    if (query.code) {
-      confirmAccount(query);
+    if (!router.isReady) return;
+    if (router.query.userId || router.query.code || router.query.email) {
+      const query: any = { ...router.query };
+      if (query.code) {
+        confirmAccount(query);
+      }
+      return;
     }
+    router.push("login");
   }, [router]);
 
   const resendNotification = () => {

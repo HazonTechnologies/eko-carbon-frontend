@@ -29,17 +29,17 @@ const Projects = ({ status }: ProjectsPropType) => {
 
   const getProject: ListerProject[] = useMemo(() => {
     if (status === "active") {
-      return projects.filter((project) => project.archived);
+      return projects.filter((project) => project.approved);
     }
     if (status === "pending") {
       return projects.filter(
-        (project) => !project.archived && !project.IsDraft
+        (project) => !project.archived && !project.drafted && !project.approved
       );
     }
     if (status === "draft") {
-      return projects.filter((project) => project.IsDraft);
+      return projects.filter((project) => project.drafted);
     }
-    return projects.filter((project) => !project.IsDraft && project.archived);
+    return projects.filter((project) => project.archived);
   }, [projects, status]);
 
   return (

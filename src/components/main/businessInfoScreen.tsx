@@ -124,10 +124,7 @@ const BusinessInfoScreen: NextPage<BusinessInfoPropType> = ({
         <Form.Item
           label="Website"
           name="Website"
-          rules={[
-            { required: true, message: "Kindly input your business Website!" },
-            { pattern: urlPattern, message: "Invalid Web Url!" },
-          ]}
+          rules={[{ pattern: urlPattern, message: "Invalid Web Url!" }]}
         >
           <Input />
         </Form.Item>

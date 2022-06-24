@@ -89,7 +89,7 @@ const ResetPassword = ({
               {
                 pattern: passwordPattern,
                 message:
-                  "Password must minimum eight characters, at least one letter, one number and one special character",
+                  "Password must contain a minimum of six characters with at least one letter and a number",
               },
             ]}
           >
