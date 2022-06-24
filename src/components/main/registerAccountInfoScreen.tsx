@@ -17,11 +17,6 @@ import {
 } from "../../models/listers";
 import { Dependencies } from "../../models/dependencies";
 
-// import { useState } from "react";
-// import { Option } from "../../models/option";
-// import { UserType } from "../../models/user";
-// import OptionsUI from "../utilities/OptionsUI";
-
 interface RegisterAccountInfoPropType {
   // eslint-disable-next-line no-unused-vars
   onSubmitReg: (val: FormData) => void;

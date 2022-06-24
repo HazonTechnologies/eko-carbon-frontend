@@ -42,7 +42,9 @@ const Header: NextPage<any> = ({ toggleSideNav, isSideNavOpen, type }) => {
 
   useEffect(() => {
     if (UserState) {
-      setAvatarLink(UserState.userPayload?.profile.company.profilePicture.url);
+      setAvatarLink(
+        UserState.userPayload?.profile?.company?.profilePicture?.url
+      );
     }
   }, [UserState]);
 
@@ -101,24 +103,35 @@ const Header: NextPage<any> = ({ toggleSideNav, isSideNavOpen, type }) => {
             </Badge>
           </p>
           <p>
-            <DropdownUI menuItem={menu} selectOption={onClickAvatar}>
-              <Avatar
-                size={28}
-                className="!bg-transparent border border-secondary-high -mb-1"
-                src={(
-                  <Image
-                    priority={true}
-                    unoptimized={true}
-                    alt="User Avatar"
-                    loader={imageLoader}
-                    width={40}
-                    height={40}
-                    src={`${avatarLink ?? "/"}`}
-                  />
-                )}
-                icon={<UserOutlined />}
-              />
-            </DropdownUI>
+            {avatarLink && (
+              <DropdownUI menuItem={menu} selectOption={onClickAvatar}>
+                <Avatar
+                  size={28}
+                  className="!bg-transparent border border-secondary-high -mb-1"
+                  src={(
+                    <Image
+                      priority={true}
+                      unoptimized={true}
+                      alt="User Avatar"
+                      loader={imageLoader}
+                      width={40}
+                      height={40}
+                      src={`${avatarLink}`}
+                    />
+                  )}
+                  icon={<UserOutlined />}
+                />
+              </DropdownUI>
+            )}
+            {!avatarLink && (
+              <DropdownUI menuItem={menu} selectOption={onClickAvatar}>
+                <Avatar
+                  size={28}
+                  className="!bg-transparent border border-secondary-high -mb-1"
+                  icon={<UserOutlined />}
+                />
+              </DropdownUI>
+            )}
           </p>
         </nav>
       )}
