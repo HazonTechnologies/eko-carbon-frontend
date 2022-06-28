@@ -133,5 +133,5 @@ export interface ListerProject {
   pictures: Picture[];
   projectId: number;
   projectType: string;
-  tags: string[];
+  tags: { name: string | null }[];
 }

@@ -2,7 +2,7 @@
 /* eslint-disable object-curly-newline */
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable max-len */
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Form, Input, Select, Tag } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import randomColor from "randomcolor";
@@ -20,24 +20,26 @@ import { Dependencies } from "../../models/dependencies";
 import { ListerProject } from "../../models/listers";
 import { fetcher, postApi } from "../../lib/helperFunctions/fetcher";
 import { useLoading } from "../../context/loadingCtx";
+import { DependenciesUrl } from "../../lib/common/endpoints";
 
 const { Option } = Select;
 
 interface ProjectEntryType {
   isModalVisible: boolean;
   setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  initialValues?: ListerProject | null;
 }
 
 const ProjectEntry = ({
   isModalVisible,
   setIsModalVisible,
+  initialValues,
 }: ProjectEntryType) => {
   // const [profileInfo, setProfileInfo] = useState<ProfileInfo>(dummyProfileInfo);
   const { loading, setLoadingStatus } = useLoading();
   const { mutate } = useSWRConfig();
 
   const [form] = Form.useForm();
-  const [initialValues, setInitialValue] = useState<ListerProject | null>(null);
   const [ProjectPicture, setProjectPicture] = useState<File[]>([]);
   const tag = useRef<any>(null);
   const [Tags, setTags] = useState<string[]>([]);
@@ -55,6 +57,7 @@ const ProjectEntry = ({
           return;
         }
         toast.success(res.message);
+        form.resetFields();
         setIsModalVisible(false);
       })
       .finally(() => setLoadingStatus(false));
@@ -62,7 +65,6 @@ const ProjectEntry = ({
   };
 
   const saveToDraft = () => {
-    setInitialValue(form.getFieldsValue());
     const payload: ListerProject = {
       ...form.getFieldsValue(),
       IsDraft: true,
@@ -88,7 +90,6 @@ const ProjectEntry = ({
 
   const onSubmit = (values: ListerProject) => {
     console.log(values, Tags);
-    setInitialValue(values);
     const payload: ListerProject = {
       ...values,
       IsDraft: false,
@@ -138,7 +139,7 @@ const ProjectEntry = ({
 
   const getDependencies = () => {
     setLoadingStatus(true);
-    fetcher("Account/dependencies")
+    fetcher(DependenciesUrl)
       .then((res) => {
         if (res.successful) {
           setDependencies(res.data);
@@ -146,6 +147,10 @@ const ProjectEntry = ({
       })
       .finally(() => setLoadingStatus(false));
   };
+
+  useMemo(() => {
+    setTags(initialValues?.Tags ?? []);
+  }, [initialValues]);
 
   useEffect(() => {
     getDependencies();

@@ -17,7 +17,7 @@ export const userTypes: Option[] = [
     icon: "pluscircleoutlined",
   },
   {
-    title: "Calculate & Offset my Organisational's Emissions",
+    title: "Calculate & Offset my Organization Emissions",
     description: "Create an account to calculate and offset your organisation footprint",
     value: "offset_company",
     icon: "pluscircleoutlined",
@@ -31,7 +31,7 @@ export const offsetTypes: Option[] = [
     icon: "pluscircleoutlined",
   },
   {
-    title: `Calculate & Offset my Organisation's Emissions`,
+    title: `Calculate & Offset my Organization Emissions`,
     description: "Calculate and offset your carbon footprint",
     value: "organisation",
     icon: "pluscircleoutlined",

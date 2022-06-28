@@ -7,11 +7,11 @@ import OffsetterTable from "./offsetter";
 const ListerOverview = () => (
   <div className="mt-10">
     <ListerBoard />
-    <div className="flex items-start flex-wrap gap-4  justify-between">
+    <div className="flex items-start flex-wrap gap-y-4 gap-x-2  justify-between">
       <div className="bg-secondary-high p-4 pb-5 w-[100%] lg:w-[60%] boxProps2 ">
         <ListerAreaChart />
       </div>
-      <div className="bg-secondary-high p-4 pb-[60px] w-[100%] lg:w-[36%] xl:w-[38%] boxProps2">
+      <div className="bg-secondary-high p-4 pb-[60px] w-[100%] lg:w-[37%] xl:w-[38%] boxProps2">
         <ListerPieChart />
       </div>
       <div className="flex items-start flex-wrap gap-4 gap-x-2 w-[100%] justify-between">

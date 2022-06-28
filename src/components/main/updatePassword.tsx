@@ -80,7 +80,7 @@ const UpdatePassword = ({
           autoComplete="off"
         >
           <Form.Item label="Current password" name="oldPassword">
-            <Input.Password className="sm:w-[50%]" />
+            <Input.Password />
           </Form.Item>
           <Divider />
           <Form.Item
@@ -98,7 +98,7 @@ const UpdatePassword = ({
               },
             ]}
           >
-            <Input.Password className="sm:w-[50%]" />
+            <Input.Password />
           </Form.Item>
           <Divider />
           <Form.Item
@@ -112,10 +112,7 @@ const UpdatePassword = ({
               },
             ]}
           >
-            <Input.Password
-              className="sm:w-[50%]"
-              onChange={(e) => confirmPass(e.target.value)}
-            />
+            <Input.Password onChange={(e) => confirmPass(e.target.value)} />
           </Form.Item>
 
           <Form.Item className="mt-4 text-right">
