@@ -10,6 +10,8 @@ const ListerBoard = () => {
   const [boardDetails, setBoardDetails] =
     useState<ListerBoardType[]>(listerDummy);
 
+  const [showTable] = useState<boolean>(false);
+
   useEffect(() => {
     setBoardDetails(listerDummy);
   }, []);
@@ -28,19 +30,22 @@ const ListerBoard = () => {
                 <h4 className="whitespace-nowrap text-xs">{board.title}</h4>
                 <p className="flex items-center flex-nowrap">
                   <span className="text-lg">
-                    {numberWithCommas(board.value)}
+                    {showTable && numberWithCommas(board.value)}
+                    {!showTable && 0}
                   </span>
-                  <span
-                    className={`${board.direction === "up" && "text-success"}
+                  {showTable && (
+                    <span
+                      className={`${board.direction === "up" && "text-success"}
                   ${
                     board.direction === "down" && "text-error"
                   } flex items-center -mb-2 ml-2 flex-nowrap text-xs`}
-                  >
-                    {board.direction === "up" && <ArrowUpOutlined />}
-                    {board.direction === "down" && <ArrowDownOutlined />}
-                    <span className="ml-1">{board.subValue}</span>
-                    <span>%</span>
-                  </span>
+                    >
+                      {board.direction === "up" && <ArrowUpOutlined />}
+                      {board.direction === "down" && <ArrowDownOutlined />}
+                      <span className="ml-1">{board.subValue}</span>
+                      <span>%</span>
+                    </span>
+                  )}
                 </p>
               </div>
             </div>

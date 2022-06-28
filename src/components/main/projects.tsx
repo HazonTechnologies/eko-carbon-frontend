@@ -2,9 +2,12 @@
 import { useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
 import { useUser } from "../../context/userCtx";
-import { ProjectsUrl } from "../../lib/common/endpoints";
+import { ProjectsUrl, ProjectUrl } from "../../lib/common/endpoints";
+import EvalProjects from "../../lib/helperFunctions/evalProject";
+import { fetcher } from "../../lib/helperFunctions/fetcher";
 import { ListerProject } from "../../models/listers";
 import Project from "./project";
+import ProjectEntry from "./projectEntry";
 
 // import icons needed for the logic
 
@@ -15,7 +18,8 @@ interface ProjectsPropType {
 
 const Projects = ({ status }: ProjectsPropType) => {
   const { data } = useSWR(ProjectsUrl);
-
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [initialValues, setInitialValues] = useState<any>(null);
   const [projects, setProjects] = useState<ListerProject[]>([]);
 
   useEffect(() => {
@@ -23,8 +27,28 @@ const Projects = ({ status }: ProjectsPropType) => {
       setProjects(data.data);
     }
   }, [data]);
+
+  const fetchProject = (id: number, project: ListerProject) => {
+    setInitialValues(EvalProjects(project));
+    setIsModalVisible(true);
+    // return;
+    // fetcher(`${ProjectUrl}/${id}`)
+    //   .then((res) => {
+    //     if (!res.successful) return;
+    //     setInitialValues(() => EvalProjects(res.data));
+    //     setIsModalVisible(true);
+    //   })
+    //   .catch(() => {
+    //     setInitialValues(EvalProjects(project));
+    //     setIsModalVisible(true);
+    //   });
+  };
+
   const onSelectProject = (project: ListerProject) => {
-    console.warn(project);
+    if (status === "draft") {
+      fetchProject(project.projectId, project);
+    }
+    // console.warn(project);
   };
 
   const getProject: ListerProject[] = useMemo(() => {
@@ -43,22 +67,31 @@ const Projects = ({ status }: ProjectsPropType) => {
   }, [projects, status]);
 
   return (
-    <div className="flex gap-2 flex-wrap">
-      {!!getProject.length &&
-        getProject.map((proj) => (
-          <Project
-            key={proj.projectId}
-            project={proj}
-            selectProject={onSelectProject}
-          />
-        ))}
+    <>
+      <ProjectEntry
+        initialValues={initialValues}
+        setIsModalVisible={setIsModalVisible}
+        isModalVisible={isModalVisible}
+      />
 
-      {!getProject.length && (
-        <p className="text-center m-auto mt-10 opacity-80 text-base">
-          No projects available &#x1F61E;
-        </p>
-      )}
-    </div>
+      <div className="flex gap-2 flex-wrap">
+        {!!getProject.length &&
+          getProject.map((proj) => (
+            <Project
+              status={status}
+              key={proj.projectId}
+              project={proj}
+              selectProject={onSelectProject}
+            />
+          ))}
+
+        {!getProject.length && (
+          <p className="text-center m-auto mt-10 opacity-80 text-base">
+            No projects available &#x1F61E;
+          </p>
+        )}
+      </div>
+    </>
   );
 };
 export default Projects;
