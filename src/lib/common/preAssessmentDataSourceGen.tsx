@@ -7,14 +7,18 @@ const recylableMaterials: any = {
   books: "Books",
   cardboards: "Cardboards",
   magazines: "Magazines",
+  mixedPaper: "Mixed Paper",
   newspapers: "Newspapers",
-  plasticsADPE: "Plastics ADPE",
+  plasticsPets: "Plastics Pets",
+  plasticsHDPE: "Plastics HDPE",
   plasticsLDE: "Plastics LDPE",
-  plasticsPVE: "Plastics PVE",
+  ldpeCldpe: "LDPE & CLDPE",
+  plasticsPVC: "Plastics PVC",
   metalScraps: "Metal Scraps",
   metalMixedCans: "Metal Mixed Cans",
   electromagneticWaste: "Electromagnetic Waste",
   glass: "Glass",
+  mixedRecycling: "Mixed Recycling",
 };
 
 const energyPhotoVolatic: any = {

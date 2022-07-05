@@ -138,6 +138,19 @@ const RecyclePreAssessment: NextPage<RecyclePreAssessmentPropType> = ({
             />
           </Form.Item>
           <Form.Item
+            label="Mixed Paper (kg)"
+            name="mixedPaper"
+            className="w-[250px]"
+          >
+            <InputNumber
+              className="w-[100%]"
+              formatter={(value) =>
+                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              }
+              parser={(value) => value!.replace(/\$\s?|(,*)/g, "")}
+            />
+          </Form.Item>
+          <Form.Item
             label="Newspapers (kg)"
             name="newspapers"
             className="w-[250px]"
@@ -151,8 +164,21 @@ const RecyclePreAssessment: NextPage<RecyclePreAssessmentPropType> = ({
             />
           </Form.Item>
           <Form.Item
-            label="Plastics ADPE (kg)"
-            name="plasticsADPE"
+            label="Plastics Pets (kg)"
+            name="plasticsPets"
+            className="w-[250px]"
+          >
+            <InputNumber
+              className="w-[100%]"
+              formatter={(value) =>
+                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              }
+              parser={(value) => value!.replace(/\$\s?|(,*)/g, "")}
+            />
+          </Form.Item>
+          <Form.Item
+            label="Plastics HDPE (kg)"
+            name="plasticsHDPE"
             className="w-[250px]"
           >
             <InputNumber
@@ -177,8 +203,21 @@ const RecyclePreAssessment: NextPage<RecyclePreAssessmentPropType> = ({
             />
           </Form.Item>
           <Form.Item
-            label="Plastics PVE (kg)"
-            name="plasticsPVE"
+            label="LDPE &amp; CLDPE (kg)"
+            name="ldpeCldpe"
+            className="w-[250px]"
+          >
+            <InputNumber
+              className="w-[100%]"
+              formatter={(value) =>
+                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              }
+              parser={(value) => value!.replace(/\$\s?|(,*)/g, "")}
+            />
+          </Form.Item>
+          <Form.Item
+            label="Plastics PVC (kg)"
+            name="plasticsPVC"
             className="w-[250px]"
           >
             <InputNumber
@@ -229,6 +268,15 @@ const RecyclePreAssessment: NextPage<RecyclePreAssessmentPropType> = ({
             />
           </Form.Item>
           <Form.Item label="Glass (kg)" name="glass" className="w-[250px]">
+            <InputNumber
+              className="w-[100%]"
+              formatter={(value) =>
+                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              }
+              parser={(value) => value!.replace(/\$\s?|(,*)/g, "")}
+            />
+          </Form.Item>
+          <Form.Item label="Mixed Recycling" name="mixedRecycling" className="w-[250px]">
             <InputNumber
               className="w-[100%]"
               formatter={(value) =>
