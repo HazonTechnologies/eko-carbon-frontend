@@ -2,7 +2,7 @@
 /* eslint-disable indent */
 /** @type {import('next').NextConfig} */
 
-const devIP = `http://eko-lb-366478105.us-east-1.elb.amazonaws.com`;
+const devIP = `http://34.229.201.188`;
 const version = 1;
 const nextConfig = {
     reactStrictMode: false,
